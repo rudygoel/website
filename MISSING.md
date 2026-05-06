@@ -1,69 +1,66 @@
 # Assets Rudy Still Owes
 
-A short batch list. Once these land, the site has everything it needs to ship.
+A short batch list. Once these land, the site has everything it needs to ship. Mirrors `_knowledge/07-asset-inventory.md` §3.
 
-## Core integrations
+> **Delete this file before production deploy.**
 
-- [ ] **Calendly URL** — the exact event slug (e.g. `https://calendly.com/rudygoel/audit`). One source of truth across the site.
-- [ ] **GA4 measurement ID** — `G-XXXXXXXXXX`
-- [ ] **Meta Pixel ID** — 15-digit
-- [ ] **Email contact** — confirm `rudy@rudygoel.com` or alternative
-- [ ] **Confirmed social handles** — Instagram, LinkedIn, TikTok, YouTube full URLs
+## Core integrations (env vars)
+
+- [ ] **Calendly URL** — confirm slug (default placeholder: `https://calendly.com/rudygoel/audit`). Set `VITE_CALENDLY_URL` in production env.
+- [ ] **GA4 measurement ID** (`G-XXXXXXXXXX`). Set `VITE_GA4_ID`. Left as default → GA4 doesn't load.
+- [ ] **Meta Pixel ID** (15 digits). Set `VITE_META_PIXEL_ID`. Left as default → pixel doesn't load.
+- [ ] **Email contact** — confirm `rudy@rudygoel.com` (currently hardcoded in footer + final CTA soft link).
+- [ ] **Confirmed social URLs** — Instagram, LinkedIn, TikTok, YouTube. Currently using `rudygoel` handle on each; replace if any differ.
 
 ## Imagery
 
-- [ ] **Hero/about portrait** of Rudy — editorial, 4:5 ratio, low-saturation, warm shadow tones (replaces the Instagram-export currently in place)
-- [ ] **OG image** — 1200×630 PNG, see `_knowledge/02-design-system.md` §10
-- [ ] **Favicon SVG** — "RG" monogram, Linen on Charcoal, 32×32
-- [ ] **Apple touch icon** — 180×180 PNG
+- [ ] **Open Graph card** — 1200×630 PNG at `public/og.png`. Spec in `_knowledge/02-design-system.md` §10.
+- [ ] **Apple touch icon** — 180×180 PNG at `public/apple-touch-icon.png`.
+- [ ] **Hero/about portrait** — editorial 4:5 of Rudy, low-saturation, warm shadow tones. Replaces the IG-export currently at `assets/images/rudy-portrait.jpeg`.
 
 ## Testimonials
 
-- [ ] **Matthew Volkwyn video file** — MP4 H.264, 1080p, 16:9, ≤ 50MB
-- [ ] **Matthew Volkwyn video poster (16:9)** — current poster is 1:1 aspect, needs a 1920×1080 export
-- [ ] **1–2 additional video testimonials** — same spec
-- [ ] **3–6 written testimonials** — each = headshot 200×200 + full name + role/business + 60–250 word quote
-  - 2 already drafted: Joel Edgley, Jose Williams (need their headshots)
-  - 1–4 more slots open for new ones
+- [ ] **Matthew Volkwyn video file** — MP4 H.264, 1080p, 16:9, ≤ 50 MB. Drop in `assets/testimonials/matthew-volkwyn.mp4` and update `src` in `src/data/proof.ts`.
+- [ ] **Matthew Volkwyn poster (16:9)** — current poster is ~1:1; re-export at 1920×1080 to replace `assets/testimonials/matthew-volkwyn-video-poster.jpg`.
+- [ ] **1–2 additional video testimonials** — same spec.
+- [ ] **3–6 written testimonials** — each = headshot 200×200 + full name + role/business + 60–250 word quote.
+  - 2 already drafted in `src/data/proof.ts`: Joel Edgley, Jose Williams (need their headshots).
+  - Slots open for 1–4 more.
 
 ## Client roster (logos optional)
 
-The named-clients block works as text alone. Logos are an upgrade — supply when convenient:
+The named-clients block reads as text only by default. Add logos to upgrade. Format: SVG preferred, transparent background, monochrome-friendly. Drop in `assets/clients/`, then set `logo` on the matching client in `src/data/proof.ts`.
 
 - [ ] Byron Dempsey — Driven Young / Founders Retreat
 - [ ] Kishan Bodalia — DJ Accelerator / Bodalia Academy
 - [ ] Mike Fox — Lone Wolf Unleashed
 - [ ] Rupert Bryce — Performance Strategies
-- [ ] Terrence — broadcast retainers
-
-Format: SVG preferred, transparent background, monochrome-friendly.
+- [ ] Terrence — Broadcast retainers
 
 ## Results / case-study numbers
 
-- [ ] **3–6 stat tiles** — each = a number ≤ 6 chars (e.g. "47%", "$15K", "3.2×") + a 60-char-or-less caption naming the client/context
-  - Placeholder copy currently in §SECTION 6.2 of content master
+- [ ] **3–6 stat tiles** — each = a number ≤ 6 chars (e.g. "47%", "$15K", "3.2×") + a 60-char-or-less caption naming the client/context. Currently rendered as `[bracketed]` placeholders in `src/data/proof.ts`.
 
 ## Selected writing
 
-- [ ] **3–5 LinkedIn post excerpts** — 60–80 words each + URL to the post
-- [ ] **1 Instagram embed URL** — public IG post URL
+- [ ] **3–5 LinkedIn post excerpts** — 60–80 words each + URL. Replace placeholder copy in `src/data/proof.ts` → `writingPosts`.
+- [ ] **1 Instagram embed URL** — public IG post URL. Set `instagramEmbedUrl` in `src/data/proof.ts` (currently `null` so the IG tile doesn't render).
 
-## Final copy
+## Final copy passes
 
-- [ ] **About-Me copy** — 200–400 words in Rudy's voice, replacing the placeholder draft in §SECTION 8 of content master
-- [ ] **FAQ refinements** — the 6 questions in §SECTION 9 are placeholder; Rudy's pass on tone
+- [ ] **About-Me copy** — Rudy's pass on the 200–400-word block in `index.html` §SECTION 8. The placeholder draft is decent but his voice will sharpen it.
+- [ ] **FAQ refinements** — the 6 questions in `index.html` §SECTION 9 are placeholder-quality; let Rudy retune tone.
+- [ ] **"02 SPOTS / Q3" scarcity line** — manually update text in hero + final CTA when capacity changes (no JS counter; intentional).
 
 ---
 
 ## How to deliver
 
-Drop everything into a single Dropbox / Google Drive folder named `rudy-assets-<date>`, share the link with the builder. The builder will:
+Drop everything into a single Dropbox / Google Drive folder named `rudy-assets-<date>`, share with the builder. The builder will:
 
 1. Sort into `assets/images/`, `assets/testimonials/`, `assets/clients/` per the structure already in place.
-2. Run them through the optimisation pipeline (`_knowledge/07-asset-inventory.md` §5).
+2. Optimise (AVIF + WebP for photos, SVGO for SVGs, pngquant for PNGs).
 3. Update `src/data/proof.ts` with new entries.
-4. Replace `[bracketed]` placeholders in HTML with Rudy's final copy.
+4. Replace `[bracketed]` placeholders in `index.html` and `proof.ts`.
 
-Until everything lands, the site can render with `[brackets]` visible — it's a live placeholder, not broken.
-
-**Delete this file before production deploy.**
+Until the assets land, the site renders cleanly with `[brackets]` showing — that's a deliberate live placeholder, not a bug.

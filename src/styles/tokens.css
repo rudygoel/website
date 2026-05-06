@@ -1,0 +1,190 @@
+/* ===============================================
+   Rudy Goel / Design Tokens v1.0
+   Pine & Tobacco palette, Newsreader + Geist
+   Variables only — base styles in base.css.
+   =============================================== */
+
+:root {
+  /* ----------------------------------------------
+     1. COLOUR
+     ---------------------------------------------- */
+
+  --palette-charcoal: #16191A;
+  --palette-pine-shadow: #1F2D2A;
+  --palette-pine: #3D5852;
+  --palette-tobacco: #8B6F4E;
+  --palette-tobacco-strong: #A38561;
+  --palette-tobacco-deep: #7A6044;
+  --palette-linen: #DDD3C4;
+
+  --color-bg: var(--palette-charcoal);
+  --color-surface-1: var(--palette-pine-shadow);
+  --color-surface-2: var(--palette-pine);
+  --color-surface-inverse: var(--palette-linen);
+
+  --color-text: var(--palette-linen);
+  --color-text-soft: rgba(221, 211, 196, 0.72);
+  --color-text-faint: rgba(221, 211, 196, 0.48);
+  --color-text-mute: rgba(221, 211, 196, 0.32);
+  --color-text-inverse: var(--palette-charcoal);
+  --color-text-inverse-soft: rgba(22, 25, 26, 0.72);
+
+  --color-accent: var(--palette-tobacco);
+  --color-accent-hover: var(--palette-tobacco-strong);
+  --color-accent-active: var(--palette-tobacco-deep);
+  --color-accent-soft: rgba(139, 111, 78, 0.14);
+
+  --color-border: rgba(221, 211, 196, 0.08);
+  --color-border-strong: rgba(221, 211, 196, 0.18);
+  --color-border-accent: var(--palette-tobacco);
+  --color-border-inverse: rgba(22, 25, 26, 0.12);
+
+  --color-overlay: rgba(22, 25, 26, 0.85);
+  --color-scrim: rgba(22, 25, 26, 0.6);
+
+  /* ----------------------------------------------
+     2. TYPOGRAPHY
+     ---------------------------------------------- */
+
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-display-xl: clamp(56px, 9vw, 144px);
+  --text-display-l: clamp(44px, 7vw, 96px);
+  --text-h1: clamp(36px, 5vw, 64px);
+  --text-h2: clamp(28px, 4vw, 44px);
+  --text-h3: clamp(22px, 3vw, 32px);
+  --text-h4: 20px;
+  --text-h5: 16px;
+  --text-body-l: clamp(17px, 1.4vw, 19px);
+  --text-body: 16px;
+  --text-body-s: 14px;
+  --text-caption: 13px;
+  --text-eyebrow: 11px;
+  --text-quote: clamp(20px, 2.4vw, 28px);
+
+  --weight-display: 300;
+  --weight-h: 400;
+  --weight-body: 400;
+  --weight-strong: 500;
+  --weight-soft: 350;
+
+  --leading-display: 0.96;
+  --leading-h: 1.1;
+  --leading-h-tight: 1.04;
+  --leading-body: 1.6;
+  --leading-body-tight: 1.45;
+  --leading-eyebrow: 1.4;
+
+  --tracking-display: -0.025em;
+  --tracking-h: -0.015em;
+  --tracking-body: 0.005em;
+  --tracking-eyebrow: 0.18em;
+  --tracking-mono: 0.05em;
+  --tracking-wordmark: 0.04em;
+
+  /* ----------------------------------------------
+     3. SPACING
+     ---------------------------------------------- */
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 128px;
+  --s-11: 160px;
+
+  --section-y: clamp(80px, 12vw, 160px);
+  --section-y-hero: clamp(120px, 18vw, 240px);
+  --section-y-tight: clamp(56px, 8vw, 96px);
+  --section-y-proof: clamp(120px, 14vw, 200px);
+
+  /* ----------------------------------------------
+     4. LAYOUT
+     ---------------------------------------------- */
+
+  --container-max: 1280px;
+  --container-narrow: 720px;
+  --container-wide: 1440px;
+  --gutter: 24px;
+  --gutter-mobile: 16px;
+
+  /* ----------------------------------------------
+     5. RADIUS
+     ---------------------------------------------- */
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+
+  /* ----------------------------------------------
+     6. ELEVATION
+     ---------------------------------------------- */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.4);
+
+  /* ----------------------------------------------
+     7. MOTION
+     ---------------------------------------------- */
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --d-fast: 180ms;
+  --d-base: 280ms;
+  --d-slow: 480ms;
+  --d-pageload: 900ms;
+
+  /* ----------------------------------------------
+     8. Z-INDEX
+     ---------------------------------------------- */
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-modal: 2000;
+  --z-toast: 3000;
+
+  /* ----------------------------------------------
+     9. COMPONENT-LEVEL TOKENS
+     ---------------------------------------------- */
+
+  --btn-height: 48px;
+  --btn-height-sm: 40px;
+  --btn-padding-x: 24px;
+  --btn-radius: var(--radius-sm);
+  --btn-font-size: 14px;
+  --btn-font-weight: var(--weight-strong);
+  --btn-tracking: 0.02em;
+
+  --input-height: 48px;
+  --input-padding-x: 16px;
+  --input-radius: var(--radius-sm);
+  --input-bg: var(--color-surface-1);
+  --input-border: var(--color-border);
+  --input-border-focus: var(--color-accent);
+  --input-text: var(--color-text);
+  --input-placeholder: var(--color-text-faint);
+
+  --card-bg: var(--color-surface-1);
+  --card-border: var(--color-border);
+  --card-radius: var(--radius-md);
+  --card-padding: var(--s-6);
+  --card-padding-feature: var(--s-7);
+
+  --nav-height: 72px;
+  --nav-bg-scrolled: rgba(22, 25, 26, 0.85);
+  --nav-blur: 12px;
+}

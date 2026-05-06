@@ -1,0 +1,21 @@
+{
+  "name": "rudy-goel-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Rudy Goel — single-page boutique site. Email & creative strategy for coaches.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.13"
+  },
+  "devDependencies": {
+    "sirv": "^3.0.2",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.10"
+  }
+}

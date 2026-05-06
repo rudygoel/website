@@ -1,130 +1,156 @@
-# Rudy Goel — Website Rebuild
+# Rudy Goel — Website
 
-Staging area for the rebuild of [www.rudygoel.com](https://www.rudygoel.com). This folder is what you copy to the production repo before letting the AI cook.
+Single-page boutique site for **Rudy Goel** — freelance email copywriter and creative strategist for mindset and high-performance coaches. The site has one job: get a visitor to **book a free 20-minute email audit** via Calendly.
 
-## What's here
+Production: https://www.rudygoel.com
+
+---
+
+## Stack
+
+- **Vite 5** + **TypeScript** + plain HTML/CSS, deployed as a static `dist/`
+- **GSAP** (CustomEase + ScrollTrigger) + **Lenis** for motion
+- **Calendly** as the only paid integration (lazy-loaded on first interaction)
+- **GA4** + **Meta Pixel** for analytics, deferred to idle
+
+No framework. No SSR. No CMS. The proof block (clients, stats, testimonials, press, writing) is rendered at runtime from a single TypeScript data file (`src/data/proof.ts`) so Rudy can update content without touching templates.
+
+## Project structure
 
 ```
-rudy website/
-├── README.md                       ← you are here
-├── _knowledge/                     ← AI knowledge pack — DELETE BEFORE PRODUCTION DEPLOY
-│   ├── 00-START-HERE.md            ← entry point (the AI reads this first)
-│   ├── 01-brand-identity.md
-│   ├── 02-design-system.md
-│   ├── 03-content-master.md
-│   ├── 04-motion-and-animation.md
-│   ├── 05-component-library.md
-│   ├── 06-page-architecture.md
-│   ├── 07-asset-inventory.md
-│   ├── 08-integrations.md
-│   ├── 09-testimonials-and-proof.md
-│   ├── 10-tech-stack.md
-│   ├── 11-do-and-dont.md
-│   ├── 12-cook-prompt.md            ← the master prompt to feed Claude Code
-│   ├── tokens.css                   ← drop-in CSS variable file
-│   └── references/
-│       ├── brand-spec-v1.md         ← original 600-line brand spec
-│       ├── website-brief-handover.md← original product brief from Rudy
-│       ├── live-site-content.md     ← audit of current rudygoel.com
-│       └── demo-analyses.md         ← writeups of demo1/2/3 references
-│
-├── assets/                         ← production image assets (keep)
-│   ├── images/                     (rudy-portrait, rudy-logo-headshot, etc.)
-│   ├── icons/                      (instagram, linkedin, tiktok, youtube)
-│   ├── press-logos/                (yahoo-finance, nbc, forbes, etc.)
-│   ├── testimonials/               (matthew-volkwyn-headshot + video poster, finedge-media-logo)
-│   └── clients/                    (empty — Rudy will supply)
-│
-├── Rudy Goel _ R. Goel.html        ← live-site scrape (reference only)
-├── Rudy Goel _ R. Goel_files/      ← live-site assets (reference only)
-├── [C] Website Brief — Designer Handover.md  ← original brief
-├── [C] Website Mockup v1.html      ← rough mockup
-├── rudy-combinations.html          ← old experimentation
-├── demo1/                          ← Juan Mora vibe inspiration
-├── demo2/                          ← Matthew Volkwyn (avoid)
-├── demo3/                          ← Cameron Cruz simplicity inspiration
-└── vibes/                          ← original brand-spec / tokens / system files
+.
+├── public/                  ← copied verbatim into dist/
+│   ├── favicon.svg
+│   ├── robots.txt
+│   └── sitemap.xml
+├── assets/                  ← served at /assets/* (custom Vite plugin)
+│   ├── images/
+│   ├── icons/               (raster — replaced by inline SVG in main.ts)
+│   ├── press-logos/
+│   ├── testimonials/
+│   └── clients/
+├── src/
+│   ├── styles/
+│   │   ├── tokens.css       ← variables (Pine & Tobacco palette, type, motion)
+│   │   ├── base.css         ← reset, typography defaults, atmospherics
+│   │   ├── layout.css       ← container, section, grid utilities
+│   │   └── components.css   ← every component from spec
+│   ├── scripts/
+│   │   ├── main.ts          ← entry: renders proof block, mounts SVGs, boots motion/calendly
+│   │   ├── motion.ts        ← GSAP "rg" ease, hero stagger, reveals, Lenis, nav theme
+│   │   ├── calendly.ts      ← lazy loader, popup trigger, mobile fallback
+│   │   ├── analytics.ts     ← gtag + fbq wrappers (audit_booked, Schedule, Lead)
+│   │   └── faq.ts           ← single-open accordion enforcement
+│   └── data/
+│       └── proof.ts         ← clients, stats, testimonials, press, writing posts
+├── index.html               ← all 11 sections + meta + JSON-LD
+├── vite.config.ts
+├── tsconfig.json
+├── package.json
+├── .env.example
+├── README.md
+└── MISSING.md               ← assets/copy still owed by Rudy
 ```
 
-## How to use this
+## Local dev
 
-### Path A — Hand it to Claude Code (recommended)
+```bash
+git clone <repo>
+cd rudy-goel-site
+cp .env.example .env.local            # fill in real values
+npm install
+npm run dev                           # http://localhost:5173
+```
 
-1. Initialise a fresh git repo for the production site.
-2. Copy `_knowledge/` and `assets/` into the new repo root.
-3. Open the new repo in Claude Code.
-4. Open `_knowledge/12-cook-prompt.md`, copy the prompt between the markers, paste into Claude.
-5. Confirm the build plan it summarises back, then let it cook.
-6. After the site is shipped: **delete `_knowledge/`** before the production deploy and verify nothing in `src/` imports from it.
+## Environment variables
 
-### Path B — Hand it to a designer / dev
+Set these in `.env.local` (never commit real values):
 
-1. Send them this folder zipped.
-2. Tell them to start at `_knowledge/00-START-HERE.md` and read top-down.
-3. The brief, brand spec, content master, and motion guide all stand alone. They don't need anything outside the folder.
-
-## What's in `_knowledge/` and why
-
-| File | What it does |
+| Var | Purpose |
 |---|---|
-| `00-START-HERE.md` | Map of the pack + 10 hard rules + ambiguity-resolution order |
-| `01-brand-identity.md` | Voice, tone, banned words, what the brand IS NOT |
-| `02-design-system.md` | Pine & Tobacco palette, Newsreader + Geist, spacing, layout |
-| `03-content-master.md` | Final word-for-word copy for every section, ready to use |
-| `04-motion-and-animation.md` | GSAP / Lenis / WebGL / hover / scroll / landing — every motion spec |
-| `05-component-library.md` | Every UI component with markup + CSS + states |
-| `06-page-architecture.md` | Section order, IDs, anchor map, responsive rules, SEO meta |
-| `07-asset-inventory.md` | What's in `assets/`, the rename map, what's still missing |
-| `08-integrations.md` | Calendly, GA4, Meta Pixel, OG, schema.org, sitemap |
-| `09-testimonials-and-proof.md` | Data shape + slot rules for video + written testimonials |
-| `10-tech-stack.md` | Vite + TS + plain HTML/CSS recommendation, folder structure |
-| `11-do-and-dont.md` | Single-page printable launch checklist |
-| `12-cook-prompt.md` | The master prompt (copy/paste into Claude Code) |
-| `tokens.css` | Drop-in CSS variable file |
-| `references/` | Original brief, original brand spec, live-site audit, demo writeups |
+| `VITE_CALENDLY_URL` | Full Calendly event URL, e.g. `https://calendly.com/rudygoel/audit` |
+| `VITE_GA4_ID` | GA4 measurement ID (`G-XXXXXXXXXX`) — left as default disables GA4 |
+| `VITE_META_PIXEL_ID` | 15-digit Meta pixel ID — left as default disables the pixel |
+| `VITE_SITE_URL` | Canonical site URL (used in OG/sitemap, default `https://www.rudygoel.com`) |
 
-## What Rudy still owes
+The brand-themed Calendly query params (`background_color=16191A&text_color=DDD3C4&primary_color=8B6F4E&hide_landing_page_details=1&hide_gdpr_banner=1`) are appended automatically by `calendly.ts`.
 
-A short list, mirrored in `_knowledge/07-asset-inventory.md` §3. Get these to the AI / designer in one batch:
+## Build & preview
 
-- Final Calendly URL (slug)
-- Final email address (probably `rudy@rudygoel.com`)
-- Confirmed social URLs (IG / LinkedIn / TikTok / YouTube handles)
-- Hero/about portrait of Rudy (4:5, editorial)
-- Matthew Volkwyn video file (.mp4) + 16:9 poster export
-- 1–2 additional video testimonials
-- 3–6 written testimonials (headshot 200×200 + name + role + 60–250 word quote)
-- 5 client logos (SVG preferred): Byron Dempsey · Kishan Bodalia · Mike Fox · Rupert Bryce · Terrence
-- 3–6 results stats (number + 1-line caption)
-- 3–5 LinkedIn post excerpts (60–80 words each + post URL)
-- 1 Instagram embed URL
-- Final About-Me copy (200–400 words; placeholder in §SECTION 8 of `03-content-master.md` is a starter)
-- Open Graph image + favicon (specs in `02-design-system.md` §10)
+```bash
+npm run build      # tsc --noEmit + vite build → dist/
+npm run preview    # serve dist/ at http://localhost:4173
+```
 
-## Critical rules (don't break)
+A successful build is around:
 
-- **One CTA only:** "Book a free 20-minute email audit" → Calendly. Everywhere. No newsletter, no PDF, no exit-intent popup, no live chat.
-- **No prices on the site.** No revenue guarantee on the site.
-- **Three colours total:** Charcoal, Pine Shadow / Pine, Tobacco — plus Linen for text.
-- **Two type families:** Newsreader + Geist (JetBrains Mono for utility eyebrows only).
-- **Real photos of Rudy or no photos.** No stock photography.
-- **Calendly is the only paid-CTA integration.**
+| File | gzip |
+|---|---|
+| `index.html` | ~7 KB |
+| CSS | ~7 KB |
+| Main JS | ~6 KB |
+| Motion chunk (GSAP+Lenis, lazy) | ~55 KB |
 
-The full hard-rules list lives in `_knowledge/00-START-HERE.md`.
+## Deploy
 
-## Pre-deploy checklist
+The repo deploys cleanly to **Vercel**, **Netlify**, or **Cloudflare Pages**:
 
-Before pushing the production repo live:
+1. Connect repo, set framework to "Vite".
+2. Set the env vars above in the host's project settings.
+3. Build command: `npm run build` · Output dir: `dist`.
+4. Point `rudygoel.com` DNS at the host (A/CNAME).
+5. SSL is automatic.
 
-- [ ] Lighthouse: Perf 95+, A11y 100, SEO 100, Best Practices 100
-- [ ] Tested at 375 / 768 / 1024 / 1280 / 1536 px
-- [ ] Calendly opens correctly from every primary CTA
-- [ ] GA4 + Meta Pixel fire on Calendly schedule confirmation
-- [ ] OG card validates on opengraph.xyz, X validator, LinkedIn post inspector
-- [ ] `prefers-reduced-motion` is respected (test in OS settings)
-- [ ] Schema.org JSON-LD validates on validator.schema.org
-- [ ] All `[bracketed]` placeholders replaced with real content from Rudy
-- [ ] **`_knowledge/` folder removed**
-- [ ] Nothing in `src/` imports from `_knowledge/`
+Cache headers (recommended at the host):
+- Hashed assets: `Cache-Control: public, max-age=31536000, immutable`
+- HTML: `Cache-Control: public, max-age=0, must-revalidate`
 
-When all boxes are ticked, deploy.
+## What lives where
+
+- **Copy** — directly inline in `index.html`. Bracketed text like `[47%]` is intentional placeholder; replace when Rudy supplies real values.
+- **Proof content** (clients / stats / testimonials / press / writing) — `src/data/proof.ts`. Edit this file to add or change items; the page re-renders without touching markup.
+- **Brand tokens** — `src/styles/tokens.css`. Pine & Tobacco palette, Newsreader + Geist + JetBrains Mono.
+- **Motion vocabulary** — `src/scripts/motion.ts`. Custom ease registered as `"rg"`; SplitText reimplemented inline (~30 LOC) so we don't need a Club GreenSock licence.
+
+## Updating the site after launch
+
+| Task | Where |
+|---|---|
+| Add a written testimonial | `src/data/proof.ts` → `testimonials` array |
+| Add a video testimonial | Drop the file in `assets/testimonials/`, add an entry to `testimonials` (`type: "video"`, `featured?: true`) |
+| Update stat tiles | `src/data/proof.ts` → `stats` |
+| Update client roster | `src/data/proof.ts` → `clients` |
+| Add a LinkedIn post excerpt | `src/data/proof.ts` → `writingPosts` |
+| Update FAQ | `index.html` (look for `<details class="faq__item">`) |
+| Update About copy | `index.html` (look for `id="about"`) |
+
+## Quality bar
+
+- Lighthouse targets: Performance 95+, Accessibility 100, Best Practices 100, SEO 100.
+- WCAG AA contrast on every text/background combination.
+- `prefers-reduced-motion` respected everywhere (Lenis disabled, hero stagger skipped, reveals skipped, custom cursor never mounted).
+- Tested at 375 / 768 / 1024 / 1280 / 1536px.
+
+## Hard rules (don't break)
+
+- One CTA pattern across the entire site: **"Book the audit"**. No newsletter signup, no PDF download, no exit-intent popup, no live chat, no contact form.
+- No prices. No revenue guarantees on the site.
+- Three colours total + Linen for text (Charcoal · Pine Shadow · Pine · Tobacco · Linen).
+- Two type families + one mono utility (Newsreader · Geist · JetBrains Mono).
+- No icons in the nav. No stock photography.
+
+If a future feature would break any of these, ask Rudy first.
+
+---
+
+## Note on `_knowledge/`
+
+If you've been handed this repo with a `_knowledge/` folder at the root: that folder is the AI knowledge pack used to brief the build. **Delete it before deploying to production** — nothing in `src/` imports from it, and the production deploy must not include it.
+
+Verify with:
+
+```bash
+grep -r "_knowledge" src/ index.html
+```
+
+Should return no results.
