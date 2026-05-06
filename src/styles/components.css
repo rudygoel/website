@@ -2935,7 +2935,10 @@ section + section#book {
   transform: translateY(-50%) scaleX(1);
 }
 
-/* The symbol box: fixed-size SQUARE. JS sets only `left`. */
+/* The symbol box: fixed-size SQUARE.
+   Vertically centred on the letters' cap-height midpoint (Newsreader's
+   caps sit in the upper portion of the em-box, so margin-top is bigger
+   than half the box height to lift it). JS sets only `left`. */
 .hero--jm .hero__symbol-box {
   position: absolute;
   top: 50%;
@@ -2943,7 +2946,7 @@ section + section#book {
   z-index: 2;             /* paint above both words for clean glyph termination */
   width: 0.78em;
   height: 0.78em;
-  margin-top: -0.39em;
+  margin-top: -0.5em;     /* lifts box ~0.11em above em-centre to hit cap-midpoint */
   border-radius: clamp(14px, 0.12em, 26px);
   background:
     linear-gradient(135deg,
