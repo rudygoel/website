@@ -16,8 +16,6 @@ import {
   press,
   writingPosts,
   instagramEmbedUrl,
-  type Testimonial,
-  type WrittenTestimonial,
   type VideoTestimonial,
 } from "../data/proof";
 
@@ -54,6 +52,52 @@ function mountSocialSvgs(): void {
   });
 }
 
+/**
+ * Fetch + inline the SVG icons referenced by [data-nav-icon].
+ *
+ * Each file in /assets/icons/ ships with a hardcoded `<style>` block:
+ *   .cls-1 { fill: #fff }
+ * which paints the symbol white on top of a coloured bg circle.
+ *
+ * Approach: keep the FULL original artwork (bg circle + inner detail +
+ * symbol) and just retheme the two layers via CSS:
+ *   - `.cls-1` paths (the symbol) inherit `fill: currentColor` from CSS,
+ *     so the link's `color` drives them.
+ *   - All other paths inherit the SVG's CSS `fill` property, set to a
+ *     dark project palette colour for the circle background.
+ *
+ * We strip only the embedded `<style>` so it can't override our CSS.
+ */
+async function mountNavIcons(): Promise<void> {
+  const nodes = document.querySelectorAll<HTMLAnchorElement>("[data-nav-icon]");
+  if (nodes.length === 0) return;
+
+  await Promise.all(
+    Array.from(nodes).map(async (a) => {
+      const src = a.dataset.navIcon;
+      if (!src) return;
+      try {
+        const res = await fetch(src);
+        if (!res.ok) return;
+        const text = await res.text();
+        const doc = new DOMParser().parseFromString(text, "image/svg+xml");
+        const svg = doc.documentElement;
+        if (!(svg instanceof SVGElement)) return;
+        // Strip the embedded style block (it baked white into .cls-1).
+        svg.querySelectorAll("style, defs").forEach((el) => el.remove());
+        // Strip ID/data-name to avoid duplicate IDs across multiple icons.
+        svg.removeAttribute("id");
+        svg.removeAttribute("data-name");
+        svg.removeAttribute("fill");
+        svg.setAttribute("aria-hidden", "true");
+        a.insertAdjacentHTML("afterbegin", svg.outerHTML);
+      } catch {
+        /* swallow; circle just stays empty if asset is missing */
+      }
+    }),
+  );
+}
+
 // -----------------------------------------------
 // Proof block renderers
 // -----------------------------------------------
@@ -65,15 +109,6 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((p) => p[0]?.toUpperCase())
-    .slice(0, 2)
-    .join("");
 }
 
 function renderRoster(): void {
@@ -122,120 +157,72 @@ function renderStats(): void {
     .join("");
 }
 
-function renderTestimonialHeader(t: VideoTestimonial | WrittenTestimonial): string {
-  // Layout: NAME on first line. ROLE · BUSINESS · LOCATION on second line, mono.
-  const meta: string[] = [];
-  if (t.role) meta.push(escapeHtml(t.role));
-  if (t.business) meta.push(escapeHtml(t.business));
-  if (t.location) meta.push(escapeHtml(t.location));
-  return `
-    <header class="testimonial-head">
-      <strong class="testimonial-head__name">${escapeHtml(t.name)}</strong>
-      ${meta.length ? `<p class="testimonial-head__meta">${meta.join(" <span class=\"sep\">·</span> ")}</p>` : ""}
-    </header>
-  `;
-}
-
-function renderVideoTestimonial(t: VideoTestimonial): string {
-  const captionHtml = t.caption
-    ? `<p class="testimonial-video__caption">${escapeHtml(t.caption)}</p>`
-    : "";
-  return `
-    <figure class="testimonial-video" data-video-name="${escapeHtml(t.name)}" data-video-src="${
-      t.src ? escapeHtml(t.src) : ""
-    }">
-      ${renderTestimonialHeader(t)}
-      <button class="testimonial-video__play" type="button" aria-label="Play testimonial from ${escapeHtml(
-        t.name,
-      )}">
-        <img src="${escapeHtml(t.poster)}" alt="${escapeHtml(t.name)}" width="1280" height="720" loading="lazy" decoding="async" />
-        <span class="testimonial-video__play-icon" aria-hidden="true">▶</span>
-        <span class="testimonial-video__duration">${escapeHtml(t.duration)}</span>
-      </button>
-      ${captionHtml ? `<figcaption class="testimonial-video__caption-wrap">${captionHtml}</figcaption>` : ""}
-    </figure>
-  `;
-}
-
-function renderWrittenTestimonial(t: WrittenTestimonial): string {
-  const avatarHtml = t.avatar
-    ? `<img src="${escapeHtml(t.avatar)}" alt="" class="testimonial__avatar" width="96" height="96" loading="lazy" decoding="async" />`
-    : `<span class="testimonial__avatar testimonial__avatar--placeholder" aria-hidden="true">${escapeHtml(initials(t.name))}</span>`;
-  const brandHtml = t.brandLogo
-    ? `<img src="${escapeHtml(t.brandLogo)}" alt="${escapeHtml(t.business || "")} logo" class="testimonial__brand" width="96" height="32" loading="lazy" decoding="async" />`
-    : "";
-  return `
-    <figure class="testimonial">
-      <blockquote class="testimonial__quote">${escapeHtml(t.quote)}</blockquote>
-      <figcaption class="testimonial__attr">
-        ${avatarHtml}
-        <div class="testimonial__attr-meta">
-          <strong>${escapeHtml(t.name)}</strong>
-          <span>${escapeHtml([t.role, t.business].filter(Boolean).join(" · "))}</span>
-          ${t.location ? `<span class="testimonial__location">${escapeHtml(t.location)}</span>` : ""}
-        </div>
-        ${brandHtml}
-      </figcaption>
-    </figure>
-  `;
-}
-
-function renderTestimonials(): void {
-  const mount = document.querySelector<HTMLElement>(
-    '[data-proof="testimonials-content"]',
-  );
-  const wrap = document.querySelector<HTMLElement>(
-    '[data-proof="testimonials"]',
-  );
-  const countEl = document.querySelector<HTMLElement>(
-    '[data-proof="testimonials-count"]',
-  );
-  if (!mount || !wrap) return;
-  if (testimonials.length === 0) {
-    wrap.remove();
+function renderPortraitVideos(): void {
+  const mount = document.querySelector<HTMLElement>('[data-proof="portraits"]');
+  if (!mount) return;
+  const videos = testimonials
+    .filter((t): t is VideoTestimonial => t.type === "video")
+    .slice(0, 2);
+  if (videos.length === 0) {
+    mount.remove();
     return;
   }
-
-  const featuredVideo = testimonials.find(
-    (t): t is VideoTestimonial => t.type === "video" && !!t.featured,
-  );
-  const others = testimonials.filter((t) => t !== featuredVideo);
-  const written = others.filter(
-    (t): t is WrittenTestimonial => t.type === "written",
-  );
-  const moreVideos = others.filter(
-    (t): t is VideoTestimonial => t.type === "video",
-  );
-
-  const total = testimonials.length;
-  if (countEl) countEl.textContent = `${total} ${total === 1 ? "voice" : "voices"}`;
-
-  const parts: string[] = [];
-
-  if (featuredVideo) {
-    parts.push(renderVideoTestimonial(featuredVideo));
-  }
-
-  if (moreVideos.length > 0) {
-    const grid = moreVideos
-      .map((t: Testimonial) => renderVideoTestimonial(t as VideoTestimonial))
-      .join("");
-    parts.push(`<div class="testimonial-grid" data-stagger style="margin-top:var(--s-7)">${grid}</div>`);
-  }
-
-  if (written.length > 0) {
-    const cap = written.slice(0, 6);
-    const single = cap.length === 1;
-    const grid = cap.map(renderWrittenTestimonial).join("");
-    parts.push(
-      `<div class="testimonial-grid${single ? " testimonial-grid--single" : ""}" data-stagger>${grid}</div>`,
-    );
-  }
-
-  mount.innerHTML = parts.join("");
+  mount.innerHTML = videos
+    .map((v) => {
+      const meta = [v.role, v.business].filter(Boolean).join(" at ");
+      const author = meta ? `${v.name}, ${meta}` : v.name;
+      const desc = v.caption || "[Short description of what's covered in the video. Fill in later.]";
+      return `
+      <figure class="portrait-video-figure">
+        <div class="portrait-video"
+             data-video-name="${escapeHtml(v.name)}"
+             data-video-src="${v.src ? escapeHtml(v.src) : ""}">
+          <img src="${escapeHtml(v.poster)}" alt="${escapeHtml(v.name)}" loading="lazy" decoding="async" />
+          <button type="button" class="portrait-video__play" aria-label="Play testimonial from ${escapeHtml(v.name)}">
+            <span class="portrait-video__icon" aria-hidden="true">▶</span>
+          </button>
+          <span class="portrait-video__duration">${escapeHtml(v.duration)}</span>
+        </div>
+        <figcaption class="portrait-video__alt">
+          <span class="portrait-video__alt-author">${escapeHtml(author)}</span>
+          <span class="portrait-video__alt-desc">${escapeHtml(desc)}</span>
+        </figcaption>
+      </figure>
+    `;
+    })
+    .join("");
 }
 
-function renderPress(): void {
+/* StaggerTestimonials is a React island. Imported lazily so React is only
+   pulled in by users who scroll to the proof section. */
+function mountStaggerIsland(): void {
+  if (!document.getElementById("stagger-mount")) return;
+  import("./stagger-mount").then((m) => m.mountStagger()).catch(() => {
+    /* fail soft — section just won't appear */
+  });
+}
+
+/**
+ * Sanitise an SVG markup string so it inherits colour from CSS:
+ * - drop XML prolog and any <style> blocks (which can hardcode fills)
+ * - drop `class` and `fill` attributes from inner elements
+ * - set `fill="currentColor"` on the root <svg>
+ * - drop the document `id` so duplicates in the DOM don't collide
+ */
+function sanitiseSvg(raw: string, label: string): string {
+  let svg = raw
+    .replace(/<\?xml[^?]*\?>/g, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/\s(class|fill|stroke)="[^"]*"/gi, "");
+  // Inject fill + a11y label on the root <svg>
+  svg = svg.replace(
+    /<svg([^>]*)>/i,
+    `<svg$1 fill="currentColor" role="img" aria-label="${label.replace(/"/g, "&quot;")}">`,
+  );
+  return svg;
+}
+
+async function renderPress(): Promise<void> {
   const row = document.querySelector<HTMLElement>('[data-proof="press-row"]');
   const wrap = document.querySelector<HTMLElement>('[data-proof="press"]');
   if (!row || !wrap) return;
@@ -243,12 +230,33 @@ function renderPress(): void {
     wrap.remove();
     return;
   }
-  row.innerHTML = press
+
+  // Fetch + sanitise each SVG. Items that fail to load are dropped silently.
+  const fetched = await Promise.all(
+    press.map(async (p) => {
+      try {
+        const res = await fetch(p.logo);
+        if (!res.ok) return null;
+        const text = await res.text();
+        if (!text.trim().toLowerCase().startsWith("<svg") &&
+            !text.trim().toLowerCase().startsWith("<?xml")) return null;
+        return { name: p.name, svg: sanitiseSvg(text, p.name) };
+      } catch {
+        return null;
+      }
+    }),
+  );
+
+  const items = fetched
+    .filter((x): x is { name: string; svg: string } => x !== null)
     .map(
-      (p) =>
-        `<li><img src="${escapeHtml(p.logo)}" alt="${escapeHtml(p.name)}" width="120" height="32" loading="lazy" decoding="async" /></li>`,
+      (p) => `<span class="press-marquee__item" data-brand="${escapeHtml(p.name)}">${p.svg}</span>`,
     )
     .join("");
+
+  // Duplicate the list so the CSS keyframe can translate -50% for a seamless loop.
+  row.innerHTML = items + items;
+  row.setAttribute("aria-hidden", "true");
 }
 
 function renderWriting(): void {
@@ -292,16 +300,18 @@ function initVideoTestimonials(): void {
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement | null;
     if (!target) return;
-    const btn = target.closest<HTMLButtonElement>(".testimonial-video__play");
+    const btn = target.closest<HTMLButtonElement>(
+      ".testimonial-video__play, .portrait-video__play",
+    );
     if (!btn) return;
-    const figure = btn.closest<HTMLElement>(".testimonial-video");
+    const figure = btn.closest<HTMLElement>(".testimonial-video, .portrait-video");
     if (!figure) return;
 
     const src = figure.dataset.videoSrc;
     const name = figure.dataset.videoName ?? "testimonial";
+    const isPortrait = figure.classList.contains("portrait-video");
 
     if (!src) {
-      // No video file yet — surface the placeholder (do nothing destructive).
       btn.setAttribute("aria-disabled", "true");
       return;
     }
@@ -312,10 +322,17 @@ function initVideoTestimonials(): void {
     video.playsInline = true;
     video.preload = "metadata";
     video.src = src;
+    video.style.position = "absolute";
+    video.style.inset = "0";
     video.style.width = "100%";
-    video.style.aspectRatio = "16 / 9";
-    video.style.borderRadius = "var(--radius-md)";
-    video.style.background = "var(--color-surface-1)";
+    video.style.height = "100%";
+    video.style.objectFit = "cover";
+    if (!isPortrait) {
+      video.style.position = "static";
+      video.style.aspectRatio = "16 / 9";
+      video.style.borderRadius = "var(--radius-md)";
+      video.style.background = "var(--color-surface-1)";
+    }
 
     btn.replaceWith(video);
     trackVideoPlay(name);
@@ -380,9 +397,11 @@ function setFooterDate(): void {
 
 function boot(): void {
   mountSocialSvgs();
+  mountNavIcons();
   renderRoster();
   renderStats();
-  renderTestimonials();
+  renderPortraitVideos();
+  mountStaggerIsland();
   renderPress();
   renderWriting();
   initVideoTestimonials();

@@ -68,6 +68,7 @@ export const stats: ReadonlyArray<Stat> = [
 ];
 
 export const testimonials: ReadonlyArray<Testimonial> = [
+  /* ---------- VIDEO TESTIMONIALS (portrait) ---------- */
   {
     type: "video",
     featured: true,
@@ -81,6 +82,19 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     caption:
       "A millionaire copywriter reads, reviews, and loves my copy. Zero feedback. He calls me by my full name, Rudraksh.",
   },
+  {
+    type: "video",
+    name: "[CLIENT NAME]",
+    role: "[ROLE]",
+    business: "[BUSINESS]",
+    location: "[CITY · COUNTRY]",
+    poster: "/assets/testimonials/matthew-volkwyn-video-poster.jpg",
+    src: null,
+    duration: "0:58",
+    caption: "[Second short-form video testimonial. Portrait orientation.]",
+  },
+
+  /* ---------- WRITTEN TESTIMONIALS (real) ---------- */
   {
     type: "written",
     name: "Joel Edgley",
@@ -102,15 +116,80 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     quote:
       "If you want someone who can not only deliver great copy and drive revenue for your business, but also elevate your own writing skills in the process. Rudy's your guy.",
   },
+
+  /* ---------- WRITTEN TESTIMONIALS (placeholder — replace with real) ---------- */
+  {
+    type: "written",
+    name: "[CLIENT NAME]",
+    role: "Performance Coach",
+    business: "[BUSINESS NAME]",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "Hired Rudy after our welcome sequence converted at 0%. Three weeks later it's pulling 28%. He just gets the voice on draft one, every time.",
+  },
+  {
+    type: "written",
+    name: "[CLIENT NAME]",
+    role: "Mindset Coach",
+    business: "[BUSINESS NAME]",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "The first broadcast Rudy sent under my name made $11K. I'm not rounding up. He moves my list like nobody else has.",
+  },
+  {
+    type: "written",
+    name: "[CLIENT NAME]",
+    role: "High-performance Coach",
+    business: "[BUSINESS NAME]",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "I've worked with five copywriters. Rudy is the only one who got me on draft one. Saves me an hour a week, easy.",
+  },
+  {
+    type: "written",
+    name: "[CLIENT NAME]",
+    role: "Founder",
+    business: "[BUSINESS NAME]",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "Rudy doesn't just write. He thinks. The strategy calls alone are worth the retainer. The emails are a bonus.",
+  },
+  {
+    type: "written",
+    name: "[CLIENT NAME]",
+    role: "Course Creator",
+    business: "[BUSINESS NAME]",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "Best decision we made this year was bringing Rudy on for our launch sequence. List has never been hotter.",
+  },
+  {
+    type: "written",
+    name: "[CLIENT NAME]",
+    role: "Coach",
+    business: "[BUSINESS NAME]",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "Replies started coming in the same day. Real ones, from real readers. That's the difference Rudy makes.",
+  },
 ];
 
+/* Press logos: SVGs are inlined at runtime by renderPress() so currentColor
+   theming works. Each logo renders at a constant height; aspect ratio
+   preserves wider/narrower marks naturally. */
 export const press: ReadonlyArray<Press> = [
-  { name: "Yahoo Finance", logo: "/assets/press-logos/yahoo-finance.png" },
-  { name: "NBC", logo: "/assets/press-logos/nbc.png" },
-  { name: "Forbes", logo: "/assets/press-logos/forbes.png" },
-  { name: "Daily Mail", logo: "/assets/press-logos/daily-mail.png" },
-  { name: "KivoDaily", logo: "/assets/press-logos/kivodaily.png" },
-  { name: "Sam Robson", logo: "/assets/press-logos/sam-robson-1.png" },
+  { name: "Yahoo Finance", logo: "/assets/icons/yahoof.svg" },
+  { name: "NBC",          logo: "/assets/icons/nbc.svg" },
+  { name: "Forbes",       logo: "/assets/icons/forbes.svg" },
+  { name: "KivoDaily",    logo: "/assets/icons/kivodaily.svg" },
+  { name: "Entrepreneur", logo: "/assets/icons/entrepreneur.svg" },
+  { name: "Amazon",       logo: "/assets/icons/amazon.svg" },
 ];
 
 export const writingPosts: ReadonlyArray<WritingPost> = [

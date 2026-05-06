@@ -2,6 +2,7 @@ import { defineConfig, type Plugin } from "vite";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import sirv from "sirv";
+import react from "@vitejs/plugin-react";
 
 /**
  * Serves the root-level /assets directory at /assets/* in dev,
@@ -48,7 +49,12 @@ async function copyDir(src: string, dest: string): Promise<void> {
 }
 
 export default defineConfig({
-  plugins: [rootAssets()],
+  plugins: [rootAssets(), react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+  },
   build: {
     target: "es2022",
     assetsDir: "_app",
@@ -56,6 +62,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           motion: ["gsap"],
+          react: ["react", "react-dom"],
         },
       },
     },

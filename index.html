@@ -113,35 +113,20 @@
 
     <ul class="nav__social nav__social--glass" role="list" aria-label="Social">
       <li>
-        <a href="mailto:rudy@rudygoel.com" class="nav__circle" aria-label="Email">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="6" width="18" height="13" rx="2"/>
-            <path d="m3 8 9 6 9-6"/>
-          </svg>
-        </a>
+        <a href="https://www.linkedin.com/in/rudygoelcopy" target="_blank" rel="noopener" class="nav__circle" aria-label="LinkedIn"
+           data-nav-icon="/assets/icons/linkedin.svg"></a>
       </li>
       <li>
-        <a href="https://www.linkedin.com/in/rudygoel/" target="_blank" rel="noopener" class="nav__circle" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8 18H5V10h3v8zM6.5 8.5A1.7 1.7 0 1 1 6.5 5a1.7 1.7 0 0 1 0 3.5zM18 18h-3v-4.5c0-1.2-.4-2-1.5-2-1 0-1.5.6-1.7 1.5V18h-3v-8h3v1.2c.5-.9 1.5-1.5 2.7-1.5 2 0 3.5 1.3 3.5 3.7V18z"/>
-          </svg>
-        </a>
+        <a href="https://www.instagram.com/rudygoel_/" target="_blank" rel="noopener" class="nav__circle" aria-label="Instagram"
+           data-nav-icon="/assets/icons/insta.svg"></a>
       </li>
       <li>
-        <a href="https://www.instagram.com/rudygoel/" target="_blank" rel="noopener" class="nav__circle" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="5"/>
-            <circle cx="12" cy="12" r="4"/>
-            <circle cx="17.4" cy="6.6" r=".7" fill="currentColor"/>
-          </svg>
-        </a>
+        <a href="https://www.tiktok.com/@rudygoel" target="_blank" rel="noopener" class="nav__circle" aria-label="TikTok"
+           data-nav-icon="/assets/icons/tiktok.svg"></a>
       </li>
       <li>
-        <a href="https://www.youtube.com/@rudygoel" target="_blank" rel="noopener" class="nav__circle" aria-label="YouTube">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M22 8c0-2-1.5-3.3-3.5-3.5C16.5 4.3 12 4 12 4s-4.5 0-6.5.5C3.5 4.7 2 6 2 8v8c0 2 1.5 3.3 3.5 3.5 2 .5 6.5.5 6.5.5s4.5 0 6.5-.5c2-.2 3.5-1.5 3.5-3.5V8zm-12 8V8l5 4-5 4z"/>
-          </svg>
-        </a>
+        <a href="https://www.youtube.com/@rudygoel" target="_blank" rel="noopener" class="nav__circle" aria-label="YouTube"
+           data-nav-icon="/assets/icons/youtube.svg"></a>
       </li>
     </ul>
 
@@ -158,8 +143,9 @@
       </ul>
       <ul class="nav__drawer-social" role="list" aria-label="Social">
         <li><a href="mailto:rudy@rudygoel.com">Email</a></li>
-        <li><a href="https://www.linkedin.com/in/rudygoel/" target="_blank" rel="noopener">LinkedIn</a></li>
-        <li><a href="https://www.instagram.com/rudygoel/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/in/rudygoelcopy" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/rudygoel_/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.tiktok.com/@rudygoel" target="_blank" rel="noopener">TikTok</a></li>
         <li><a href="https://www.youtube.com/@rudygoel" target="_blank" rel="noopener">YouTube</a></li>
       </ul>
     </div>
@@ -181,9 +167,9 @@
         <div class="hero__bg-vignette"></div>
       </div>
 
-      <!-- Top-left tagline, single line -->
+      <!-- Top-left wordmark -->
       <h2 class="hero__tag hero__tag--tl" data-hero-anim="tagline">
-        Email Copy &amp; Creative Strategy
+        IMPACT.
       </h2>
 
       <!-- Big name with embedded symbol box.
@@ -256,8 +242,8 @@
         <div class="about-grid">
           <figure class="about__portrait">
             <img
-              src="/assets/images/rudy-portrait.jpeg"
-              alt="Rudy Goel, in portrait."
+              src="/assets/images/rudy-walking.png"
+              alt="Rudy Goel, walking."
               width="800"
               height="1000"
               loading="lazy"
@@ -319,29 +305,39 @@
     </section>
 
     <!-- ===========================================
-         5. Proof
+         5. Press, isolated section between Work and Proof
+         =========================================== -->
+    <section id="press" class="section press-section" aria-labelledby="press-heading">
+      <div class="container">
+        <header class="press-section__head" data-reveal>
+          <span class="eyebrow">03 / Press</span>
+          <h2 id="press-heading" class="press-section__heading">Taught by leaders featured&nbsp;in</h2>
+        </header>
+      </div>
+
+      <!-- Marquee, full bleed -->
+      <div class="press-marquee" aria-hidden="true" data-proof="press" data-reveal>
+        <div class="press-marquee__viewport">
+          <div class="press-marquee__track" data-proof="press-row"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         6. Proof
          =========================================== -->
     <section id="proof" class="section proof" aria-labelledby="proof-heading">
       <div class="container">
-
         <header class="proof__head" data-reveal>
-          <span class="eyebrow">03 / Proof</span>
+          <span class="eyebrow">04 / Proof</span>
           <h2 id="proof-heading" class="proof__heading">Real words. From <em>real</em> people.</h2>
         </header>
 
-        <!-- Testimonials, video featured + written grid, rendered from proof.ts -->
-        <div data-proof="testimonials">
-          <div data-proof="testimonials-content"></div>
-        </div>
+        <!-- Two portrait video testimonials -->
+        <div class="proof__portraits" data-proof="portraits"></div>
 
-      </div>
-
-      <!-- Press strip, full bleed -->
-      <div class="container-wide">
-        <section class="press-strip" aria-labelledby="press-strip-label" data-proof="press" data-reveal>
-          <p id="press-strip-label" class="eyebrow press-strip__caption">Taught by leaders featured in</p>
-          <ul class="press-strip__row" role="list" data-proof="press-row" data-stagger></ul>
-        </section>
+        <!-- Stagger testimonials (React island, breaks out to full viewport width) -->
+        <div id="stagger-mount" data-proof="stagger"></div>
       </div>
     </section>
 

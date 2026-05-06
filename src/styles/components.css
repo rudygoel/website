@@ -2362,11 +2362,15 @@ a.card:hover,
   position: relative;
   overflow: hidden;
   border-radius: 2px;
+  aspect-ratio: 4 / 5;
 }
 .about__portrait img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.18); /* default zoom into the frame */
   transition: transform 1.2s var(--ease);
   filter: saturate(0.92) contrast(1.02);
 }
@@ -2777,8 +2781,9 @@ section + section#book {
 }
 .nav.nav--jm .nav__social a:hover::after { transform: scaleX(1); }
 
-/* override the icon-only social bg from earlier rules */
-.nav.nav--jm .nav__social a {
+/* override the icon-only social bg from earlier rules.
+   Excludes .nav__circle so the new SVG-icon circles keep their 40×40 box. */
+.nav.nav--jm .nav__social a:not(.nav__circle) {
   background: none !important;
   width: auto !important;
   height: auto !important;
@@ -2863,6 +2868,12 @@ section + section#book {
   top: clamp(100px, 12vw, 160px);
   left: clamp(20px, 4vw, 56px);
   text-align: left;
+  /* Wordmark "IMPACT." — bolder and bigger than the default corner heading. */
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 3.4vw, 52px);
+  letter-spacing: -0.01em;
+  line-height: 1;
 }
 /* Subtitle sits directly below the wordmark, right-aligned. Newsreader italic
    for the accent (kept inside the project's two fonts). */
@@ -3101,7 +3112,42 @@ section + section#book {
     0 8px 20px rgba(0, 0, 0, 0.24);
 }
 
-.nav.nav--jm .nav__circle svg {
+/* Circles that load an external SVG via mountNavIcons:
+   - the SVG ships as a coloured circle + symbol designed for white-on-bg.
+   - we keep the original artwork and theme it via two CSS hooks:
+       fill (the bg circle + inner detail) and currentColor (the .cls-1 symbol).
+   - .nav__circle's own glass background is hidden so the SVG provides the
+     circle. */
+.nav.nav--jm .nav__circle[data-nav-icon] {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  overflow: hidden;
+}
+
+.nav.nav--jm .nav__circle[data-nav-icon] svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* default fill (non-cls-1 paths: bg circle, inner detail) */
+  fill: var(--palette-pine-shadow);
+  /* color drives currentColor for cls-1 paths (the symbol) */
+  color: var(--color-text);
+  transition: fill var(--d-base) var(--ease), color var(--d-base) var(--ease);
+}
+
+.nav.nav--jm .nav__circle[data-nav-icon] svg .cls-1 {
+  fill: currentColor;
+}
+
+.nav.nav--jm .nav__circle[data-nav-icon]:hover svg {
+  fill: var(--palette-pine);
+  color: var(--color-accent);
+}
+
+.nav.nav--jm .nav__circle:not([data-nav-icon]) svg {
   width: 17px;
   height: 17px;
   display: block;
@@ -3124,4 +3170,233 @@ body::after {
     radial-gradient(ellipse 110% 90% at 50% 50%, transparent 52%, rgba(31, 45, 42, 0.42) 100%),
     radial-gradient(ellipse 50% 30% at 0% 100%, rgba(31, 45, 42, 0.18), transparent 70%),
     radial-gradient(ellipse 50% 30% at 100% 0%, rgba(31, 45, 42, 0.12), transparent 70%);
+}
+
+/* ============================================================
+   Proof — portrait videos + stagger section
+   ============================================================ */
+
+.proof__portraits {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 2vw, 32px);
+  max-width: 720px;
+  margin: 0 auto var(--s-8);
+  padding: 0 var(--gutter);
+}
+
+.portrait-video {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: transform var(--d-base) var(--ease), border-color var(--d-base) var(--ease);
+}
+.portrait-video:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.portrait-video img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.portrait-video__play {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, rgba(22,25,26,0) 50%, rgba(22,25,26,0.55) 100%);
+  border: 0; cursor: pointer; padding: 0; margin: 0;
+}
+
+.portrait-video__icon {
+  width: 64px; height: 64px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(221, 211, 196, 0.14);
+  border: 1px solid rgba(221, 211, 196, 0.28);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  color: var(--color-text);
+  border-radius: 999px;
+  font-size: 22px;
+}
+
+.portrait-video__meta {
+  position: absolute; left: 16px; right: 16px; bottom: 16px;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  z-index: 2;
+  pointer-events: none;
+}
+.portrait-video__name { display: block; font-weight: 500; letter-spacing: 0.005em; }
+.portrait-video__role { display: block; color: var(--color-text-soft); font-size: 12px; margin-top: 2px; }
+.portrait-video__duration {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(22,25,26,0.6);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+/* Figure wrapper now contains the video card AND the alt-text caption below it. */
+.portrait-video-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.portrait-video-figure .portrait-video {
+  /* video card retains its own aspect ratio inside the figure */
+  width: 100%;
+}
+
+.portrait-video__alt {
+  display: block;
+  padding: 0 4px;
+  font-family: var(--font-body);
+  color: var(--color-text-mute);
+  line-height: 1.4;
+}
+.portrait-video__alt-author {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+.portrait-video__alt-desc {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.005em;
+  color: var(--color-text-faint);
+}
+
+.proof__stagger-wrap {
+  max-width: var(--container-wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+@media (max-width: 768px) {
+  .proof__portraits { gap: 12px; max-width: 480px; }
+  .portrait-video__alt-desc { font-size: 12px; }
+}
+
+
+/* ============================================================
+   Press section — isolated section with header + horizontal logo roll
+   ============================================================ */
+
+.press-section {
+  /* Tighter than the default .section, since the marquee carries
+     its own visual weight. */
+  padding-block: clamp(64px, 8vw, 112px);
+}
+
+.press-section__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-7);
+}
+
+.press-section__head .eyebrow {
+  color: var(--color-text-mute);
+}
+
+.press-section__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+  max-width: 22ch;
+}
+
+@media (max-width: 768px) {
+  .press-section { padding-block: 56px; }
+  .press-section__head { margin-bottom: var(--s-6); }
+}
+
+.press-marquee {
+  width: 100%;
+  padding-block: var(--s-4);
+  overflow: hidden;
+}
+
+.press-marquee__viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.press-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(72px, 8vw, 140px);
+  width: max-content;
+  animation: press-roll 42s linear infinite;
+  will-change: transform;
+}
+
+.press-marquee:hover .press-marquee__track {
+  animation-play-state: paused;
+}
+
+/* SVGs are inlined; their fill="currentColor" inherits this. The item's
+   color drives the logo colour. Height drives logo size — width: auto
+   so each brand mark keeps its real aspect ratio. */
+.press-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  height: clamp(56px, 6vw, 88px);
+  color: var(--color-text-soft);
+  transition: color 240ms ease, transform 240ms ease;
+}
+
+.press-marquee__item svg {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  display: block;
+}
+
+.press-marquee__item svg * {
+  fill: currentColor !important; /* override any inline fills inside the SVG */
+}
+
+.press-marquee__item:hover {
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+@keyframes press-roll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-marquee__track { animation: none; }
 }

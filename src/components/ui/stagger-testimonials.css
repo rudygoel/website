@@ -1,0 +1,191 @@
+/* ==========================================================================
+   StaggerTestimonials — vanilla CSS, project palette (Pine + Tobacco + Linen)
+   ========================================================================== */
+
+.stagger-stage {
+  position: relative;
+  /* Full-bleed: span the whole viewport even when inside a constrained
+     container. Works because the parent's content-box centres at 50%. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+  background: rgba(31, 45, 42, 0.18);
+  isolation: isolate;
+}
+
+/* ----- Card ----- */
+
+.stagger-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  cursor: pointer;
+  border: 2px solid var(--color-border-strong);
+  padding: 32px;
+  transition:
+    transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 280ms ease,
+    border-color 280ms ease,
+    box-shadow 280ms ease,
+    color 280ms ease;
+  font-family: var(--font-body);
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+}
+
+.stagger-card--center {
+  z-index: 10;
+  background: var(--color-accent);          /* Tobacco */
+  color: var(--color-text-inverse);          /* Charcoal */
+  border-color: var(--color-accent);
+}
+
+.stagger-card--side {
+  z-index: 0;
+  background: var(--color-surface-1);        /* Pine Shadow */
+  color: var(--color-text);                   /* Linen */
+  border-color: var(--color-border-strong);
+}
+
+.stagger-card--side:hover {
+  border-color: var(--color-accent);
+  background: rgba(139, 111, 78, 0.08);
+}
+
+/* ----- Diagonal slash decoration on the right edge ----- */
+
+.stagger-card__slash {
+  position: absolute;
+  display: block;
+  height: 2px;
+  background: var(--color-border-strong);
+  transform-origin: top right;
+  transform: rotate(45deg);
+}
+
+.stagger-card--center .stagger-card__slash {
+  background: rgba(22, 25, 26, 0.18);
+}
+
+/* ----- Avatar ----- */
+
+.stagger-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  width: 48px;
+  height: 56px;
+  background: var(--color-surface-2);
+  object-fit: cover;
+  object-position: top;
+  box-shadow: 3px 3px 0 var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.stagger-card--center .stagger-card__avatar {
+  background: var(--palette-tobacco-deep);
+  color: var(--color-text);
+  box-shadow: 3px 3px 0 var(--color-text-inverse);
+}
+
+.stagger-card__avatar--placeholder {
+  letter-spacing: 0.05em;
+}
+
+/* ----- Quote + attribution ----- */
+
+.stagger-card__quote {
+  margin: 0;
+  /* Reserve room at the bottom for the byline so the quote can never
+     visually crash into it. JS sets fontSize per-card based on length. */
+  margin-bottom: 60px;
+  max-height: calc(100% - 110px);
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 18px; /* JS overrides */
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+.stagger-card--side .stagger-card__quote {
+  color: var(--color-text);
+}
+
+.stagger-card__by {
+  position: absolute;
+  bottom: 32px;
+  left: 32px;
+  right: 32px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 0.005em;
+}
+
+.stagger-card--center .stagger-card__by {
+  color: rgba(22, 25, 26, 0.78);
+}
+
+.stagger-card--side .stagger-card__by {
+  color: var(--color-text-soft);
+}
+
+/* ----- Controls ----- */
+
+.stagger-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+}
+
+.stagger-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 2px solid var(--color-border-strong);
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+  appearance: none;
+  font-size: 24px;
+}
+
+.stagger-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent);
+}
+
+.stagger-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.stagger-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ----- Mobile ----- */
+
+@media (max-width: 768px) {
+  .stagger-stage { height: 540px; }
+  .stagger-card { padding: 24px; }
+  .stagger-card__quote { font-size: 15px; }
+  .stagger-card__by { left: 24px; right: 24px; bottom: 24px; }
+}
