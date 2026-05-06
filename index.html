@@ -168,7 +168,9 @@
   <main id="main">
 
     <!-- ===========================================
-         1. Hero, Juan Mora style: Rudy [image] Goel
+         1. Hero: Rudy [symbol-box] Goel
+         Two rigid words. The gap animates as triggers
+         change the symbol box width + content.
          =========================================== -->
     <section id="hero" class="hero hero--jm" aria-labelledby="hero-headline">
 
@@ -179,28 +181,64 @@
         <div class="hero__bg-vignette"></div>
       </div>
 
-      <!-- Top-left tagline -->
-      <p class="hero__tag hero__tag--tl" data-hero-anim="tagline">
-        Email Copy &amp;<br/>Creative Strategy
-      </p>
+      <!-- Top-left tagline, single line -->
+      <h2 class="hero__tag hero__tag--tl" data-hero-anim="tagline">
+        Email Copy &amp; Creative Strategy
+      </h2>
 
-      <!-- Bottom-right role -->
-      <p class="hero__tag hero__tag--br" data-hero-anim="role">
-        Email Copywriter for Coaches
-      </p>
-
-      <!-- Big name. Mouse X drives image position + per-region symbol +
-           name-half stretch on the X axis. Rests centered. -->
-      <h1 id="hero-headline" class="hero__name hero__name--interactive" data-hero-anim="name">
-        <span class="hero__name-part hero__name-part--left" data-name-side="left">Rudy</span>
-        <div class="hero__cycle hero__cycle--symbols" aria-hidden="true">
-          <img src="/assets/icons/email.png"  alt="" class="hero__cycle-img is-active" data-region="0" width="82" height="58" />
-          <img src="/assets/icons/msg.png"    alt="" class="hero__cycle-img"           data-region="1" width="82" height="72" />
-          <img src="/assets/icons/letter.png" alt="" class="hero__cycle-img"           data-region="2" width="70" height="82" />
-          <img src="/assets/icons/alert.png"  alt="" class="hero__cycle-img"           data-region="3" width="82" height="82" />
-        </div>
-        <span class="hero__name-part hero__name-part--right" data-name-side="right">Goel</span>
+      <!-- Big name with embedded symbol box.
+           Three flex children: word, box, word.
+           Words are rigid; mouse X (or trigger hover) drives box. -->
+      <h1 id="hero-headline" class="hero__name" data-hero-anim="name">
+        <span class="hero__name-inner" aria-label="Rudy Goel" data-wordmark>
+          <span class="hero__word" data-word="rudy">Rudy</span>
+          <span
+            class="hero__symbol-box"
+            data-symbol-box
+            aria-hidden="true"
+          ></span>
+          <span class="hero__word" data-word="goel">Goel</span>
+        </span>
       </h1>
+
+      <!-- Subtitle: sits directly below the wordmark, right-aligned -->
+      <h2 class="hero__role hero__role--br" data-hero-anim="role">
+        Freelance Email Strategist
+      </h2>
+
+      <!-- SR-only keyboard triggers. The visible interaction is the mouse moving
+           across the hero — these exist only so keyboard users can advance through
+           the symbols by Tab. -->
+      <ul class="hero__triggers sr-only" role="list" aria-label="Symbol triggers" data-hero-anim="triggers">
+        <li>
+          <button type="button" class="hero__trigger" data-trigger
+            data-symbol="email" data-width="280px" data-label="Email">
+            <span class="hero__trigger-num">01</span>
+            <span class="hero__trigger-label">Email</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="hero__trigger" data-trigger
+            data-symbol="msg" data-width="240px" data-label="Messages">
+            <span class="hero__trigger-num">02</span>
+            <span class="hero__trigger-label">Messages</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="hero__trigger" data-trigger
+            data-symbol="letter" data-width="320px" data-label="Letters">
+            <span class="hero__trigger-num">03</span>
+            <span class="hero__trigger-label">Letters</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="hero__trigger" data-trigger
+            data-symbol="alert" data-width="220px" data-label="Alerts">
+            <span class="hero__trigger-num">04</span>
+            <span class="hero__trigger-label">Alerts</span>
+          </button>
+        </li>
+      </ul>
 
     </section>
 

@@ -2683,7 +2683,7 @@ section + section#book {
 }
 .nav__brand-dot {
   display: inline-block;
-  color: var(--color-accent);
+  color: var(--palette-linen);
   font-size: 18px;
   line-height: 0;
   transform: translateY(-1px);
@@ -2809,6 +2809,10 @@ section + section#book {
   align-items: stretch;
   isolation: isolate;
   padding: 0;
+  cursor: crosshair; /* hints at mouse interactivity */
+}
+@media (max-width: 768px) {
+  .hero.hero--jm { cursor: auto; }
 }
 
 /* Background portrait + Tobacco wash */
@@ -2841,116 +2845,194 @@ section + section#book {
   background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(22, 25, 26, 0.45) 100%);
 }
 
-/* Top-left tagline */
-.hero--jm .hero__tag {
+/* Hero corner headings — Geist (body font), small + single line. */
+.hero--jm .hero__tag,
+.hero--jm .hero__role {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
+  margin: 0;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: clamp(15px, 1.4vw, 18px);
-  line-height: 1.25;
-  letter-spacing: -0.005em;
+  font-size: clamp(13px, 1.1vw, 16px);
+  line-height: 1.3;
+  letter-spacing: 0.005em;
   color: var(--color-accent);
-  margin: 0;
+  white-space: nowrap;
 }
 .hero--jm .hero__tag--tl {
-  top: clamp(120px, 14vw, 200px);
-  left: clamp(20px, 3vw, 40px);
-  max-width: 22ch;
+  top: clamp(100px, 12vw, 160px);
+  left: clamp(20px, 4vw, 56px);
+  text-align: left;
 }
-.hero--jm .hero__tag--br {
-  right: clamp(20px, 3vw, 40px);
-  bottom: clamp(120px, 14vw, 180px);
+/* Subtitle sits directly below the wordmark, right-aligned. Newsreader italic
+   for the accent (kept inside the project's two fonts). */
+.hero--jm .hero__role--br {
+  right: clamp(20px, 4vw, 56px);
+  bottom: clamp(40px, 5vw, 64px);
   text-align: right;
-  max-width: 22ch;
-}
-
-/* The big Rudy [image] Goel name
-   Sized so it always fits the viewport regardless of width.
-   8 letters in Newsreader 300 ~ 3.4em, image ~1.4em, gaps ~0.2em → ~5em total.
-   At a viewport of 100vw with 4vw padding each side, a font-size of ~14vw
-   gives 5 * 14vw = 70vw + image + gap = comfortably under 92vw. */
-.hero--jm .hero__name {
-  position: absolute;
-  z-index: 1;
-  bottom: clamp(48px, 7vw, 96px);
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(6px, 0.8vw, 12px);
-  padding: 0 clamp(16px, 4vw, 56px);
-  margin: 0;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(64px, 13.5vw, 200px);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+  font-style: italic;
+  font-size: clamp(15px, 1.3vw, 20px);
+  letter-spacing: 0.01em;
+}
+
+/* The big Rudy [box] Goel wordmark.
+   Two rigid words sit either side of an animated symbol box.
+   The wordmark itself is centered; as the box grows, the right
+   word is pushed further right symmetrically. */
+/* Wordmark.
+   - Rudy and Goel are anchored to opposite edges of the wordmark.
+   - The symbol box translates between them based on mouse X.
+   - The word the box is approaching gets squished; the far word stretches.
+   - A small fixed gap (BOX_GAP, set in JS) sits between the box and the
+     squished word at all times. */
+.hero--jm .hero__name {
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(90px, 9vw, 140px);
+  left: 0;
+  right: 0;
+  height: 1em;
+  margin: 0;
+  padding: 0 clamp(20px, 4vw, 56px);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(5.5rem, 13vw, 17rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--color-accent);
   font-variation-settings: "opsz" 72;
   white-space: nowrap;
-  text-align: center;
-  overflow: hidden;
+  pointer-events: none;
+  overflow: visible;
 }
 
-.hero--jm .hero__name-part {
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-/* The image cycle between Rudy and Goel.
-   Width tied to font-size via em so it always scales with the type.
-   Roughly 1.4em wide × 0.7em tall = cap-height proportions. */
-.hero--jm .hero__cycle {
+.hero--jm .hero__name-inner {
   position: relative;
-  flex-shrink: 0;
-  width: 1.45em;
-  height: 0.7em;
-  border-radius: 0.07em;
-  overflow: hidden;
-  align-self: center;
-  background: var(--color-surface-1);
-  box-shadow: 0 0.18em 0.36em -0.12em rgba(0, 0, 0, 0.55),
-              0 1px 0 rgba(221, 211, 196, 0.06) inset;
-}
-.hero--jm .hero__cycle-img {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transform: scale(1.03);
-  transition: opacity 700ms var(--ease), transform 1.6s var(--ease);
+  display: block;
 }
-.hero--jm .hero__cycle-img.is-active {
+
+.hero--jm .hero__word {
+  position: absolute;
+  top: 50%;
+  display: inline-block;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  will-change: transform;
+}
+.hero--jm .hero__word[data-word="rudy"] {
+  left: clamp(20px, 4vw, 56px);
+  transform-origin: left center; /* squishes from the right when scaled <1 */
+  transform: translateY(-50%) scaleX(1);
+}
+.hero--jm .hero__word[data-word="goel"] {
+  right: clamp(20px, 4vw, 56px);
+  transform-origin: right center; /* squishes from the left when scaled <1 */
+  transform: translateY(-50%) scaleX(1);
+}
+
+/* The symbol box: fixed-size SQUARE. JS sets only `left`. */
+.hero--jm .hero__symbol-box {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;             /* paint above both words for clean glyph termination */
+  width: 0.78em;
+  height: 0.78em;
+  margin-top: -0.39em;
+  border-radius: clamp(14px, 0.12em, 26px);
+  background:
+    linear-gradient(135deg,
+      rgba(221, 211, 196, 0.20) 0%,
+      rgba(163, 133, 97, 0.36) 100%);
+  border: 1px solid rgba(221, 211, 196, 0.22);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+          backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    0 1px 0 rgba(221, 211, 196, 0.10) inset,
+    0 18px 44px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  will-change: left;
+}
+
+/* All symbols render at the same size, perfectly centred in the box.
+   Crossfade is opacity-only. */
+.hero--jm .hero__symbol-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 60%;
+  transform: translate(-50%, -50%) scale(0.92);
+  object-fit: contain;
+  object-position: 50% 50%;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease), transform 0.5s var(--ease);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+.hero--jm .hero__symbol-img.is-active {
   opacity: 1;
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* SR-only trigger list — visually hidden, keyboard-focusable. */
+.hero--jm .hero__triggers.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  list-style: none;
+}
+.hero--jm .hero__trigger {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+}
+.hero--jm .hero__trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
 }
 
 /* Tablet: shrink type a touch */
 @media (max-width: 1024px) {
-  .hero--jm .hero__name { font-size: clamp(56px, 13vw, 120px); }
+  .hero--jm .hero__name { font-size: clamp(72px, 14vw, 140px); }
 }
 
-/* Mobile: smaller and tighter */
+/* Mobile: stack the words, drop the symbol box, shrink the corner headings. */
 @media (max-width: 768px) {
   .hero--jm .hero__tag--tl {
     top: 88px;
-    font-size: 13px;
+    font-size: clamp(20px, 5.5vw, 28px);
+    max-width: 14ch;
   }
-  .hero--jm .hero__tag--br {
-    right: 20px;
+  .hero--jm .hero__role--br {
     bottom: 28px;
-    font-size: 12px;
-    max-width: 18ch;
+    font-size: clamp(18px, 4.5vw, 22px);
+    max-width: 14ch;
   }
   .hero--jm .hero__name {
-    bottom: 64px;
-    gap: 4px;
-    font-size: clamp(44px, 13vw, 80px);
-    padding: 0 16px;
+    bottom: 120px;
+    font-size: clamp(56px, 18vw, 110px);
+    padding: 0 20px;
+  }
+  .hero--jm .hero__name-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .hero--jm .hero__symbol-box {
+    display: none;
   }
 }
 
@@ -2959,39 +3041,7 @@ section + section#book {
 [data-motion="off"] .hero--jm .hero__name { opacity: 1 !important; }
 
 /* ============================================================
-   v3.1 — Symbol cycle in hero (Linen card + Tobacco symbols)
-   ============================================================ */
-
-.hero--jm .hero__cycle--symbols {
-  width: 1em;
-  height: 1em;
-  border-radius: 0.12em;
-  background: var(--color-text);              /* Linen */
-  box-shadow:
-    0 0.18em 0.36em -0.12em rgba(0, 0, 0, 0.55),
-    0 1px 0 rgba(22, 25, 26, 0.08) inset,
-    0 0 0 1px rgba(22, 25, 26, 0.06);
-}
-
-.hero--jm .hero__cycle--symbols .hero__cycle-img {
-  position: absolute;
-  inset: 22%;                                  /* breathing room around symbol */
-  width: auto;
-  height: auto;
-  max-width: 56%;
-  max-height: 56%;
-  margin: auto;
-  object-fit: contain;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-/* Tighter mobile sizing so the card never looks chunky relative to the type */
-@media (max-width: 768px) {
-  .hero--jm .hero__cycle--symbols { border-radius: 0.14em; }
-}
-
-/* ============================================================
-   v3.2 — Glass circle socials, mouse-driven name, pine vignette
+   v3.2 — Glass circle socials, pine vignette
    ============================================================ */
 
 /* -----------------------------------------------------------
@@ -3052,74 +3102,6 @@ section + section#book {
   width: 17px;
   height: 17px;
   display: block;
-}
-
-/* -----------------------------------------------------------
-   Mouse-driven name layout
-   Left/right halves anchored to opposite edges, transformed
-   independently by JS-supplied scaleX. Cycle floats on top with
-   absolute X position controlled by --cx (in pixels).
-   ----------------------------------------------------------- */
-
-.hero--jm .hero__name--interactive {
-  position: absolute;
-  bottom: clamp(48px, 7vw, 96px);
-  left: 0;
-  right: 0;
-  height: 1em;
-  margin: 0;
-  padding: 0;
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(64px, 13.5vw, 200px);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--color-accent);
-  font-variation-settings: "opsz" 72;
-  white-space: nowrap;
-  overflow: hidden;
-  cursor: none; /* indicates the surface is interactive */
-}
-
-.hero--jm .hero__name--interactive .hero__name-part {
-  position: absolute;
-  top: 50%;
-  display: inline-block;
-  flex-shrink: 0;
-  margin: 0;
-  padding: 0;
-  will-change: transform;
-  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.hero--jm .hero__name--interactive .hero__name-part--left {
-  left: clamp(16px, 4vw, 56px);
-  transform: translateY(-50%) scaleX(1);
-  transform-origin: left center;
-}
-.hero--jm .hero__name--interactive .hero__name-part--right {
-  right: clamp(16px, 4vw, 56px);
-  transform: translateY(-50%) scaleX(1);
-  transform-origin: right center;
-}
-
-/* Cycle is absolutely positioned, JS sets translateX */
-.hero--jm .hero__name--interactive .hero__cycle--symbols {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 1em;
-  height: 1em;
-  margin-top: -0.5em;
-  border-radius: 0.12em;
-  background: var(--color-text);
-  box-shadow:
-    0 0.18em 0.36em -0.12em rgba(0, 0, 0, 0.55),
-    0 1px 0 rgba(22, 25, 26, 0.08) inset,
-    0 0 0 1px rgba(22, 25, 26, 0.06);
-  transform: translate3d(0, 0, 0);
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: transform;
 }
 
 /* -----------------------------------------------------------

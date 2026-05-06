@@ -12,6 +12,7 @@
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
 const root = document.documentElement;
 
@@ -19,18 +20,66 @@ const reduced =
   window.matchMedia &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/* Symbol set — uses PNG icons in /assets/icons/.
+   Each entry: src + box width + object-position. The width range is
+   intentionally wide so the wordmark visibly stretches as the symbol swaps,
+   and each icon sits at a slightly different x within the box so the gap
+   on one side looks bigger than the other. */
+/* Symbol set. All symbols share the box's fixed size — only the PNG
+   inside swaps. No per-symbol width. */
+type SymbolDef = { src: string };
+const SYMBOL_MAP: Record<string, SymbolDef> = {
+  email:  { src: "/assets/icons/email.png"  },
+  msg:    { src: "/assets/icons/msg.png"    },
+  letter: { src: "/assets/icons/letter.png" },
+  alert:  { src: "/assets/icons/alert.png"  },
+};
+
+const SYMBOL_KEYS = ["email", "msg", "letter", "alert"] as const;
+const DEFAULT_SYMBOL = "email";
+
 if (reduced) {
   root.dataset.motion = "off";
+  // Still mount a default symbol so the wordmark looks complete.
+  mountDefaultSymbol();
 } else {
   root.dataset.motion = "on";
   init();
 }
 
+/* Mount all PNG symbols once into the box, then toggle .is-active.
+   Crossfade is driven by CSS opacity transitions. */
+function mountSymbols(box: HTMLElement): HTMLImageElement[] {
+  if (box.children.length > 0) {
+    return Array.from(box.querySelectorAll<HTMLImageElement>(".hero__symbol-img"));
+  }
+  return SYMBOL_KEYS.map((key) => {
+    const def = SYMBOL_MAP[key];
+    const img = document.createElement("img");
+    img.src = def.src;
+    img.alt = "";
+    img.className = "hero__symbol-img";
+    img.dataset.symbol = key;
+    img.decoding = "async";
+    box.appendChild(img);
+    return img;
+  });
+}
+
+function mountDefaultSymbol(): void {
+  const box = document.querySelector<HTMLElement>("[data-symbol-box]");
+  if (!box) return;
+  const imgs = mountSymbols(box);
+  imgs.forEach((img) => img.classList.toggle("is-active", img.dataset.symbol === DEFAULT_SYMBOL));
+}
+
 function init(): void {
-  gsap.registerPlugin(CustomEase, ScrollTrigger);
+  gsap.registerPlugin(CustomEase, ScrollTrigger, SplitText);
   CustomEase.create("rg", "0.625, 0.05, 0, 1");
+  CustomEase.create("rgBox", "0.65, 0, 0.35, 1");
   gsap.defaults({ duration: 0.6, ease: "rg" });
 
+  initLenis();
   setupAnchorClicks();
 
   initHero();
@@ -38,6 +87,26 @@ function init(): void {
   initStaggerGroups();
   initNav();
   initScrollProgress();
+}
+
+/**
+ * Lenis smooth scroll, tied to GSAP's ticker so ScrollTrigger
+ * can read the latest scroll position on every frame.
+ */
+async function initLenis(): Promise<void> {
+  try {
+    const { default: Lenis } = await import("lenis");
+    const lenis = new Lenis({
+      lerp: 0.1,
+      duration: 1.1,
+      smoothWheel: true,
+    });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } catch {
+    /* Lenis is optional — bail silently */
+  }
 }
 
 /**
@@ -185,190 +254,224 @@ function initHero(): void {
 }
 
 /**
- * Juan Mora style hero: Rudy [image] Goel.
- * - Two name halves slide up from below in a single mask
- * - Image cycles through ~3 photos every 3.6s with cross-fade
- * - Top-left tagline + bottom-right role fade up
+ * Hero: Rudy [symbol-box] Goel.
+ *
+ * - Two rigid words flank an animated PNG-symbol box.
+ * - Mouse X across the hero divides into 4 regions, one symbol each.
+ * - Each symbol has a target box width; the box width animates between them.
+ * - Triggers (data-trigger pills) provide a keyboard/click-accessible path.
+ * - SplitText slides chars up on load.
+ * - Default rest state: email symbol, mouseleave returns here.
  */
 function initJmHero(nameEl: HTMLElement): void {
+  const heroEl = document.getElementById("hero");
   const taglineEl = document.querySelector<HTMLElement>(
     '[data-hero-anim="tagline"]',
   );
   const roleEl = document.querySelector<HTMLElement>(
     '[data-hero-anim="role"]',
   );
-  const cycleImgs = Array.from(
-    nameEl.querySelectorAll<HTMLElement>(".hero__cycle-img"),
+  const triggersEl = document.querySelector<HTMLElement>(
+    '[data-hero-anim="triggers"]',
   );
-  const nameParts = Array.from(
-    nameEl.querySelectorAll<HTMLElement>(".hero__name-part"),
+  const symbolBox = nameEl.querySelector<HTMLElement>("[data-symbol-box]");
+  const leftWord = nameEl.querySelector<HTMLElement>(
+    '.hero__word[data-word="rudy"]',
   );
-
-  // Wrap each name part in an overflow:hidden mask
-  const innerEls: HTMLElement[] = [];
-  nameParts.forEach((part) => {
-    const wrap = document.createElement("span");
-    wrap.className = "hero__name-part";
-    wrap.style.display = "inline-block";
-    wrap.style.overflow = "hidden";
-    wrap.style.lineHeight = "0.9";
-    wrap.style.paddingBottom = "0.08em";
-    wrap.style.flexShrink = "0";
-    const inner = document.createElement("span");
-    inner.style.display = "inline-block";
-    inner.style.willChange = "transform";
-    inner.textContent = part.textContent || "";
-    wrap.appendChild(inner);
-    part.replaceWith(wrap);
-    innerEls.push(inner);
-  });
-
-  // Mouse-driven interaction: name halves stretch on the X axis,
-  // cycle image follows mouse, symbol changes per region of 4.
-  initMouseDrivenName(nameEl, cycleImgs);
-
-  // If page is hidden, skip the entrance (preview tools, background tabs)
-  if (document.hidden) return;
-
-  // Initial states
-  gsap.set([taglineEl, roleEl], { autoAlpha: 0, y: 14 });
-  gsap.set(innerEls, { yPercent: 105 });
-  gsap.set(cycleImgs[0], { autoAlpha: 0, scale: 1.04 });
-
-  const tl = gsap.timeline({ delay: 0.2 });
-  tl.to(taglineEl, { autoAlpha: 1, y: 0, duration: 0.6 }, 0)
-    .to(
-      innerEls,
-      { yPercent: 0, duration: 1.05, stagger: 0.12, ease: "rg" },
-      0.05,
-    )
-    .to(
-      cycleImgs[0],
-      { autoAlpha: 1, scale: 1, duration: 0.95, ease: "rg" },
-      0.5,
-    )
-    .to(roleEl, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.85);
-}
-
-/**
- * Mouse-driven name interaction.
- *
- * - Two halves of the name are absolutely positioned, anchored to opposite
- *   edges of the hero name container. `transform: scaleX(N)` is set on each
- *   from JS so the half close to the mouse smooshes (small scaleX) while
- *   the far half expands (large scaleX).
- * - The cycle card follows mouse X (clamped within container) via translateX.
- * - 4 regions split horizontally across the container; each region activates
- *   a different symbol, swapped with .is-active class so the CSS cross-fade
- *   handles the transition.
- * - On mouseleave the layout settles back to the rest position (centered,
- *   both halves at scaleX 1, region-0 symbol active).
- */
-function initMouseDrivenName(
-  nameEl: HTMLElement,
-  cycleImgs: HTMLElement[],
-): void {
-  const leftEl = nameEl.querySelector<HTMLElement>(
-    '.hero__name-part--left',
+  const rightWord = nameEl.querySelector<HTMLElement>(
+    '.hero__word[data-word="goel"]',
   );
-  const rightEl = nameEl.querySelector<HTMLElement>(
-    '.hero__name-part--right',
-  );
-  const cycleEl = nameEl.querySelector<HTMLElement>(
-    '.hero__cycle--symbols',
-  );
-  if (!leftEl || !rightEl || !cycleEl) return;
+  if (!symbolBox || !heroEl || !leftWord || !rightWord) return;
 
-  // Range constants
-  const SCALE_MIN = 0.32;
-  const SCALE_MAX = 1.7;
+  const symbolImgs = mountSymbols(symbolBox);
+  const setSymbol = (key: string): void => {
+    symbolImgs.forEach((img) =>
+      img.classList.toggle("is-active", img.dataset.symbol === key),
+    );
+  };
+  setSymbol(DEFAULT_SYMBOL);
 
-  // Cached natural widths (measured at scaleX 1 with fonts ready)
+  /* ---------------------------------------------------------------
+     Continuous-stretch loop.
+
+     - targetX: where the mouse currently is (0 to 1 across the hero).
+     - currentX: the eased follower; lerps toward targetX every frame.
+     - At currentX = 0.5 (rest), both words are scaleX 1 and the box
+       sits centred between them.
+     - As currentX moves, the FAR word stretches and the NEAR word
+       compresses. The box translates along with the mouse.
+     - Damping factor 0.12 → ~6 frames to settle, the smooth ease feel.
+  --------------------------------------------------------------- */
+
+  // Min word scale (most squished). Max stretch is derived per-frame so
+  // the far word always reaches the box edge.
+  const MIN_SCALE = 0.55;
+  const DAMP = 0.12;
+
+  // Landing state: x = 0 (box on left, Rudy squished, email symbol).
+  let targetX = 0;
+  let currentX = 0;
+  let active = false; // pointer is over the hero
+  let raf = 0;
+
+  // Bounds cache. Refreshed on resize.
+  // - heroLeft / heroWidth: viewport bounds of the hero (used for mouse → x).
+  // - innerWidth: width of the .hero__name-inner box (the words' coord system).
+  //   leftPad/rightPad/word positions/box position are all in this space.
+  const innerEl = nameEl.querySelector<HTMLElement>(".hero__name-inner");
+  let heroLeft = 0;
+  let heroWidth = 1;
+  let innerWidth = 1;
   let leftNat = 0;
   let rightNat = 0;
-  let containerW = 0;
-  let cycleW = 0;
-  let containerLeft = 0;
-  let activeRegion = 0;
-
   const measure = (): void => {
-    // Reset transforms to measure natural width
-    leftEl.style.transform = 'translateY(-50%) scaleX(1)';
-    rightEl.style.transform = 'translateY(-50%) scaleX(1)';
-    cycleEl.style.transform = 'translate3d(0, 0, 0)';
-    const lr = leftEl.getBoundingClientRect();
-    const rr = rightEl.getBoundingClientRect();
-    const nr = nameEl.getBoundingClientRect();
-    const cr = cycleEl.getBoundingClientRect();
-    leftNat = lr.width;
-    rightNat = rr.width;
-    containerW = nr.width;
-    containerLeft = nr.left;
-    cycleW = cr.width;
-    // Apply rest position
-    applyRestState();
+    const hr = heroEl.getBoundingClientRect();
+    heroLeft = hr.left;
+    heroWidth = hr.width || 1;
+    if (innerEl) innerWidth = innerEl.getBoundingClientRect().width || 1;
+    leftWord.style.transform = "translateY(-50%) scaleX(1)";
+    rightWord.style.transform = "translateY(-50%) scaleX(1)";
+    leftNat = leftWord.getBoundingClientRect().width;
+    rightNat = rightWord.getBoundingClientRect().width;
   };
 
-  const setRegion = (region: number): void => {
-    if (region === activeRegion) return;
-    cycleImgs.forEach((img) => img.classList.remove('is-active'));
-    if (cycleImgs[region]) {
-      cycleImgs[region].classList.add('is-active');
-      activeRegion = region;
+  const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
+
+  const leftPad = () => parseFloat(getComputedStyle(leftWord).left) || 56;
+  const rightPad = () => parseFloat(getComputedStyle(rightWord).right) || 56;
+
+  const apply = (x: number): void => {
+    // All x-coordinates here are in the .hero__name-inner space.
+    // Rudy is anchored at left:lp, Goel at right:rp. The box uses style.left
+    // which is also in inner-space. So we use innerWidth, NOT heroWidth.
+    const lp = leftPad();
+    const rp = rightPad();
+    const boxW = symbolBox.offsetWidth || 1;
+
+    const minCx = lp + leftNat * MIN_SCALE + boxW / 2;
+    const maxCx = innerWidth - rp - rightNat * MIN_SCALE - boxW / 2;
+    const cx = lerp(minCx, maxCx, x);
+
+    const boxLeft = cx - boxW / 2;
+    const boxRight = cx + boxW / 2;
+
+    // Word scales chosen so each word's bounding-box inner edge touches the
+    // matching box edge. For Newsreader 700 the visible y/G glyphs sit right
+    // at the bounding-box edge, so bounding-box-touching = visible-touching.
+    const leftScale = Math.max(MIN_SCALE, (boxLeft - lp) / leftNat);
+    const rightScale = Math.max(MIN_SCALE, (innerWidth - rp - boxRight) / rightNat);
+
+    leftWord.style.transform = `translateY(-50%) scaleX(${leftScale.toFixed(3)})`;
+    rightWord.style.transform = `translateY(-50%) scaleX(${rightScale.toFixed(3)})`;
+    symbolBox.style.left = `${boxLeft.toFixed(1)}px`;
+
+    // Symbol per region (4 zones), default when not active.
+    const idx = active
+      ? Math.min(SYMBOL_KEYS.length - 1, Math.floor(x * SYMBOL_KEYS.length))
+      : SYMBOL_KEYS.indexOf(DEFAULT_SYMBOL as typeof SYMBOL_KEYS[number]);
+    const key = SYMBOL_KEYS[idx];
+    const currentActive = symbolImgs.find((i) => i.classList.contains("is-active"));
+    if (currentActive?.dataset.symbol !== key) {
+      setSymbol(key);
     }
   };
 
-  const applyRestState = (): void => {
-    // Image centered, both halves slightly expanded to fill space evenly
-    const targetCx = containerW / 2;
-    const leftAvail = targetCx - cycleW / 2;
-    const rightAvail = containerW - targetCx - cycleW / 2;
-    const leftScale = clamp(leftAvail / leftNat, SCALE_MIN, SCALE_MAX);
-    const rightScale = clamp(rightAvail / rightNat, SCALE_MIN, SCALE_MAX);
-    leftEl.style.transform = `translateY(-50%) scaleX(${leftScale})`;
-    rightEl.style.transform = `translateY(-50%) scaleX(${rightScale})`;
-    cycleEl.style.transform = `translate3d(${targetCx - cycleW / 2}px, 0, 0)`;
-    setRegion(0);
+  const tick = (): void => {
+    currentX = lerp(currentX, targetX, DAMP);
+    apply(currentX);
+    if (Math.abs(currentX - targetX) > 0.0005 || active) {
+      raf = requestAnimationFrame(tick);
+    } else {
+      raf = 0;
+    }
+  };
+  const startLoop = (): void => {
+    if (!raf) raf = requestAnimationFrame(tick);
   };
 
   const onMove = (e: PointerEvent): void => {
-    if (containerW === 0) return;
-    const localX = clamp(e.clientX - containerLeft, 0, containerW);
-    const ratio = localX / containerW;
-    // Image x center, clamped so it never clips the edges
-    const imgCx = clamp(localX, cycleW / 2 + 8, containerW - cycleW / 2 - 8);
-    const leftAvail = imgCx - cycleW / 2;
-    const rightAvail = containerW - imgCx - cycleW / 2;
-    const leftScale = clamp(leftAvail / leftNat, SCALE_MIN, SCALE_MAX);
-    const rightScale = clamp(rightAvail / rightNat, SCALE_MIN, SCALE_MAX);
-
-    leftEl.style.transform = `translateY(-50%) scaleX(${leftScale})`;
-    rightEl.style.transform = `translateY(-50%) scaleX(${rightScale})`;
-    cycleEl.style.transform = `translate3d(${imgCx - cycleW / 2}px, 0, 0)`;
-
-    // Region: 0..3 based on horizontal position
-    setRegion(Math.min(3, Math.floor(ratio * 4)));
+    active = true;
+    targetX = Math.max(0, Math.min(1, (e.clientX - heroLeft) / heroWidth));
+    startLoop();
   };
-
   const onLeave = (): void => {
-    applyRestState();
+    active = false;
+    targetX = 0; // ease back to landing state on exit
+    startLoop();
   };
 
-  // Wait for fonts before measuring
-  const ready = (
-    document as unknown as { fonts?: { ready?: Promise<unknown> } }
-  ).fonts?.ready ?? Promise.resolve();
-  ready.then(() => measure());
-  window.addEventListener('resize', measure);
+  heroEl.addEventListener("pointermove", onMove);
+  heroEl.addEventListener("pointerleave", onLeave);
+  window.addEventListener("resize", measure);
 
-  const heroEl = document.getElementById('hero');
-  if (!heroEl) return;
-  heroEl.addEventListener('pointermove', onMove);
-  heroEl.addEventListener('pointerleave', onLeave);
-}
+  // Trigger pills (sr-only, keyboard a11y): nudge target to the symbol's region.
+  document.querySelectorAll<HTMLElement>("[data-trigger]").forEach((t) => {
+    const idx = SYMBOL_KEYS.indexOf((t.dataset.symbol || DEFAULT_SYMBOL) as typeof SYMBOL_KEYS[number]);
+    if (idx < 0) return;
+    const center = (idx + 0.5) / SYMBOL_KEYS.length;
+    const focus = (): void => { active = true; targetX = center; startLoop(); };
+    const blur = (): void => { active = false; targetX = 0; startLoop(); };
+    t.addEventListener("focusin", focus);
+    t.addEventListener("focusout", blur);
+  });
 
-function clamp(n: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, n));
+  // Initial measure + paint at rest after fonts load.
+  const ready =
+    (document as unknown as { fonts?: { ready?: Promise<unknown> } }).fonts
+      ?.ready ?? Promise.resolve();
+
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    ready.then(() => {
+      measure();
+      apply(0);
+      gsap.set([taglineEl, roleEl, triggersEl], { autoAlpha: 1, y: 0 });
+    });
+    return;
+  }
+
+  // Entrance: only autoAlpha is animated by GSAP. The scale + position
+  // come from apply()'s inline transform on the box, so GSAP must not
+  // touch transform on .hero__symbol-box.
+  gsap.set([taglineEl, roleEl, triggersEl], { autoAlpha: 0, y: 14 });
+  symbolBox.style.opacity = "0";
+
+  ready.then(() => {
+    measure();
+    apply(0);
+
+    if (document.hidden) {
+      gsap.set([taglineEl, roleEl, triggersEl], { autoAlpha: 1, y: 0 });
+      symbolBox.style.opacity = "1";
+      return;
+    }
+
+    const splits = [leftWord, rightWord].map(
+      (el) => new SplitText(el, { type: "chars", charsClass: "hero__char" }),
+    );
+    const allChars = splits.flatMap((s) => s.chars as HTMLElement[]);
+    allChars.forEach((c) => {
+      c.style.display = "inline-block";
+      c.style.overflow = "hidden";
+      const inner = document.createElement("span");
+      inner.style.display = "inline-block";
+      inner.style.willChange = "transform";
+      inner.textContent = c.textContent;
+      c.textContent = "";
+      c.appendChild(inner);
+    });
+    const innerChars = allChars
+      .map((c) => c.firstElementChild)
+      .filter((n): n is HTMLElement => n instanceof HTMLElement);
+
+    gsap.set(innerChars, { yPercent: 110 });
+
+    const tl = gsap.timeline({ delay: 0.2, onComplete: () => measure() });
+    tl.to(taglineEl, { autoAlpha: 1, y: 0, duration: 0.7 }, 0)
+      .to(innerChars, { yPercent: 0, duration: 1, stagger: 0.04, ease: "power3.out" }, 0.05)
+      .to(symbolBox, { opacity: 1, duration: 0.7, ease: "rgBox" }, 0.55)
+      .to(roleEl, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.85)
+      .to(triggersEl, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.95);
+  });
 }
 
 /**
