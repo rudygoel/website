@@ -49,6 +49,7 @@ async function copyDir(src: string, dest: string): Promise<void> {
 }
 
 export default defineConfig({
+  base: process.env.GITHUB_PAGES ? "/website/" : "/",
   plugins: [rootAssets(), react()],
   resolve: {
     alias: {
