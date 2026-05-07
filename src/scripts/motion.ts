@@ -13,6 +13,7 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { assetUrl } from "../lib/utils";
 
 const root = document.documentElement;
 
@@ -29,10 +30,10 @@ const reduced =
    inside swaps. No per-symbol width. */
 type SymbolDef = { src: string };
 const SYMBOL_MAP: Record<string, SymbolDef> = {
-  email:  { src: "/assets/icons/email.png"  },
-  msg:    { src: "/assets/icons/msg.png"    },
-  letter: { src: "/assets/icons/letter.png" },
-  alert:  { src: "/assets/icons/alert.png"  },
+  email:  { src: assetUrl("/assets/icons/email.png")  },
+  msg:    { src: assetUrl("/assets/icons/msg.png")    },
+  letter: { src: assetUrl("/assets/icons/letter.png") },
+  alert:  { src: assetUrl("/assets/icons/alert.png")  },
 };
 
 const SYMBOL_KEYS = ["email", "msg", "letter", "alert"] as const;

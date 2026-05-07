@@ -23,6 +23,7 @@ import { initFaq } from "./faq";
 import { initCalendly } from "./calendly";
 import { loadAnalytics } from "./analytics";
 import { trackVideoPlay } from "./analytics";
+import { assetUrl } from "../lib/utils";
 
 // -----------------------------------------------
 // Social SVG glyphs (currentColor; clean, monochrome)
@@ -77,7 +78,7 @@ async function mountNavIcons(): Promise<void> {
       const src = a.dataset.navIcon;
       if (!src) return;
       try {
-        const res = await fetch(src);
+        const res = await fetch(assetUrl(src));
         if (!res.ok) return;
         const text = await res.text();
         const doc = new DOMParser().parseFromString(text, "image/svg+xml");
@@ -176,8 +177,8 @@ function renderPortraitVideos(): void {
       <figure class="portrait-video-figure">
         <div class="portrait-video"
              data-video-name="${escapeHtml(v.name)}"
-             data-video-src="${v.src ? escapeHtml(v.src) : ""}">
-          <img src="${escapeHtml(v.poster)}" alt="${escapeHtml(v.name)}" loading="lazy" decoding="async" />
+             data-video-src="${v.src ? escapeHtml(assetUrl(v.src)) : ""}">
+          <img src="${escapeHtml(assetUrl(v.poster))}" alt="${escapeHtml(v.name)}" loading="lazy" decoding="async" />
           <button type="button" class="portrait-video__play" aria-label="Play testimonial from ${escapeHtml(v.name)}">
             <span class="portrait-video__icon" aria-hidden="true">▶</span>
           </button>
@@ -235,7 +236,7 @@ async function renderPress(): Promise<void> {
   const fetched = await Promise.all(
     press.map(async (p) => {
       try {
-        const res = await fetch(p.logo);
+        const res = await fetch(assetUrl(p.logo));
         if (!res.ok) return null;
         const text = await res.text();
         if (!text.trim().toLowerCase().startsWith("<svg") &&
