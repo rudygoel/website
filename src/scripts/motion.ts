@@ -504,55 +504,6 @@ function letterMask(el: HTMLElement): { inner: HTMLElement }[] {
   return out;
 }
 
-/**
- * Lightweight word-mask: wraps each word in <span class="split-word">
- * with an inner <span class="split-word__inner"> we can yPercent.
- */
-type WordMask = { inner: HTMLElement };
-
-function wordMask(el: HTMLElement): WordMask[] {
-  const html = el.innerHTML;
-  const result: WordMask[] = [];
-
-  // Tokenise: keep whitespace, em tags. We split by whitespace but preserve <em>...</em> as one word.
-  const frag = document.createElement("div");
-  frag.innerHTML = html;
-
-  const out: string[] = [];
-  flatten(frag, out);
-
-  el.innerHTML = "";
-  for (const piece of out) {
-    if (piece.trim() === "") {
-      el.appendChild(document.createTextNode(piece));
-      continue;
-    }
-    const word = document.createElement("span");
-    word.className = "split-word";
-    const inner = document.createElement("span");
-    inner.className = "split-word__inner";
-    inner.innerHTML = piece;
-    word.appendChild(inner);
-    el.appendChild(word);
-    result.push({ inner });
-  }
-
-  return result;
-}
-
-function flatten(node: Node, out: string[]): void {
-  for (const child of Array.from(node.childNodes)) {
-    if (child.nodeType === Node.TEXT_NODE) {
-      const text = child.textContent ?? "";
-      const tokens = text.split(/(\s+)/);
-      for (const t of tokens) if (t.length) out.push(t);
-    } else if (child.nodeType === Node.ELEMENT_NODE) {
-      // Treat the whole <em> (or any inline element) as a single word token.
-      out.push((child as HTMLElement).outerHTML);
-    }
-  }
-}
-
 /* ---------------------------------------------------------------
    Section reveals (one per section)
 --------------------------------------------------------------- */
