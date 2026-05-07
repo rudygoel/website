@@ -310,8 +310,8 @@
 
 .nav__hamburger {
   display: none;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
   margin-left: auto;
@@ -320,8 +320,14 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   position: relative;
+  z-index: calc(var(--z-sticky) + 1);
   flex-direction: column;
   gap: 5px;
+}
+
+.nav.is-open .nav__hamburger {
+  background: var(--color-surface-1);
+  border-color: var(--color-border-strong);
 }
 
 .nav__hamburger span {
@@ -393,24 +399,40 @@
 
 .nav__drawer-social {
   display: flex;
-  gap: var(--s-5);
+  flex-wrap: wrap;
+  gap: var(--s-3);
   margin: var(--s-5) 0;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--color-border);
 }
 
 .nav__drawer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
   color: var(--color-text);
-  opacity: 0.72;
-  transition: opacity var(--d-fast) var(--ease);
+  opacity: 0.7;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transition: opacity var(--d-fast) var(--ease),
+              background var(--d-fast) var(--ease),
+              border-color var(--d-fast) var(--ease),
+              color var(--d-fast) var(--ease);
 }
 
-.nav__drawer-social a:hover {
+.nav__drawer-social a:hover,
+.nav__drawer-social a:focus-visible {
   opacity: 1;
   color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
 }
 
 .nav__drawer-social svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
 }
 
@@ -2794,7 +2816,8 @@ section + section#book {
 @media (max-width: 1024px) {
   .nav.nav--jm { grid-template-columns: auto 1fr auto; }
   .nav.nav--jm .nav__pill,
-  .nav.nav--jm .nav__social { display: none; }
+  .nav.nav--jm .nav__social,
+  .nav.nav--jm .nav__social--glass { display: none; }
   .nav.nav--jm .nav__hamburger { display: inline-flex; justify-self: end; }
 }
 
@@ -3109,6 +3132,18 @@ section + section#book {
   width: 17px;
   height: 17px;
   display: block;
+}
+
+/* Nav-icon SVGs ship with an inline <style> block keying .cls-1 to white.
+   We strip the <style> at runtime, then re-paint the glyph layer here so it
+   tracks the link's currentColor. The unclassed outer path is the round
+   colored backdrop in the source file — we hide it because .nav__circle
+   already provides the bg + border. */
+.nav.nav--jm .nav__circle svg .cls-1 { fill: currentColor; }
+.nav.nav--jm .nav__circle svg > path:not(.cls-1) { fill: transparent; }
+
+@media (max-width: 1024px) {
+  .nav.nav--jm .nav__social.nav__social--glass { display: none; }
 }
 
 /* -----------------------------------------------------------
