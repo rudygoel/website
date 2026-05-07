@@ -2370,7 +2370,7 @@ a.card:hover,
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(1.18); /* default zoom into the frame */
+  transform: scale(1.58); /* default zoom into the frame */
   transition: transform 1.2s var(--ease);
   filter: saturate(0.92) contrast(1.02);
 }
@@ -2781,9 +2781,8 @@ section + section#book {
 }
 .nav.nav--jm .nav__social a:hover::after { transform: scaleX(1); }
 
-/* override the icon-only social bg from earlier rules.
-   Excludes .nav__circle so the new SVG-icon circles keep their 40×40 box. */
-.nav.nav--jm .nav__social a:not(.nav__circle) {
+/* override the icon-only social bg from earlier rules */
+.nav.nav--jm .nav__social a {
   background: none !important;
   width: auto !important;
   height: auto !important;
@@ -2868,12 +2867,6 @@ section + section#book {
   top: clamp(100px, 12vw, 160px);
   left: clamp(20px, 4vw, 56px);
   text-align: left;
-  /* Wordmark "IMPACT." — bolder and bigger than the default corner heading. */
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(28px, 3.4vw, 52px);
-  letter-spacing: -0.01em;
-  line-height: 1;
 }
 /* Subtitle sits directly below the wordmark, right-aligned. Newsreader italic
    for the accent (kept inside the project's two fonts). */
@@ -3112,42 +3105,7 @@ section + section#book {
     0 8px 20px rgba(0, 0, 0, 0.24);
 }
 
-/* Circles that load an external SVG via mountNavIcons:
-   - the SVG ships as a coloured circle + symbol designed for white-on-bg.
-   - we keep the original artwork and theme it via two CSS hooks:
-       fill (the bg circle + inner detail) and currentColor (the .cls-1 symbol).
-   - .nav__circle's own glass background is hidden so the SVG provides the
-     circle. */
-.nav.nav--jm .nav__circle[data-nav-icon] {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-          backdrop-filter: none;
-  overflow: hidden;
-}
-
-.nav.nav--jm .nav__circle[data-nav-icon] svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  /* default fill (non-cls-1 paths: bg circle, inner detail) */
-  fill: var(--palette-pine-shadow);
-  /* color drives currentColor for cls-1 paths (the symbol) */
-  color: var(--color-text);
-  transition: fill var(--d-base) var(--ease), color var(--d-base) var(--ease);
-}
-
-.nav.nav--jm .nav__circle[data-nav-icon] svg .cls-1 {
-  fill: currentColor;
-}
-
-.nav.nav--jm .nav__circle[data-nav-icon]:hover svg {
-  fill: var(--palette-pine);
-  color: var(--color-accent);
-}
-
-.nav.nav--jm .nav__circle:not([data-nav-icon]) svg {
+.nav.nav--jm .nav__circle svg {
   width: 17px;
   height: 17px;
   display: block;
