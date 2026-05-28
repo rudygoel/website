@@ -2392,11 +2392,8 @@ a.card:hover,
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(1.58); /* default zoom into the frame */
-  transition: transform 1.2s var(--ease);
   filter: saturate(0.92) contrast(1.02);
 }
-.about__portrait:hover img { transform: scale(1.02); }
 .about__portrait::before {
   content: "";
   position: absolute;
@@ -2715,12 +2712,17 @@ section + section#book {
   transform: translateY(-1px);
 }
 
-/* The center pill */
+/* The center pill — inline-flex with a uniform 12px gap. Grid columns
+   forced "Testimonials" to fill its track edge-to-edge while shorter
+   labels had ~22px of empty slack, which leaked into the visible gap
+   on the left side and produced an uneven 32/32/8/8 rhythm. Inline-flex
+   measures gap edge-to-edge so the rhythm reads consistent regardless
+   of label width. */
 .nav__pill {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px;
+  gap: var(--s-3);
+  padding: 6px 12px;
   background: rgba(221, 211, 196, 0.06);
   border: 1px solid var(--color-border);
   border-radius: 999px;
@@ -2742,6 +2744,7 @@ section + section#book {
   border-radius: 999px;
   transition: background var(--d-fast) var(--ease),
               color var(--d-fast) var(--ease);
+  white-space: nowrap;
 }
 .nav__pill > a:hover { background: rgba(221, 211, 196, 0.08); }
 
@@ -2751,6 +2754,10 @@ section + section#book {
   justify-content: center;
   width: 36px;
   height: 36px;
+  /* 8px breathing margin on each side, on top of the pill's 12px flex
+     gap, so the RG mark sits with ~20px clearance from neighbouring
+     links — reads as a deliberate center anchor, not just a fifth item. */
+  margin: 0 var(--s-2) !important;
   padding: 0 !important;
   background: var(--color-text) !important;
   color: var(--color-text-inverse) !important;
@@ -2803,8 +2810,10 @@ section + section#book {
 }
 .nav.nav--jm .nav__social a:hover::after { transform: scaleX(1); }
 
-/* override the icon-only social bg from earlier rules */
-.nav.nav--jm .nav__social a {
+/* override the icon-only social bg from earlier rules — scoped to the
+   TEXT social row only. The :not(.nav__circle) guard keeps the glass-pill
+   nav__circle variant intact (width: 40px, height: 40px, faint Linen bg). */
+.nav.nav--jm .nav__social a:not(.nav__circle) {
   background: none !important;
   width: auto !important;
   height: auto !important;
@@ -3090,7 +3099,11 @@ section + section#book {
 
 .nav.nav--jm .nav__social--glass li { display: inline-flex; }
 
-.nav.nav--jm .nav__circle {
+/* Higher-specificity selector (.nav__social--glass + .nav__circle) so this
+   wins over the earlier `.nav.nav--jm .nav__social a { color: tobacco }`
+   rule that targets the text-variant social row. Without this bump the
+   glass-pill icons inherited Tobacco and washed into the background. */
+.nav.nav--jm .nav__social--glass .nav__circle {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -3116,9 +3129,9 @@ section + section#book {
     0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
-.nav.nav--jm .nav__circle::after { content: none !important; }
+.nav.nav--jm .nav__social--glass .nav__circle::after { content: none !important; }
 
-.nav.nav--jm .nav__circle:hover {
+.nav.nav--jm .nav__social--glass .nav__circle:hover {
   background: rgba(221, 211, 196, 0.14);
   border-color: rgba(221, 211, 196, 0.32);
   color: var(--color-accent);
@@ -3128,9 +3141,12 @@ section + section#book {
     0 8px 20px rgba(0, 0, 0, 0.24);
 }
 
-.nav.nav--jm .nav__circle svg {
-  width: 17px;
-  height: 17px;
+.nav.nav--jm .nav__social--glass .nav__circle svg {
+  /* These icons are full self-contained circle badges (Linen disc with
+     the logo carved through via fill-rule: evenodd). Scale to fill most
+     of the glass pill so the glyph reads cleanly at a glance. */
+  width: 30px;
+  height: 30px;
   display: block;
 }
 
@@ -3139,8 +3155,15 @@ section + section#book {
    tracks the link's currentColor. The unclassed outer path is the round
    colored backdrop in the source file — we hide it because .nav__circle
    already provides the bg + border. */
-.nav.nav--jm .nav__circle svg .cls-1 { fill: currentColor; }
-.nav.nav--jm .nav__circle svg > path:not(.cls-1) { fill: transparent; }
+/* mountNavIcons() removes the backdrop circle at runtime, so every element
+   left inside the SVG is part of the glyph. Paint the whole thing with the
+   link's currentColor (Linen at rest, Tobacco on hover). No class-based
+   masking — that was hiding the unclassed glyph paths in Instagram /
+   YouTube and leaving the pill empty. */
+.nav.nav--jm .nav__social--glass .nav__circle svg,
+.nav.nav--jm .nav__social--glass .nav__circle svg * {
+  fill: currentColor;
+}
 
 @media (max-width: 1024px) {
   .nav.nav--jm .nav__social.nav__social--glass { display: none; }

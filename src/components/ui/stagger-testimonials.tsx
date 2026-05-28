@@ -14,15 +14,17 @@ export type StaggerTestimonialItem = {
   imgSrc?: string | null;
 };
 
+// Fail-safe: only used if the parent forgets to pass `items`. Production
+// always passes the real list from proof.ts via stagger-mount.tsx, so this
+// is a single-card "system is up" placeholder, not seed content.
 const FALLBACK: StaggerTestimonialItem[] = [
-  { tempId: 0, testimonial: "Hired Rudy after our welcome sequence converted at 0%. Three weeks later it's pulling 28%. He just gets the voice on draft one, every time.", by: "[CLIENT NAME], Performance Coach", imgSrc: null },
-  { tempId: 1, testimonial: "The first broadcast Rudy sent under my name made $11K. I'm not rounding up. He moves my list like nobody else has.", by: "[CLIENT NAME], Mindset Coach", imgSrc: null },
-  { tempId: 2, testimonial: "I've worked with five copywriters. Rudy is the only one who got me on draft one. Saves me an hour a week, easy.", by: "[CLIENT NAME], High-performance Coach", imgSrc: null },
-  { tempId: 3, testimonial: "Rudy doesn't just write. He thinks. The strategy calls alone are worth the retainer. The emails are a bonus.", by: "[CLIENT NAME], Founder", imgSrc: null },
-  { tempId: 4, testimonial: "Best decision we made this year was bringing Rudy on for our launch sequence. List has never been hotter.", by: "[CLIENT NAME], Course Creator", imgSrc: null },
-  { tempId: 5, testimonial: "Replies started coming in the same day. Real ones, from real readers. That's the difference Rudy makes.", by: "[CLIENT NAME], Coach", imgSrc: null },
-  { tempId: 6, testimonial: "Rudy has provided me with more than I could ever ask for. He exceeded my expectations and has become a guiding force for my business and its messaging.", by: "Joel Edgley, Owner at FINEDGE Media", imgSrc: null },
-  { tempId: 7, testimonial: "If you want someone who can deliver great copy and drive revenue for your business, plus elevate your own writing skills in the process, Rudy's your guy.", by: "Jose Williams, Copywriter", imgSrc: null },
+  {
+    tempId: 0,
+    testimonial:
+      "Real testimonials load from src/data/proof.ts. If you're seeing this, the data import failed.",
+    by: "Fallback",
+    imgSrc: null,
+  },
 ];
 
 interface TestimonialCardProps {
@@ -45,17 +47,17 @@ function getInitials(by: string): string {
 /**
  * Quote font size scales inversely with character count so a long quote
  * fits the card without crashing into the byline. Tuned for the current
- * card sizes (360 desktop / 280 mobile).
+ * card sizes (440 desktop / 320 mobile).
  *
- *   ≤ 70 chars → base size (20 / 16)
- *   middle    → step down 1px per 25 extra chars
- *   ≥ ~330 chars → min size (11 / 9), the rest clips with overflow:hidden
+ *   ≤ 90 chars → base size (20 / 16)
+ *   middle    → step down 1px per 40 extra chars (gentler than before)
+ *   long      → floor at 14 / 12 so quotes stay legible end-to-end
  */
 function quoteFontSize(quoteLen: number, cardSize: number): number {
-  const base = cardSize >= 340 ? 20 : 16;
-  const min = cardSize >= 340 ? 11 : 9;
-  const overshoot = Math.max(0, quoteLen - 70);
-  const px = base - Math.round(overshoot / 25);
+  const base = cardSize >= 400 ? 20 : 16;
+  const min = cardSize >= 400 ? 14 : 12;
+  const overshoot = Math.max(0, quoteLen - 90);
+  const px = base - Math.round(overshoot / 40);
   return Math.max(min, px);
 }
 
@@ -81,7 +83,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           "polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)",
         transform: `
           translate(-50%, -50%)
-          translateX(${(cardSize / 1.5) * position}px)
+          translateX(${(cardSize / 1.6) * position}px)
           translateY(${isCenter ? -65 : position % 2 ? 15 : -15}px)
           rotate(${isCenter ? 0 : position % 2 ? 2.5 : -2.5}deg)
         `,
@@ -157,7 +159,7 @@ export const StaggerTestimonials: React.FC<StaggerTestimonialsProps> = ({
   useEffect(() => {
     const updateSize = () => {
       const { matches } = window.matchMedia("(min-width: 640px)");
-      setCardSize(matches ? 360 : 280);
+      setCardSize(matches ? 400 : 300);
     };
     updateSize();
     window.addEventListener("resize", updateSize);
@@ -165,11 +167,14 @@ export const StaggerTestimonials: React.FC<StaggerTestimonialsProps> = ({
   }, []);
 
   return (
-    <div className="stagger-stage" style={{ height: 600 }}>
+    <div className="stagger-stage" style={{ height: 660 }}>
       {list.map((t, index) => {
+        // Symmetric centering: 5 cards → -2, -1, 0, +1, +2. The earlier
+        // `(length + 1) / 2` made odd lists lean left, pushing the first
+        // card off-screen when the stack got bigger.
         const position =
           list.length % 2
-            ? index - (list.length + 1) / 2
+            ? index - Math.floor(list.length / 2)
             : index - list.length / 2;
         return (
           <TestimonialCard

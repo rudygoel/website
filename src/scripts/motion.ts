@@ -360,6 +360,19 @@ function initJmHero(nameEl: HTMLElement): void {
   let active = false; // pointer is over the hero
   let raf = 0;
 
+  // Auto-pulse: on viewports where the symbol box is hidden (CSS hides it
+  // at ≤768px), there is no cursor to drive the wordmark stretch. Run a
+  // slow cosine cycle that breathes Rudy ↔ Goel between max squish and
+  // max stretch, so the brand mark feels alive on phones too.
+  //
+  // Period is intentionally long (~9s per full cycle): cosine eases at the
+  // peaks, so the wordmark dwells briefly at each extreme rather than
+  // sweeping nonstop. Quiet-luxury pace, not banner-ad pulsing.
+  const noBoxQuery = window.matchMedia("(max-width: 768px)");
+  const AUTO_PERIOD_MS = 9000;
+  let auto = false;
+  let autoStart = 0;
+
   // Bounds cache. Refreshed on resize / fonts settle / entrance complete.
   // - heroLeft / heroWidth: viewport bounds of the hero (used for mouse → x).
   // - innerWidth: width of the .hero__name-inner box (the words' coord system).
@@ -427,9 +440,15 @@ function initJmHero(nameEl: HTMLElement): void {
   };
 
   const tick = (): void => {
+    if (auto) {
+      // Drive targetX with a cosine wave: 0 → 1 → 0 → 1 …
+      // cos eases at the peaks, so motion slows naturally at extremes.
+      const t = (performance.now() - autoStart) / AUTO_PERIOD_MS;
+      targetX = 0.5 - 0.5 * Math.cos(t * Math.PI * 2);
+    }
     currentX = lerp(currentX, targetX, DAMP);
     apply(currentX);
-    if (Math.abs(currentX - targetX) > 0.0005 || active) {
+    if (Math.abs(currentX - targetX) > 0.0005 || active || auto) {
       raf = requestAnimationFrame(tick);
     } else {
       raf = 0;
@@ -437,6 +456,30 @@ function initJmHero(nameEl: HTMLElement): void {
   };
   const startLoop = (): void => {
     if (!raf) raf = requestAnimationFrame(tick);
+  };
+
+  const startAuto = (): void => {
+    if (auto) return;
+    auto = true;
+    autoStart = performance.now();
+    startLoop();
+  };
+  const stopAuto = (): void => {
+    if (!auto) return;
+    auto = false;
+    targetX = 0; // ease back to landing state
+    startLoop();
+  };
+  const syncAutoMode = (): void => {
+    // Resize crossing the 768px line: re-measure (boxW changes when the
+    // box flips between display:block and none) and toggle the pulse.
+    measure();
+    if (noBoxQuery.matches) {
+      startAuto();
+    } else {
+      stopAuto();
+      apply(currentX);
+    }
   };
 
   const onMove = (e: PointerEvent): void => {
@@ -454,11 +497,11 @@ function initJmHero(nameEl: HTMLElement): void {
   heroEl.addEventListener("pointerleave", onLeave);
   // On resize, re-measure AND re-apply the current state. measure() alone
   // resets the words to scaleX(1) for measurement; without apply() the words
-  // stay at scale 1 and the box drifts out of alignment.
-  window.addEventListener("resize", () => {
-    measure();
-    apply(currentX);
-  });
+  // stay at scale 1 and the box drifts out of alignment. syncAutoMode also
+  // crosses the 768px breakpoint cleanly: starts the pulse on the way down,
+  // stops it on the way back up.
+  window.addEventListener("resize", syncAutoMode);
+  noBoxQuery.addEventListener("change", syncAutoMode);
 
   // Trigger pills (sr-only, keyboard a11y): nudge target to the symbol's region.
   document.querySelectorAll<HTMLElement>("[data-trigger]").forEach((t) => {
@@ -531,6 +574,9 @@ function initJmHero(nameEl: HTMLElement): void {
         // overlapping the wordmark — until the first pointermove fixes it.
         measure();
         apply(currentX);
+        // Hand off to the auto-pulse on phone-sized viewports where there
+        // is no cursor to drive the stretch.
+        if (noBoxQuery.matches) startAuto();
       },
     });
     tl.to(taglineEl, { autoAlpha: 1, y: 0, duration: 0.7 }, 0)

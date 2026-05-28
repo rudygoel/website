@@ -10,12 +10,8 @@ import "../styles/layout.css";
 import "../styles/components.css";
 
 import {
-  clients,
-  stats,
   testimonials,
   press,
-  writingPosts,
-  instagramEmbedUrl,
   type VideoTestimonial,
 } from "../data/proof";
 
@@ -85,12 +81,14 @@ async function mountNavIcons(): Promise<void> {
         const doc = new DOMParser().parseFromString(text, "image/svg+xml");
         const svg = doc.documentElement;
         if (!(svg instanceof SVGElement)) return;
-        // Strip the embedded style block (it baked white into .cls-1).
+        // Strip embedded style blocks if present.
         svg.querySelectorAll("style, defs").forEach((el) => el.remove());
         // Strip ID/data-name to avoid duplicate IDs across multiple icons.
         svg.removeAttribute("id");
         svg.removeAttribute("data-name");
         svg.removeAttribute("fill");
+        // Drop hardcoded inline fills on inner paths so CSS currentColor wins.
+        svg.querySelectorAll("[fill]").forEach((el) => el.removeAttribute("fill"));
         svg.setAttribute("aria-hidden", "true");
         a.insertAdjacentHTML("afterbegin", svg.outerHTML);
       } catch {
@@ -111,52 +109,6 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function renderRoster(): void {
-  const mount = document.querySelector<HTMLElement>('[data-proof="roster"]');
-  if (!mount) return;
-  if (clients.length === 0) {
-    mount.remove();
-    return;
-  }
-  const items = clients
-    .map(
-      (c) => `
-      <li>
-        <strong>${escapeHtml(c.name)}</strong>
-        <span>${escapeHtml(c.role)}</span>
-      </li>`,
-    )
-    .join("");
-  mount.innerHTML = `
-    <header class="proof__sub-head">
-      <h3>The roster, <em>so far</em>.</h3>
-      <span class="meta">${clients.length} clients</span>
-    </header>
-    <ul class="proof__roster-row" role="list">${items}</ul>
-  `;
-}
-
-function renderStats(): void {
-  const grid = document.querySelector<HTMLElement>(
-    '[data-proof="stats-grid"]',
-  );
-  const wrap = document.querySelector<HTMLElement>('[data-proof="stats"]');
-  if (!grid || !wrap) return;
-  if (stats.length === 0) {
-    wrap.remove();
-    return;
-  }
-  grid.innerHTML = stats
-    .map(
-      (s) => `
-      <div class="stat-tile">
-        <span class="stat-tile__num"><em>${escapeHtml(s.number)}</em></span>
-        <p class="stat-tile__caption">${escapeHtml(s.caption)}</p>
-      </div>`,
-    )
-    .join("");
 }
 
 function renderPortraitVideos(): void {
@@ -259,39 +211,6 @@ async function renderPress(): Promise<void> {
   // Duplicate the list so the CSS keyframe can translate -50% for a seamless loop.
   row.innerHTML = items + items;
   row.setAttribute("aria-hidden", "true");
-}
-
-function renderWriting(): void {
-  const grid = document.querySelector<HTMLElement>('[data-proof="writing"]');
-  if (!grid) return;
-  const tiles = writingPosts.map((post) => {
-    const channelLabel = post.channel === "INSTAGRAM" ? "Instagram" : post.channel === "FACEBOOK" ? "Facebook" : "LinkedIn";
-    const cta =
-      post.channel === "LINKEDIN"
-        ? "Read on LinkedIn ↗"
-        : post.channel === "INSTAGRAM"
-          ? "View on Instagram ↗"
-          : "Read on Facebook ↗";
-    return `
-      <a class="writing-tile" href="${escapeHtml(post.url)}" target="_blank" rel="noopener">
-        <span class="writing-tile__date">${escapeHtml(post.date)} · ${escapeHtml(channelLabel.toUpperCase())}</span>
-        <p class="writing-tile__excerpt">${escapeHtml(post.excerpt)}</p>
-        <span class="link writing-tile__cta">${escapeHtml(cta)}</span>
-      </a>
-    `;
-  });
-
-  if (instagramEmbedUrl) {
-    tiles.push(`
-      <a class="writing-tile writing-tile--ig" href="${escapeHtml(instagramEmbedUrl)}" target="_blank" rel="noopener">
-        <span class="writing-tile__date">INSTAGRAM</span>
-        <p class="writing-tile__excerpt">[Instagram embed will load here once a public URL is supplied.]</p>
-        <span class="link writing-tile__cta">View on Instagram ↗</span>
-      </a>
-    `);
-  }
-
-  grid.innerHTML = tiles.join("");
 }
 
 // -----------------------------------------------
@@ -400,12 +319,9 @@ function setFooterDate(): void {
 function boot(): void {
   mountSocialSvgs();
   mountNavIcons();
-  renderRoster();
-  renderStats();
   renderPortraitVideos();
   mountStaggerIsland();
   renderPress();
-  renderWriting();
   initVideoTestimonials();
   initMobileNav();
   initFaq();

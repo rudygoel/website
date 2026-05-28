@@ -1,26 +1,14 @@
 /**
  * proof.ts — single source of truth for the Proof section.
- * Update this file to add/remove clients, stats, testimonials, or press.
+ * Update this file to add/remove testimonials or press logos.
  * Renderers in main.ts read these arrays and inject markup.
  */
-
-export type Client = {
-  name: string;
-  role: string;
-  logo: string | null;
-};
-
-export type Stat = {
-  number: string;
-  caption: string;
-};
 
 export type WrittenTestimonial = {
   type: "written";
   name: string;
   role: string;
   business?: string;
-  location?: string;
   avatar: string | null;
   brandLogo?: string | null;
   quote: string;
@@ -32,7 +20,6 @@ export type VideoTestimonial = {
   name: string;
   role: string;
   business?: string;
-  location?: string;
   poster: string;
   src: string | null;
   duration: string;
@@ -46,27 +33,6 @@ export type Press = {
   logo: string;
 };
 
-export type WritingPost = {
-  date: string;
-  channel: "LINKEDIN" | "INSTAGRAM" | "FACEBOOK";
-  excerpt: string;
-  url: string;
-};
-
-export const clients: ReadonlyArray<Client> = [
-  { name: "Byron Dempsey", role: "Driven Young / Founders Retreat", logo: null },
-  { name: "Kishan Bodalia", role: "DJ Accelerator / Bodalia Academy", logo: null },
-  { name: "Mike Fox", role: "Lone Wolf Unleashed", logo: null },
-  { name: "Rupert Bryce", role: "Performance Strategies", logo: null },
-  { name: "Terrence", role: "Broadcast retainers", logo: null },
-];
-
-export const stats: ReadonlyArray<Stat> = [
-  { number: "[47%]", caption: "Open rate on Easter promo for [Client]" },
-  { number: "[$15K]", caption: "Recovered from a re-engagement sequence in 14 days" },
-  { number: "[3.2×]", caption: "Reply rate after voice rebuild for a mastermind launch" },
-];
-
 export const testimonials: ReadonlyArray<Testimonial> = [
   /* ---------- VIDEO TESTIMONIALS (portrait) ---------- */
   {
@@ -75,7 +41,6 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     name: "Kishan",
     role: "Founder",
     business: "The DJ Accelerator",
-    location: "London",
     poster: "/assets/testimonials/kishan-dj-accelerator-poster.jpg",
     src: "/assets/testimonials/kishan-dj-accelerator.mp4",
     duration: "2:42",
@@ -87,7 +52,6 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     name: "Jasmine",
     role: "Founder",
     business: "The Outlier Group",
-    location: "Brisbane",
     poster: "/assets/testimonials/jasmine-outlier-group-poster.jpg",
     src: "/assets/testimonials/jasmine-outlier-group.mp4",
     duration: "2:24",
@@ -96,23 +60,24 @@ export const testimonials: ReadonlyArray<Testimonial> = [
   },
 
   /* ---------- WRITTEN TESTIMONIALS (real) ---------- */
+  /* Order chosen so the stagger carousel features Joel's long quote at the
+     central position (index 3 of 6 → position 0). Short quotes (Pav, Alfie)
+     sit at the outer positions where the carousel clips them — fine, since
+     their full text remains reachable via the chevrons. */
   {
     type: "written",
-    name: "Joel Edgley",
-    role: "Owner",
-    business: "FINEDGE Media",
-    location: "[CITY · COUNTRY]",
+    name: "Pav Hareesha",
+    role: "Creator",
+    business: "NetWorth Digital",
     avatar: null,
-    brandLogo: "/assets/testimonials/finedge-media-logo.png",
     quote:
-      "Rudy has provided me with more than I could ever ask for. I needed a copywriter and was initially skeptical, it's hard for someone to truly understand your voice. However, Rudy exceeded my expectations and has become a guiding force for my business and its messaging. Not only does Rudy write beautifully and help me convert potential customers into lasting relationships, but he has also acted as a valuable sounding board for ideas to help my business grow. His work has been a significant contributor to the growth of my company, FINEDGE Media.",
+      "From start to end, everything was a breeze. Exactly what I needed. Thanks Rudy.",
   },
   {
     type: "written",
     name: "Matthew Volkwyn",
     role: "Founder",
     business: "The Dojo",
-    location: "[CITY · COUNTRY]",
     avatar: null,
     quote:
       "A millionaire copywriter who's helped 7- and 8-figure online businesses generate millions reads, reviews, and loves my copy. Zero feedback. He calls me Rudraksh.",
@@ -122,72 +87,37 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     name: "Jose Williams",
     role: "Copywriter",
     business: "Law firm and legal business specialist",
-    location: "[CITY · COUNTRY]",
     avatar: null,
     quote:
       "If you want someone who can not only deliver great copy, drive revenue for your business but also elevate your own writing skills in the process... Rudy's your guy.",
   },
-
-  /* ---------- WRITTEN TESTIMONIALS (placeholder — replace with real) ---------- */
   {
     type: "written",
-    name: "[CLIENT NAME]",
-    role: "Performance Coach",
-    business: "[BUSINESS NAME]",
-    location: "[CITY · COUNTRY]",
+    name: "Joel Edgley",
+    role: "Owner",
+    business: "FINEDGE Media",
     avatar: null,
+    brandLogo: "/assets/testimonials/finedge-media-logo.png",
     quote:
-      "Hired Rudy after our welcome sequence converted at 0%. Three weeks later it's pulling 28%. He just gets the voice on draft one, every time.",
+      "Rudy has provided me with more than I could ever ask for. I needed a copywriter and was initially skeptical, it's hard for someone to truly understand your voice. However, Rudy exceeded my expectations and has become a guiding force for my business and its messaging. Not only does Rudy write beautifully and help me convert potential customers into lasting relationships, but he has also acted as a valuable sounding board for ideas to help my business grow. His work has been a significant contributor to the growth of my company, FINEDGE Media.",
   },
   {
     type: "written",
-    name: "[CLIENT NAME]",
-    role: "Mindset Coach",
-    business: "[BUSINESS NAME]",
-    location: "[CITY · COUNTRY]",
-    avatar: null,
-    quote:
-      "The first broadcast Rudy sent under my name made $11K. I'm not rounding up. He moves my list like nobody else has.",
-  },
-  {
-    type: "written",
-    name: "[CLIENT NAME]",
-    role: "High-performance Coach",
-    business: "[BUSINESS NAME]",
-    location: "[CITY · COUNTRY]",
-    avatar: null,
-    quote:
-      "I've worked with five copywriters. Rudy is the only one who got me on draft one. Saves me an hour a week, easy.",
-  },
-  {
-    type: "written",
-    name: "[CLIENT NAME]",
+    name: "Loki Kumar",
     role: "Founder",
-    business: "[BUSINESS NAME]",
-    location: "[CITY · COUNTRY]",
+    business: "Nunik Co.",
     avatar: null,
     quote:
-      "Rudy doesn't just write. He thinks. The strategy calls alone are worth the retainer. The emails are a bonus.",
+      "Rudy completely transformed my business's digital presence! He crafted a custom brand identity and voice guide that speaks perfectly to my audience, significantly enhancing the impact of my content. His attention to detail is remarkable, and he truly takes the time to build a real human connection. Highly recommend!",
   },
   {
     type: "written",
-    name: "[CLIENT NAME]",
-    role: "Course Creator",
-    business: "[BUSINESS NAME]",
-    location: "[CITY · COUNTRY]",
-    avatar: null,
-    quote:
-      "Best decision we made this year was bringing Rudy on for our launch sequence. List has never been hotter.",
-  },
-  {
-    type: "written",
-    name: "[CLIENT NAME]",
+    name: "Alfie Jorge",
     role: "Coach",
-    business: "[BUSINESS NAME]",
-    location: "[CITY · COUNTRY]",
+    business: "UnlockYou",
     avatar: null,
     quote:
-      "Replies started coming in the same day. Real ones, from real readers. That's the difference Rudy makes.",
+      "Rudy is a brilliant email copywriter who knows exactly how to get readers to stop scrolling and start clicking. They consistently deliver crisp, persuasive, and highly engaging emails that convert.",
   },
 ];
 
@@ -203,28 +133,3 @@ export const press: ReadonlyArray<Press> = [
   { name: "Amazon",       logo: "/assets/icons/amazon.svg" },
 ];
 
-export const writingPosts: ReadonlyArray<WritingPost> = [
-  {
-    date: "[2026 · MAR 12]",
-    channel: "LINKEDIN",
-    excerpt:
-      "[60 to 80 word LinkedIn post excerpt. Rudy will paste in a recent post that proves the writing on its own, no setup required. The best ones land a single belief shift in five sentences and end on a turn.]",
-    url: "#",
-  },
-  {
-    date: "[2026 · MAR 09]",
-    channel: "LINKEDIN",
-    excerpt:
-      "[Second LinkedIn excerpt. 60 to 80 words. Goes here verbatim from Rudy's feed. Pick the post that prompted the most replies that week, not the one with the highest reach.]",
-    url: "#",
-  },
-  {
-    date: "[2026 · MAR 06]",
-    channel: "LINKEDIN",
-    excerpt:
-      "[Third LinkedIn excerpt. The one your favourite client DMs you about. Keep it tight. This card is craft proof, not the whole post.]",
-    url: "#",
-  },
-];
-
-export const instagramEmbedUrl: string | null = null;
