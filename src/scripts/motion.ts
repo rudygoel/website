@@ -360,16 +360,22 @@ function initJmHero(nameEl: HTMLElement): void {
   let active = false; // pointer is over the hero
   let raf = 0;
 
-  // Bounds cache. Refreshed on resize.
+  // Bounds cache. Refreshed on resize / fonts settle / entrance complete.
   // - heroLeft / heroWidth: viewport bounds of the hero (used for mouse → x).
   // - innerWidth: width of the .hero__name-inner box (the words' coord system).
   //   leftPad/rightPad/word positions/box position are all in this space.
+  // - lp / rp / boxW: cached so apply() doesn't force layout every frame.
+  //   Calling getComputedStyle / offsetWidth from a 60fps tick was the
+  //   biggest source of perceived steppiness in the wordmark stretch.
   const innerEl = nameEl.querySelector<HTMLElement>(".hero__name-inner");
   let heroLeft = 0;
   let heroWidth = 1;
   let innerWidth = 1;
   let leftNat = 0;
   let rightNat = 0;
+  let lp = 56;
+  let rp = 56;
+  let boxW = 1;
   const measure = (): void => {
     const hr = heroEl.getBoundingClientRect();
     heroLeft = hr.left;
@@ -379,21 +385,17 @@ function initJmHero(nameEl: HTMLElement): void {
     rightWord.style.transform = "translateY(-50%) scaleX(1)";
     leftNat = leftWord.getBoundingClientRect().width;
     rightNat = rightWord.getBoundingClientRect().width;
+    lp = parseFloat(getComputedStyle(leftWord).left) || 56;
+    rp = parseFloat(getComputedStyle(rightWord).right) || 56;
+    boxW = symbolBox.offsetWidth || 1;
   };
 
   const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
-
-  const leftPad = () => parseFloat(getComputedStyle(leftWord).left) || 56;
-  const rightPad = () => parseFloat(getComputedStyle(rightWord).right) || 56;
 
   const apply = (x: number): void => {
     // All x-coordinates here are in the .hero__name-inner space.
     // Rudy is anchored at left:lp, Goel at right:rp. The box uses style.left
     // which is also in inner-space. So we use innerWidth, NOT heroWidth.
-    const lp = leftPad();
-    const rp = rightPad();
-    const boxW = symbolBox.offsetWidth || 1;
-
     const minCx = lp + leftNat * MIN_SCALE + boxW / 2;
     const maxCx = innerWidth - rp - rightNat * MIN_SCALE - boxW / 2;
     const cx = lerp(minCx, maxCx, x);
@@ -407,9 +409,11 @@ function initJmHero(nameEl: HTMLElement): void {
     const leftScale = Math.max(MIN_SCALE, (boxLeft - lp) / leftNat);
     const rightScale = Math.max(MIN_SCALE, (innerWidth - rp - boxRight) / rightNat);
 
-    leftWord.style.transform = `translateY(-50%) scaleX(${leftScale.toFixed(3)})`;
-    rightWord.style.transform = `translateY(-50%) scaleX(${rightScale.toFixed(3)})`;
-    symbolBox.style.left = `${boxLeft.toFixed(1)}px`;
+    // 5 decimals = sub-sub-pixel precision; .toFixed(3) at 17rem font sizes
+    // visibly quantized the width transitions.
+    leftWord.style.transform = `translateY(-50%) scaleX(${leftScale.toFixed(5)})`;
+    rightWord.style.transform = `translateY(-50%) scaleX(${rightScale.toFixed(5)})`;
+    symbolBox.style.left = `${boxLeft.toFixed(2)}px`;
 
     // Symbol per region (4 zones), default when not active.
     const idx = active
@@ -448,7 +452,13 @@ function initJmHero(nameEl: HTMLElement): void {
 
   heroEl.addEventListener("pointermove", onMove);
   heroEl.addEventListener("pointerleave", onLeave);
-  window.addEventListener("resize", measure);
+  // On resize, re-measure AND re-apply the current state. measure() alone
+  // resets the words to scaleX(1) for measurement; without apply() the words
+  // stay at scale 1 and the box drifts out of alignment.
+  window.addEventListener("resize", () => {
+    measure();
+    apply(currentX);
+  });
 
   // Trigger pills (sr-only, keyboard a11y): nudge target to the symbol's region.
   document.querySelectorAll<HTMLElement>("[data-trigger]").forEach((t) => {
@@ -511,7 +521,18 @@ function initJmHero(nameEl: HTMLElement): void {
 
     gsap.set(innerChars, { yPercent: 110 });
 
-    const tl = gsap.timeline({ delay: 0.2, onComplete: () => measure() });
+    const tl = gsap.timeline({
+      delay: 0.2,
+      onComplete: () => {
+        // Re-measure once layout has settled (fonts swapped, chars sliced,
+        // entrance finished) AND re-apply the rest state. Without the
+        // apply(), measure() leaves both words at scaleX(1) and the box
+        // sits wherever apply(0) parked it during init — typically
+        // overlapping the wordmark — until the first pointermove fixes it.
+        measure();
+        apply(currentX);
+      },
+    });
     tl.to(taglineEl, { autoAlpha: 1, y: 0, duration: 0.7 }, 0)
       .to(innerChars, { yPercent: 0, duration: 1, stagger: 0.04, ease: "power3.out" }, 0.05)
       .to(symbolBox, { opacity: 1, duration: 0.7, ease: "rgBox" }, 0.55)

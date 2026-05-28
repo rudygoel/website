@@ -105,7 +105,17 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     avatar: null,
     brandLogo: "/assets/testimonials/finedge-media-logo.png",
     quote:
-      "Rudy has provided me with more than I could ever ask for. I needed a copywriter and was initially skeptical. It is hard for someone to truly understand your voice. He exceeded my expectations and has become a guiding force for my business and its messaging. Not only does Rudy write beautifully and convert potential customers into lasting relationships, but he has also acted as a sounding board for ideas. His work has been a significant contributor to the growth of FINEDGE Media.",
+      "Rudy has provided me with more than I could ever ask for. I needed a copywriter and was initially skeptical, it's hard for someone to truly understand your voice. However, Rudy exceeded my expectations and has become a guiding force for my business and its messaging. Not only does Rudy write beautifully and help me convert potential customers into lasting relationships, but he has also acted as a valuable sounding board for ideas to help my business grow. His work has been a significant contributor to the growth of my company, FINEDGE Media.",
+  },
+  {
+    type: "written",
+    name: "Matthew Volkwyn",
+    role: "Founder",
+    business: "The Dojo",
+    location: "[CITY · COUNTRY]",
+    avatar: null,
+    quote:
+      "A millionaire copywriter who's helped 7- and 8-figure online businesses generate millions reads, reviews, and loves my copy. Zero feedback. He calls me Rudraksh.",
   },
   {
     type: "written",
@@ -115,7 +125,7 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     location: "[CITY · COUNTRY]",
     avatar: null,
     quote:
-      "If you want someone who can not only deliver great copy and drive revenue for your business, but also elevate your own writing skills in the process. Rudy's your guy.",
+      "If you want someone who can not only deliver great copy, drive revenue for your business but also elevate your own writing skills in the process... Rudy's your guy.",
   },
 
   /* ---------- WRITTEN TESTIMONIALS (placeholder — replace with real) ---------- */

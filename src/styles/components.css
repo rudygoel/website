@@ -3393,3 +3393,96 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .press-marquee__track { animation: none; }
 }
+
+/* ============================================================
+   v3.3 — Responsive polish
+
+   Fixes from the cross-viewport audit:
+   - Hero subtitle was nowrap + max-width, so it clipped at <600px.
+   - Footer text links and social icons fell well under the 44×44
+     touch target on mobile.
+   - Sticky nav was eating the top of any section scrolled to via
+     anchor link (press, proof, book).
+   - Drawer link tap targets were ~38px tall; mobile users couldn't
+     reliably tap them with a thumb.
+   ============================================================ */
+
+/* Every linkable section sits below the 72px sticky nav when reached
+   via in-page anchors. */
+.section,
+#hero,
+#about,
+#work,
+#press,
+#proof,
+#book {
+  scroll-margin-top: 80px;
+}
+
+@media (max-width: 768px) {
+  /* Hero subtitle: drop nowrap so the 14ch max-width can actually wrap
+     instead of overflowing the viewport edge. */
+  .hero--jm .hero__role--br {
+    white-space: normal;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+
+  /* Drawer link tap targets — display-serif at 32px was only 38px tall.
+     Pad to 48px so a thumb hits cleanly. */
+  .nav__drawer-links a {
+    display: block;
+    padding-block: var(--s-2);
+    min-height: 48px;
+    line-height: 1.4;
+  }
+
+  /* Footer column links — text-only at 14px landed at 18px tall.
+     Give each row at least a 44px hit zone without altering the visual
+     weight of the column. */
+  .footer__col li {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .footer__col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: var(--s-2);
+  }
+
+  /* Footer wordmark — 40px tall, bump to 44 via padding. */
+  .footer__brand .wordmark {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: var(--s-1);
+  }
+
+  /* Footer social row — icons stay 18px visually, but each link
+     expands its hit area to 44×44 with padding. */
+  .footer__social {
+    gap: var(--s-3);
+  }
+  .footer__social a {
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+  }
+
+  /* "or email rudy@…" faint link on the book panel was 22px tall. */
+  .book__row .link--faint {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: var(--s-2);
+  }
+
+  /* Press heading is centered + sits near the nav. Add a bit of breath
+     so the "Taught by leaders" line never gets shaved by the nav blur. */
+  .press-section {
+    scroll-margin-top: 96px;
+  }
+}
