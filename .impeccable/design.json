@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-28T11:10:00Z",
+  "title": "Design System: Rudy Goel",
+  "extensions": {
+    "colorMeta": {
+      "charcoal": {
+        "role": "neutral",
+        "displayName": "Charcoal",
+        "canonical": "#16191A",
+        "tonalRamp": ["#0A0B0B", "#101213", "#16191A", "#1F2326", "#2A2F32", "#3A4044", "#4E5559", "#737A7E"]
+      },
+      "pine-shadow": {
+        "role": "neutral",
+        "displayName": "Pine Shadow",
+        "canonical": "#1F2D2A",
+        "tonalRamp": ["#0F1715", "#15201D", "#1A2724", "#1F2D2A", "#2A3D38", "#385047", "#4D6A60", "#739088"]
+      },
+      "pine": {
+        "role": "neutral",
+        "displayName": "Pine",
+        "canonical": "#3D5852",
+        "tonalRamp": ["#1A2624", "#243531", "#2E443E", "#3D5852", "#4E6E66", "#6B8980", "#8DA89F", "#B8CCC4"]
+      },
+      "tobacco": {
+        "role": "primary",
+        "displayName": "Tobacco",
+        "canonical": "#8B6F4E",
+        "tonalRamp": ["#3A2D1F", "#4E3D2A", "#6A5439", "#7A6044", "#8B6F4E", "#A38561", "#B89B77", "#D5BFA0"]
+      },
+      "tobacco-strong": {
+        "role": "primary",
+        "displayName": "Tobacco Strong",
+        "canonical": "#A38561",
+        "tonalRamp": ["#3A2D1F", "#5A4530", "#7A6044", "#8B6F4E", "#A38561", "#B89B77", "#CDB58F", "#E2D2B5"]
+      },
+      "tobacco-deep": {
+        "role": "primary",
+        "displayName": "Tobacco Deep",
+        "canonical": "#7A6044",
+        "tonalRamp": ["#33271A", "#4A3A28", "#5C4933", "#6B5640", "#7A6044", "#8B6F4E", "#A38561", "#B89B77"]
+      },
+      "linen": {
+        "role": "neutral",
+        "displayName": "Linen",
+        "canonical": "#DDD3C4",
+        "tonalRamp": ["#3F3A33", "#5F5750", "#807767", "#A09786", "#BFB6A5", "#DDD3C4", "#EBE3D6", "#F5F0E8"]
+      }
+    },
+    "typographyMeta": {
+      "display-xl": {
+        "displayName": "Display XL",
+        "purpose": "Hero headline only. One per page. opsz 72."
+      },
+      "display-l": {
+        "displayName": "Display L",
+        "purpose": "Section openers and final CTA panel."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Standard section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "H3 and pull-quote scale."
+      },
+      "body-large": {
+        "displayName": "Body Large",
+        "purpose": "Lead paragraph only."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default body copy. Cap at 65–75ch."
+      },
+      "label": {
+        "displayName": "Label / Eyebrow",
+        "purpose": "JetBrains Mono. Eyebrows, section numbers, metadata. The only place caps are allowed."
+      },
+      "quote": {
+        "displayName": "Quote",
+        "purpose": "Pull quotes and testimonial copy. Italic, no rendered \" characters."
+      }
+    },
+    "shadows": [
+      { "name": "shadow-sm", "value": "0 1px 2px rgba(0, 0, 0, 0.2)", "purpose": "Rare one-off depth on overlays. Not for cards at rest." },
+      { "name": "shadow-md", "value": "0 8px 24px rgba(0, 0, 0, 0.3)", "purpose": "Scrim under the Calendly modal. Not for marketing surfaces." },
+      { "name": "shadow-lg", "value": "0 24px 48px rgba(0, 0, 0, 0.4)", "purpose": "Reserved for full-screen overlays. Currently unused." },
+      { "name": "nav-blur", "value": "backdrop-filter: blur(12px)", "purpose": "Sticky-nav scrolled state over 85%-opacity Charcoal." }
+    ],
+    "motion": [
+      { "name": "ease-rg", "value": "cubic-bezier(0.625, 0.05, 0, 1)", "purpose": "The custom GSAP ease registered as 'rg'. Default for every motion on the site." },
+      { "name": "ease-out", "value": "cubic-bezier(0, 0, 0.2, 1)", "purpose": "Exit transitions, hover-off." },
+      { "name": "ease-in-out", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Symmetric transitions only." },
+      { "name": "duration-fast", "value": "180ms", "purpose": "Micro-interactions (button color change, link hover)." },
+      { "name": "duration-base", "value": "280ms", "purpose": "Default. Card hover, nav state changes." },
+      { "name": "duration-slow", "value": "480ms", "purpose": "Section reveals, hero stagger steps." },
+      { "name": "duration-pageload", "value": "900ms", "purpose": "Preloader bar to first paint." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "0–639px" },
+      { "name": "tablet", "value": "640–1023px" },
+      { "name": "desktop", "value": "1024–1439px" },
+      { "name": "wide", "value": "1440px+" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Sole conversion CTA. Always reads 'Book the audit' (or the long form). Tobacco background, Charcoal text, sharp 2px corners.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\"><span class=\"ds-btn-label\">Book the audit</span></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 24px; background: #8B6F4E; color: #16191A; border: none; border-radius: 2px; font-family: 'Geist', system-ui, sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: background 180ms cubic-bezier(0.625, 0.05, 0, 1); } .ds-btn-primary:hover { background: #A38561; } .ds-btn-primary:active { background: #7A6044; } .ds-btn-primary:focus-visible { outline: 2px solid #8B6F4E; outline-offset: 2px; } .ds-btn-label { display: inline-block; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action. Transparent at rest, Pine Shadow fill on hover. Same dimensions as primary.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\"><span class=\"ds-btn-label\">See the work</span></button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 24px; background: transparent; color: #DDD3C4; border: 1px solid rgba(221, 211, 196, 0.18); border-radius: 2px; font-family: 'Geist', system-ui, sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: background 180ms cubic-bezier(0.625, 0.05, 0, 1), border-color 180ms cubic-bezier(0.625, 0.05, 0, 1); } .ds-btn-ghost:hover { background: #1F2D2A; border-color: rgba(221, 211, 196, 0.32); } .ds-btn-ghost:focus-visible { outline: 2px solid #8B6F4E; outline-offset: 2px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The only elevated surface in the system. Pine Shadow, 4px corners, hairline border. Hover lifts 2px and brightens the border.",
+      "html": "<article class=\"ds-card\"><p class=\"ds-card-eyebrow\">01 / WELCOME</p><h3 class=\"ds-card-title\">Welcome sequences</h3><p class=\"ds-card-body\">Done-for-you. Written end to end in your voice.</p></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 32px; background: #1F2D2A; color: #DDD3C4; border: 1px solid rgba(221, 211, 196, 0.08); border-radius: 4px; transition: transform 280ms cubic-bezier(0.625, 0.05, 0, 1), border-color 280ms cubic-bezier(0.625, 0.05, 0, 1); } .ds-card:hover { transform: translateY(-2px); border-color: rgba(221, 211, 196, 0.18); } .ds-card-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: #8B6F4E; margin: 0; } .ds-card-title { font-family: 'Newsreader', Georgia, serif; font-size: 28px; font-weight: 400; line-height: 1.1; letter-spacing: -0.015em; color: #DDD3C4; margin: 0; } .ds-card-body { font-family: 'Geist', system-ui, sans-serif; font-size: 16px; line-height: 1.6; color: rgba(221, 211, 196, 0.72); margin: 0; }"
+    },
+    {
+      "name": "Nav Pill",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "Floating top-center pill, 44px tall, Pine Shadow background, 999px radius. Geist 14px links inside.",
+      "html": "<nav class=\"ds-nav-pill\" role=\"group\"><a class=\"ds-nav-link\" href=\"#about\">About</a><a class=\"ds-nav-link\" href=\"#work\">Work</a><a class=\"ds-nav-link ds-nav-link-active\" href=\"#proof\">Testimonials</a><a class=\"ds-nav-link\" href=\"#book\">Book</a></nav>",
+      "css": ".ds-nav-pill { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 16px; background: #1F2D2A; border: 1px solid rgba(221, 211, 196, 0.08); border-radius: 999px; } .ds-nav-link { display: inline-flex; align-items: center; padding: 0 12px; height: 100%; font-family: 'Geist', system-ui, sans-serif; font-size: 14px; font-weight: 400; color: rgba(221, 211, 196, 0.72); text-decoration: none; transition: color 180ms cubic-bezier(0.625, 0.05, 0, 1); } .ds-nav-link:hover { color: #DDD3C4; } .ds-nav-link-active { color: #DDD3C4; box-shadow: inset 0 -1px 0 #8B6F4E; }"
+    },
+    {
+      "name": "Pull Quote",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Newsreader italic quote with a Tobacco hairline rule in place of the open-quote character. No \" rendered.",
+      "html": "<figure class=\"ds-pullquote\"><blockquote class=\"ds-pullquote-body\">If you can articulate the belief shift, I can write the email that lands it.</blockquote><figcaption class=\"ds-pullquote-attr\">RUDY GOEL · BRISBANE</figcaption></figure>",
+      "css": ".ds-pullquote { display: flex; flex-direction: column; gap: 16px; max-width: 60ch; margin: 0; } .ds-pullquote-body { position: relative; margin: 0; padding-top: 16px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 24px; font-weight: 400; line-height: 1.45; letter-spacing: -0.015em; color: #DDD3C4; } .ds-pullquote-body::before { content: ''; position: absolute; top: 0; left: 0; width: 24px; height: 1px; background: #8B6F4E; } .ds-pullquote-attr { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(221, 211, 196, 0.72); }"
+    },
+    {
+      "name": "Eyebrow + Section Number",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Editorial metadata that precedes every section heading. Mono number in Linen-faint, Tobacco eyebrow label below.",
+      "html": "<header class=\"ds-eyebrow\"><span class=\"ds-eyebrow-num\">03</span><span class=\"ds-eyebrow-label\">PROOF</span></header>",
+      "css": ".ds-eyebrow { display: flex; flex-direction: column; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; line-height: 1.4; } .ds-eyebrow-num { color: rgba(221, 211, 196, 0.32); } .ds-eyebrow-label { color: #8B6F4E; }"
+    },
+    {
+      "name": "Portrait Video Testimonial",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Portrait MP4 in a 9:16 frame with circular Tobacco play button overlay. Inline replace on click — no modal.",
+      "html": "<figure class=\"ds-portrait-video\"><div class=\"ds-portrait-video-frame\"><img class=\"ds-portrait-video-poster\" src=\"\" alt=\"\" aria-hidden=\"true\" /><button class=\"ds-portrait-video-play\" type=\"button\" aria-label=\"Play testimonial\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"#16191A\" /></svg></button><span class=\"ds-portrait-video-duration\">2:42</span></div><figcaption class=\"ds-portrait-video-caption\"><span class=\"ds-portrait-video-author\">Kishan, Founder at The DJ Accelerator</span><span class=\"ds-portrait-video-desc\">On what working with Rudy actually changed.</span></figcaption></figure>",
+      "css": ".ds-portrait-video { display: flex; flex-direction: column; gap: 16px; max-width: 320px; margin: 0; } .ds-portrait-video-frame { position: relative; aspect-ratio: 9 / 16; background: #1F2D2A; border-radius: 4px; overflow: hidden; } .ds-portrait-video-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; } .ds-portrait-video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #8B6F4E; color: #16191A; border: none; border-radius: 999px; cursor: pointer; transition: background 180ms cubic-bezier(0.625, 0.05, 0, 1); } .ds-portrait-video-play:hover { background: #A38561; } .ds-portrait-video-play:focus-visible { outline: 2px solid #DDD3C4; outline-offset: 2px; } .ds-portrait-video-duration { position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(22, 25, 26, 0.6); color: #DDD3C4; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; border-radius: 2px; } .ds-portrait-video-caption { display: flex; flex-direction: column; gap: 4px; } .ds-portrait-video-author { font-family: 'Geist', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #DDD3C4; } .ds-portrait-video-desc { font-family: 'Geist', system-ui, sans-serif; font-size: 14px; font-weight: 400; color: rgba(221, 211, 196, 0.72); line-height: 1.5; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lived-in Editorial Hotel",
+    "overview": "A dim, quiet space where every surface is considered and nothing shouts. Charcoal walls, lamp-warm Tobacco accents, restrained editorial typography — the visual equivalent of a small luxury hotel in winter. The brand pillar is editorial restraint: whitespace doing work, one italic accent word per headline, no caps-lock claims, no exclamation marks, no growth-chart screenshots, no purple gradients pretending to be premium. The site itself is the product demo for Rudy's craft, so its surfaces have to read the way his copy reads — thoughtful, direct, confident without bragging.\n\nThis system explicitly rejects the surrounding category. Marketing-agency energy (stock people on laptops, 'trusted by 10,000+ teams' lies), direct-response screamer pages (red CTAs, countdown timers, 'ONLY 3 SPOTS LEFT' badges), Web 2.0 freelancer sites (purple gradients, sparkle emoji framing, glassmorphism), generic SaaS (mesh gradients, isometric illustrations, the hero-metric template), and Demo2 energy (stacked marquees + pulsing socials + Anton on Anton + autoplay carousel + Lottie + testimonial slider firing in the same viewport) are all out. Quiet luxury hotel, not Times Square billboard.",
+    "keyCharacteristics": [
+      "Dark by default. Charcoal carries ~60% of any view; lamp-warm Tobacco appears only when something must be noticed.",
+      "Editorial serif up top, sans-serif body, mono for eyebrows and metadata. No fourth family. Ever.",
+      "Sharp corners (2–4px). No round-rect SaaS softness. No glassmorphism. No mesh gradients.",
+      "Hairline borders for elevation, not shadows. Cards lift via border-color shift + 2px translateY.",
+      "Left-asymmetric layouts. One italic accent word per headline. One [data-reveal] per section. Restful for ≥80% of any 5-second motion window."
+    ],
+    "rules": [
+      { "name": "The 60/30/10 Rule", "body": "Every viewport reads as ~60% Charcoal, ~30% Pine Shadow + Linen text, ~10% Tobacco. If a screenshot has Tobacco on more than 10% of pixels, the page is overheated. Pull it back.", "section": "colors" },
+      { "name": "The Tobacco Budget", "body": "Tobacco appears only as: (1) the primary CTA, (2) the single italic accent word inside a display headline, (3) JetBrains-Mono eyebrows, (4) link hover, (5) hairline rules. Five slots, total. Body copy in Tobacco is a build-breaker.", "section": "colors" },
+      { "name": "The No-Status-Color Rule", "body": "No bright red error, no green success, no traffic-light states. State changes use weight, opacity, underline, or border-color shift. Tobacco is the only saturated color in the system; everything else is the Pine/Linen family.", "section": "colors" },
+      { "name": "The Anti-Mid-Section Rule", "body": "Pine and Pine Shadow may not share the same hierarchy in one view — they read muddy together. Pick one elevation per section.", "section": "colors" },
+      { "name": "The One Italic Rule", "body": "A display headline gets one — and only one — italic accent word. 'Email copy that quietly prints money.' The italic is the emphasis; weight contrast is not added on top. Two italics in a headline is a build-breaker.", "section": "typography" },
+      { "name": "The Serif-Up Sans-Down Rule", "body": "Newsreader for H1–H3 + pull quotes. Geist for H4–H5 + body. JetBrains Mono for eyebrows / numbers / metadata only. Geist anywhere above H4 — wrong. A fourth typeface — wrong.", "section": "typography" },
+      { "name": "The No-Italic-Body Rule", "body": "Newsreader italic carries personality and is reserved for headline accents. Body copy stays roman, even when emphasis is wanted; reach for weight or a structural break instead.", "section": "typography" },
+      { "name": "The 1.5+ Line-Height Floor", "body": "Body line-height is never below 1.5. Reads cramped otherwise and breaks the editorial mood.", "section": "typography" },
+      { "name": "The Borders-Over-Shadows Rule", "body": "Card depth is conveyed by 1px hairline borders at rgba(221, 211, 196, 0.08) (raised to 0.18 on hover), never by box-shadow. Shadow tokens exist for overlays only.", "section": "elevation" },
+      { "name": "The No-Drop-Shadow-On-Text Rule", "body": "Text is never elevated with text-shadow. Hierarchy comes from scale, weight, and color, not from atmospherics.", "section": "elevation" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Elevation appears only as a response to state (hover lifts a card by 2px and shifts its border color toward Linen, focus rings show a 2px Tobacco outline).", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Charcoal (#16191A) for ~60% of every view, Pine Shadow (#1F2D2A) for any elevated surface, and Tobacco (#8B6F4E) only as CTA / italic accent / eyebrow / link hover / hairline.",
+      "Do keep type strictly within Newsreader + Geist + JetBrains Mono. Three families. Final.",
+      "Do italicise exactly one accent word per display headline. Zero or one — never two.",
+      "Do lift cards on hover by 2px translateY + border color shift to rgba(221, 211, 196, 0.18). Border, not shadow.",
+      "Do cap body line length at 65–75ch and keep body line-height at 1.5 or above.",
+      "Do keep the site restful for at least 80% of any 5-second motion window. One [data-reveal] per section.",
+      "Do make every primary CTA read 'Book the audit' (or, in long-form sections, 'Book a free 20-minute email audit'). Pick one phrasing per page and stay with it.",
+      "Do respect prefers-reduced-motion — every GSAP timeline, every Lenis instance, every reveal bails when it's set.",
+      "Do keep focus rings visible: outline: 2px solid var(--color-accent); outline-offset: 2px;. Never outline: none without an equivalent replacement."
+    ],
+    "donts": [
+      "Don't introduce any color outside Charcoal / Pine Shadow / Pine / Tobacco / Linen. No red error, no green success, no Instagram-gradient social icons.",
+      "Don't put Tobacco on body text. Tobacco is the lamp, not the wallpaper.",
+      "Don't place Pine and Pine Shadow side-by-side at the same hierarchy in one view — reads muddy.",
+      "Don't mix in a third typeface, use Geist above H4, justify text, italicise body copy, or center body copy.",
+      "Don't round corners above 8px. Sharp corners are the editorial signature.",
+      "Don't ship gradient text, side-stripe borders (border-left greater than 1px as a colored accent), or glassmorphism as default.",
+      "Don't ship the hero-metric template (big number + small label + supporting stats + gradient accent). SaaS cliché.",
+      "Don't ship identical card grids (same-sized icon + heading + text cards, repeated). Vary structure and density.",
+      "Don't scale, translate, or drop-shadow buttons on hover. Color change only.",
+      "Don't loop animations on text or logos. No bouncy or elastic easing. No 3D transforms, no perspective tricks, no parallax beyond ~8% movement.",
+      "Don't ship direct-response screamer page moves — no big red CTAs, no 'ONLY 3 SPOTS LEFT' badges, no countdown timers, no fake urgency.",
+      "Don't ship Web 2.0 freelancer site moves — no purple gradients, no 'I'm a creative ✨' framing, no drop shadows on text.",
+      "Don't ship generic SaaS moves — no mesh gradients, no isometric illustrations, no 'trusted by 10,000+' lies.",
+      "Don't ship Demo2 energy — stacked marquees, pulsing socials, Anton on Anton, autoplay carousel + Lottie + testimonial slider firing at once. The opposite of that.",
+      "Don't ship marketing-agency energy — stock photos of laptops/lightbulbs/growth charts, 'team' pages.",
+      "Don't reintroduce the old Rudy moves: circular face logo, the '$15K in 90 days' guarantee, listed pricing, emoji-prefixed service cards.",
+      "Don't add a second integration with its own CTA. Calendly is the only conversion surface; no newsletter signup, no PDF download, no exit-intent overlay, no live chat, no contact form."
+    ]
+  }
+}

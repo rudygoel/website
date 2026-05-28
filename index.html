@@ -79,6 +79,15 @@
   }
   </script>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1HE0PESGM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V1HE0PESGM');
+  </script>
+
   <!-- App entry -->
   <script type="module" src="/src/scripts/main.ts"></script>
 </head>
@@ -164,7 +173,14 @@
 
       <!-- Background portrait, faded with Tobacco wash -->
       <div class="hero__bg" aria-hidden="true">
-        <img src="/assets/images/rudy.png" alt="" fetchpriority="high" />
+        <img
+          src="/assets/images/rudy.jpg"
+          alt=""
+          width="1920"
+          height="1071"
+          fetchpriority="high"
+          decoding="async"
+        />
         <div class="hero__bg-tint"></div>
         <div class="hero__bg-vignette"></div>
       </div>
@@ -243,10 +259,10 @@
         <div class="about-grid">
           <figure class="about__portrait">
             <img
-              src="/assets/images/rudy-walking.png"
+              src="/assets/images/rudy-walking.jpeg"
               alt="Rudy Goel, walking."
-              width="800"
-              height="1000"
+              width="768"
+              height="1024"
               loading="lazy"
               decoding="async"
             />

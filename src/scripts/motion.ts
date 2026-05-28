@@ -88,6 +88,40 @@ function init(): void {
   initStaggerGroups();
   initNav();
   initScrollProgress();
+
+  scheduleScrollTriggerRefreshes();
+}
+
+/**
+ * ScrollTrigger calculates trigger positions immediately, but the layout
+ * keeps shifting after init: webfonts swap in, images decode, Lenis attaches,
+ * the React stagger island mounts. Without re-measuring, [data-reveal]
+ * elements that were "below 90%" at init time can end up well inside the
+ * viewport after layout settles — and stay hidden until the user scrolls.
+ *
+ * Refresh at every reasonable settle point, then once more on a generous
+ * safety timer.
+ */
+function scheduleScrollTriggerRefreshes(): void {
+  const refresh = (): void => ScrollTrigger.refresh();
+
+  // After the first frame, after the next two, then on each settle event.
+  requestAnimationFrame(() => {
+    refresh();
+    requestAnimationFrame(refresh);
+  });
+
+  const fonts = (document as unknown as { fonts?: { ready?: Promise<unknown> } }).fonts?.ready;
+  if (fonts) fonts.then(refresh).catch(() => {});
+
+  if (document.readyState === "complete") {
+    setTimeout(refresh, 0);
+  } else {
+    window.addEventListener("load", refresh, { once: true });
+  }
+
+  // Catch late mounts (React stagger island, dynamically inserted videos).
+  setTimeout(refresh, 1500);
 }
 
 /**
@@ -105,6 +139,8 @@ async function initLenis(): Promise<void> {
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
+    // Lenis attached after init; positions may have shifted in the meantime.
+    ScrollTrigger.refresh();
   } catch {
     /* Lenis is optional — bail silently */
   }
@@ -115,13 +151,13 @@ async function initLenis(): Promise<void> {
  * with a small delay between them. Used for testimonial cards and press logos.
  */
 function initStaggerGroups(): void {
-  if (document.hidden) return;
-
   const groups = gsap.utils.toArray<HTMLElement>("[data-stagger]");
+  const allItems: HTMLElement[] = [];
   for (const group of groups) {
     const items = Array.from(group.children) as HTMLElement[];
     if (items.length === 0) continue;
     gsap.set(items, { autoAlpha: 0, y: 14 });
+    allItems.push(...items);
     ScrollTrigger.create({
       trigger: group,
       start: "top 88%",
@@ -137,6 +173,15 @@ function initStaggerGroups(): void {
       },
     });
   }
+  // Safety: any stagger item still hidden 2.4s after init gets shown,
+  // so a stuck trigger never leaves content invisible.
+  setTimeout(() => {
+    for (const el of allItems) {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.05) {
+        gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.4, ease: "rg" });
+      }
+    }
+  }, 2400);
 }
 
 /* ---------------------------------------------------------------
@@ -510,16 +555,12 @@ function letterMask(el: HTMLElement): { inner: HTMLElement }[] {
 --------------------------------------------------------------- */
 
 function initSectionReveals(): void {
-  // If the page is hidden (preview, background tab) GSAP's ticker is
-  // throttled and reveals can stall. Skip the hide-then-reveal entirely.
-  if (document.hidden) return;
-
   const items = gsap.utils.toArray<HTMLElement>("[data-reveal]");
   for (const el of items) {
     gsap.set(el, { autoAlpha: 0, y: 16 });
     ScrollTrigger.create({
       trigger: el,
-      start: "top 90%",
+      start: "top 92%",
       once: true,
       onEnter: () => {
         gsap.to(el, {
@@ -531,11 +572,20 @@ function initSectionReveals(): void {
       },
     });
   }
-  // Catch any element already in viewport at load time
-  requestAnimationFrame(() => ScrollTrigger.refresh());
 
-  // Safety: if visibility flips back to hidden mid-animation,
-  // jump remaining reveals to their end state.
+  // Safety net: any reveal still invisible 2.4s after init gets shown
+  // regardless of trigger state. Catches stuck triggers from late layout
+  // shifts (image decode, font swap, React island mount).
+  setTimeout(() => {
+    for (const el of items) {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.05) {
+        gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.4, ease: "rg" });
+      }
+    }
+  }, 2400);
+
+  // If visibility flips to hidden mid-animation, jump remaining reveals
+  // to end state so they're visible when the tab comes back.
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       for (const el of items) gsap.set(el, { autoAlpha: 1, y: 0 });

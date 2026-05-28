@@ -20,7 +20,7 @@ declare global {
 
 const RAW_URL =
   (import.meta.env.VITE_CALENDLY_URL as string | undefined)?.trim() ||
-  "https://calendly.com/rudygoel/audit";
+  "https://calendly.com/rudygoel/email-strategy-audit";
 
 const CALENDLY_URL = withBrandTheme(RAW_URL);
 
