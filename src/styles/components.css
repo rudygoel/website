@@ -3509,3 +3509,102 @@ body::after {
     scroll-margin-top: 96px;
   }
 }
+
+/* -----------------------------------------------------------
+   CASE STUDIES (#cases) — editorial result blocks, Aug 2026
+   ----------------------------------------------------------- */
+
+.cases__head { margin-bottom: var(--s-7); }
+
+.cases__heading {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--text-display-m, clamp(34px, 5vw, 56px));
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+  margin: 0;
+}
+.cases__heading em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.case {
+  border-top: 1px solid var(--color-border);
+  padding: var(--s-7) 0;
+}
+.case:last-of-type { border-bottom: 1px solid var(--color-border); }
+
+.case__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: var(--s-3);
+}
+
+.case__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(24px, 2.8vw, 36px);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 var(--s-4);
+}
+
+.case__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .case__grid { grid-template-columns: 1fr; }
+}
+
+.case__body {
+  font-family: var(--font-body);
+  font-size: var(--text-body-l);
+  line-height: 1.65;
+  color: var(--color-text-soft);
+  margin: 0;
+  max-width: 58ch;
+}
+.case__body + .case__body { margin-top: var(--s-4); }
+
+.case__stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.case__stats li {
+  padding: var(--s-4) 0;
+  border-top: 1px solid var(--color-border);
+}
+.case__stats li:first-child { border-top: 0; padding-top: 0; }
+
+.case__stat-num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.2vw, 44px);
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+}
+.case__stat-label {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+/* Landscape (16:9) testimonial video spans the portrait grid */
+.portrait-video-figure--wide { grid-column: 1 / -1; }
+.portrait-video--wide { aspect-ratio: 16 / 9; }

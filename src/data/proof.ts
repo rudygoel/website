@@ -2,6 +2,10 @@
  * proof.ts — single source of truth for the Proof section.
  * Update this file to add/remove testimonials or press logos.
  * Renderers in main.ts read these arrays and inject markup.
+ *
+ * Policy (Aug 2026): verified real people only. Pav Hareesha, Loki Kumar
+ * and Alfie Jorge were removed (not real clients, per Rudy 18 Aug 2026).
+ * Matthew, Joel and Jose are confirmed real.
  */
 
 export type WrittenTestimonial = {
@@ -17,6 +21,8 @@ export type WrittenTestimonial = {
 export type VideoTestimonial = {
   type: "video";
   featured?: boolean;
+  /** Landscape videos render full-width 16:9; default is portrait 9:16. */
+  orientation?: "portrait" | "landscape";
   name: string;
   role: string;
   business?: string;
@@ -34,7 +40,6 @@ export type Press = {
 };
 
 export const testimonials: ReadonlyArray<Testimonial> = [
-  /* ---------- VIDEO TESTIMONIALS (portrait) ---------- */
   {
     type: "video",
     featured: true,
@@ -56,23 +61,22 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     src: "/assets/testimonials/jasmine-outlier-group.mp4",
     duration: "2:24",
     caption:
-      "Jasmine, founder of The Outlier Group, on what it's like to hand the email channel to Rudy.",
+      "Jasmine, founder of The Outlier Group, on what it's like to hand the writing to Rudy.",
+  },
+  {
+    type: "video",
+    orientation: "landscape",
+    name: "Byron Dempsey",
+    role: "Founder",
+    business: "Driven Young",
+    poster: "/assets/testimonials/byron-driven-young-poster.jpg",
+    src: "/assets/testimonials/byron-driven-young.mp4",
+    duration: "0:47",
+    caption:
+      "Byron Dempsey, founder of Driven Young, on Rudy's communication and bespoke marketing.",
   },
 
-  /* ---------- WRITTEN TESTIMONIALS (real) ---------- */
-  /* Order chosen so the stagger carousel features Joel's long quote at the
-     central position (index 3 of 6 → position 0). Short quotes (Pav, Alfie)
-     sit at the outer positions where the carousel clips them — fine, since
-     their full text remains reachable via the chevrons. */
-  {
-    type: "written",
-    name: "Pav Hareesha",
-    role: "Creator",
-    business: "NetWorth Digital",
-    avatar: null,
-    quote:
-      "From start to end, everything was a breeze. Exactly what I needed. Thanks Rudy.",
-  },
+  /* ---------- WRITTEN TESTIMONIALS (confirmed real) ---------- */
   {
     type: "written",
     name: "Matthew Volkwyn",
@@ -101,24 +105,6 @@ export const testimonials: ReadonlyArray<Testimonial> = [
     quote:
       "Rudy has provided me with more than I could ever ask for. I needed a copywriter and was initially skeptical, it's hard for someone to truly understand your voice. However, Rudy exceeded my expectations and has become a guiding force for my business and its messaging. Not only does Rudy write beautifully and help me convert potential customers into lasting relationships, but he has also acted as a valuable sounding board for ideas to help my business grow. His work has been a significant contributor to the growth of my company, FINEDGE Media.",
   },
-  {
-    type: "written",
-    name: "Loki Kumar",
-    role: "Founder",
-    business: "Nunik Co.",
-    avatar: null,
-    quote:
-      "Rudy completely transformed my business's digital presence! He crafted a custom brand identity and voice guide that speaks perfectly to my audience, significantly enhancing the impact of my content. His attention to detail is remarkable, and he truly takes the time to build a real human connection. Highly recommend!",
-  },
-  {
-    type: "written",
-    name: "Alfie Jorge",
-    role: "Coach",
-    business: "UnlockYou",
-    avatar: null,
-    quote:
-      "Rudy is a brilliant email copywriter who knows exactly how to get readers to stop scrolling and start clicking. They consistently deliver crisp, persuasive, and highly engaging emails that convert.",
-  },
 ];
 
 /* Press logos: SVGs are inlined at runtime by renderPress() so currentColor
@@ -132,4 +118,3 @@ export const press: ReadonlyArray<Press> = [
   { name: "Entrepreneur", logo: "/assets/icons/entrepreneur.svg" },
   { name: "Amazon",       logo: "/assets/icons/amazon.svg" },
 ];
-

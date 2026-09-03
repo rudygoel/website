@@ -116,7 +116,7 @@ function renderPortraitVideos(): void {
   if (!mount) return;
   const videos = testimonials
     .filter((t): t is VideoTestimonial => t.type === "video")
-    .slice(0, 2);
+    .slice(0, 3);
   if (videos.length === 0) {
     mount.remove();
     return;
@@ -126,9 +126,10 @@ function renderPortraitVideos(): void {
       const meta = [v.role, v.business].filter(Boolean).join(" at ");
       const author = meta ? `${v.name}, ${meta}` : v.name;
       const desc = v.caption || "[Short description of what's covered in the video. Fill in later.]";
+      const wide = v.orientation === "landscape";
       return `
-      <figure class="portrait-video-figure">
-        <div class="portrait-video"
+      <figure class="portrait-video-figure${wide ? " portrait-video-figure--wide" : ""}">
+        <div class="portrait-video${wide ? " portrait-video--wide" : ""}"
              data-video-name="${escapeHtml(v.name)}"
              data-video-src="${v.src ? escapeHtml(assetUrl(v.src)) : ""}">
           <img src="${escapeHtml(assetUrl(v.poster))}" alt="${escapeHtml(v.name)}" loading="lazy" decoding="async" />
