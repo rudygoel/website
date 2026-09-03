@@ -1,6 +1,9 @@
 /* ===============================================
-   Rudy Goel / Design Tokens v1.0
-   Pine & Tobacco palette, Newsreader + Geist
+   Rudy Goel / Design Tokens v2.0
+   Paper & Tobacco — bright editorial light scheme.
+   Same five brand colours; the page is now warm paper
+   with ink text, and Pine is reserved for the dark
+   inverse panels that punctuate the scroll.
    Variables only — base styles in base.css.
    =============================================== */
 
@@ -9,38 +12,50 @@
      1. COLOUR
      ---------------------------------------------- */
 
+  --palette-paper: #FAF7F1;
+  --palette-paper-raised: #FFFDF9;
+  --palette-paper-sunk: #F1EBE0;
   --palette-charcoal: #16191A;
+  --palette-ink: #1A211F;
   --palette-pine-shadow: #1F2D2A;
   --palette-pine: #3D5852;
   --palette-tobacco: #8B6F4E;
   --palette-tobacco-strong: #A38561;
   --palette-tobacco-deep: #7A6044;
+  --palette-tobacco-darkest: #634E37;
   --palette-linen: #DDD3C4;
 
-  --color-bg: var(--palette-charcoal);
-  --color-surface-1: var(--palette-pine-shadow);
-  --color-surface-2: var(--palette-pine);
-  --color-surface-inverse: var(--palette-linen);
+  /* RGB triplets for translucent fills. --rgb-glass is the tint used by
+     frosted UI (nav pill, circles, play buttons); --rgb-ink is for scrims
+     that sit over photography. */
+  --rgb-glass: 26, 33, 31;
+  --rgb-ink: 22, 25, 26;
+  --rgb-paper: 255, 253, 249;
 
-  --color-text: var(--palette-linen);
-  --color-text-soft: rgba(221, 211, 196, 0.72);
-  --color-text-faint: rgba(221, 211, 196, 0.48);
-  --color-text-mute: rgba(221, 211, 196, 0.32);
-  --color-text-inverse: var(--palette-charcoal);
-  --color-text-inverse-soft: rgba(22, 25, 26, 0.72);
+  --color-bg: var(--palette-paper);
+  --color-surface-1: var(--palette-paper-raised);
+  --color-surface-2: var(--palette-paper-sunk);
+  --color-surface-inverse: var(--palette-pine-shadow);
 
-  --color-accent: var(--palette-tobacco);
-  --color-accent-hover: var(--palette-tobacco-strong);
-  --color-accent-active: var(--palette-tobacco-deep);
-  --color-accent-soft: rgba(139, 111, 78, 0.14);
+  --color-text: var(--palette-ink);
+  --color-text-soft: rgba(26, 33, 31, 0.76);
+  --color-text-faint: rgba(26, 33, 31, 0.56);
+  --color-text-mute: rgba(26, 33, 31, 0.42);
+  --color-text-inverse: var(--palette-paper-raised);
+  --color-text-inverse-soft: rgba(255, 253, 249, 0.76);
 
-  --color-border: rgba(221, 211, 196, 0.08);
-  --color-border-strong: rgba(221, 211, 196, 0.18);
+  --color-accent: var(--palette-tobacco-deep);
+  --color-accent-hover: var(--palette-tobacco);
+  --color-accent-active: var(--palette-tobacco-darkest);
+  --color-accent-soft: rgba(139, 111, 78, 0.12);
+
+  --color-border: rgba(26, 33, 31, 0.12);
+  --color-border-strong: rgba(26, 33, 31, 0.24);
   --color-border-accent: var(--palette-tobacco);
-  --color-border-inverse: rgba(22, 25, 26, 0.12);
+  --color-border-inverse: rgba(255, 253, 249, 0.16);
 
-  --color-overlay: rgba(22, 25, 26, 0.85);
-  --color-scrim: rgba(22, 25, 26, 0.6);
+  --color-overlay: rgba(22, 25, 26, 0.72);
+  --color-scrim: rgba(22, 25, 26, 0.5);
 
   /* ----------------------------------------------
      2. TYPOGRAPHY
@@ -128,9 +143,9 @@
      6. ELEVATION
      ---------------------------------------------- */
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(26, 33, 31, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(26, 33, 31, 0.14);
+  --shadow-lg: 0 24px 56px -20px rgba(26, 33, 31, 0.18);
 
   /* ----------------------------------------------
      7. MOTION
@@ -185,6 +200,6 @@
   --card-padding-feature: var(--s-7);
 
   --nav-height: 72px;
-  --nav-bg-scrolled: rgba(22, 25, 26, 0.85);
+  --nav-bg-scrolled: rgba(250, 247, 241, 0.82);
   --nav-blur: 12px;
 }

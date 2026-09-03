@@ -1,7 +1,11 @@
 ---
 name: Rudy Goel
-description: Quiet-luxury editorial site for a freelance email copywriter
+description: Bright editorial site for a freelance creative strategist and copywriter
 colors:
+  paper: "#FAF7F1"
+  paper-raised: "#FFFDF9"
+  paper-sunk: "#F1EBE0"
+  ink: "#1A211F"
   charcoal: "#16191A"
   pine-shadow: "#1F2D2A"
   pine: "#3D5852"
@@ -105,6 +109,14 @@ components:
 ---
 
 # Design System: Rudy Goel
+
+> **v2 amendment (Sep 2026): the scheme is now light, not dark.** Rudy asked for a
+> brighter, more inviting site, so the page ground is warm paper (`#FAF7F1`) with ink
+> text, and Pine is reserved for dark inverse panels. Tobacco moved one notch deeper
+> (`#7A6044`) so it holds contrast on paper. Everything below about restraint,
+> typography, the Tobacco budget and the single-CTA rule still stands; only the
+> light/dark polarity changed. Do not revert `tokens.css` to the charcoal ground
+> described in the original overview.
 
 ## 1. Overview
 
