@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/dashboard", "destination": "https://rudy-dashboard.vercel.app/dashboard" },
+    { "source": "/dashboard/:path*", "destination": "https://rudy-dashboard.vercel.app/dashboard/:path*" }
+  ]
+}
