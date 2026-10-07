@@ -1,14 +1,18 @@
 /**
  * GET /api/instagram: profile header + latest 6 posts for the /portfolio grid.
  *
- * Needs IG_TOKEN in the Vercel env. Two token types work:
+ * Sources, first one configured wins:
+ *  - BEHOLD_FEED_URL: a Behold.so JSON feed (feeds.behold.so/<id>). Behold
+ *    handles the Instagram login and re-hosts the images. Free plan refreshes
+ *    once a day, so this is cached for 6 hours to stay inside its view limit.
+ *  - IG_TOKEN, in one of two flavours:
  *  - Instagram Login token (starts with "IG"): reads graph.instagram.com/me.
  *  - Facebook Page token: reads graph.facebook.com/{IG_USER_ID}, so IG_USER_ID
  *    must be set too. This is the one that never expires.
  * With no token, or if Instagram errors, it returns { ok: false } and the page
  * falls back to a plain link to the profile.
  *
- * The CDN caches the response for an hour, so visitors never hit Instagram.
+ * The CDN caches the response, so visitors never hit Instagram or Behold.
  */
 
 const VERSION = "v23.0";
@@ -37,7 +41,59 @@ interface GraphProfile {
   media?: { data: GraphMedia[] };
 }
 
+interface BeholdSize { mediaUrl: string }
+interface BeholdPost {
+  permalink: string;
+  mediaType: "IMAGE" | "VIDEO" | "CAROUSEL_ALBUM";
+  isReel?: boolean;
+  mediaUrl?: string;
+  thumbnailUrl?: string;
+  sizes?: { small?: BeholdSize; medium?: BeholdSize; large?: BeholdSize };
+  prunedCaption?: string;
+  caption?: string;
+}
+interface BeholdFeed {
+  username: string;
+  followersCount?: number;
+  profilePictureUrl?: string;
+  posts?: BeholdPost[];
+}
+
+async function fromBehold(feedUrl: string): Promise<Response> {
+  try {
+    const res = await fetch(feedUrl);
+    if (!res.ok) {
+      console.error("behold", res.status);
+      return json({ ok: false, reason: "upstream" }, 300);
+    }
+    const f = (await res.json()) as BeholdFeed;
+    const posts = (f.posts ?? [])
+      .slice(0, 6)
+      .map((m) => ({
+        image: m.sizes?.medium?.mediaUrl ?? (m.mediaType === "VIDEO" ? m.thumbnailUrl : m.mediaUrl),
+        url: m.permalink,
+        kind: m.isReel || m.mediaType === "VIDEO" ? "reel" : m.mediaType === "CAROUSEL_ALBUM" ? "carousel" : "post",
+        caption: (m.prunedCaption ?? m.caption ?? "").replace(/\s+/g, " ").trim().slice(0, 140),
+      }))
+      .filter((m) => m.image);
+    return json(
+      {
+        ok: true,
+        profile: { username: f.username, followers: f.followersCount ?? null, posts: null, avatar: f.profilePictureUrl ?? null },
+        posts,
+      },
+      21600
+    );
+  } catch (err) {
+    console.error("behold", err);
+    return json({ ok: false, reason: "upstream" }, 300);
+  }
+}
+
 export async function GET(): Promise<Response> {
+  const behold = process.env.BEHOLD_FEED_URL;
+  if (behold) return fromBehold(behold);
+
   const token = process.env.IG_TOKEN;
   const igUserId = process.env.IG_USER_ID;
   if (!token) return json({ ok: false, reason: "not-configured" }, 300);
