@@ -60,6 +60,10 @@ export default defineConfig({
     target: "es2022",
     assetsDir: "_app",
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+        portfolio: path.resolve(__dirname, "portfolio/index.html"),
+      },
       output: {
         manualChunks: {
           motion: ["gsap"],

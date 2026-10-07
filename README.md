@@ -124,6 +124,15 @@ Cache headers (recommended at the host):
 | Update FAQ | `index.html` (look for `<details class="faq__item">`) |
 | Update About copy | `index.html` (look for `id="about"`) |
 
+## /portfolio (unlisted job-application page)
+
+`portfolio/index.html` is a standalone page at rudygoel.com/portfolio. It is not linked from the nav, is `noindex`, and is built as a second Vite entry (see `rollupOptions.input` in `vite.config.ts`). Its files live in `public/portfolio/`.
+
+To swap a PDF later, replace the file in `public/portfolio/` with one of the same name and push to `main`. The URL stays the same:
+
+- `public/portfolio/rudy-goel-anti-resume.pdf` → `/portfolio/rudy-goel-anti-resume.pdf`
+- `public/portfolio/rudy-goel-results.pdf` → `/portfolio/rudy-goel-results.pdf`
+
 ## Quality bar
 
 - Lighthouse targets: Performance 95+, Accessibility 100, Best Practices 100, SEO 100.

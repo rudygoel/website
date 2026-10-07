@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FAF7F1" />
+  <meta name="robots" content="noindex" />
+
+  <title>Rudy Goel | Creative Strategist</title>
+  <meta name="description" content="I built the ad engine that booked 219 sales calls in 5 weeks for DJ Accelerator. Here’s the proof." />
+  <meta name="author" content="Rudy Goel" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Rudy Goel | Creative Strategist" />
+  <meta property="og:description" content="I built the ad engine that booked 219 sales calls in 5 weeks for DJ Accelerator. Here’s the proof." />
+  <meta property="og:url" content="https://www.rudygoel.com/portfolio" />
+  <meta property="og:image" content="https://www.rudygoel.com/portfolio/rudy-goel-og.jpg" />
+  <meta property="og:image:width" content="600" />
+  <meta property="og:image:height" content="600" />
+  <meta property="og:image:alt" content="Rudy Goel" />
+  <meta property="og:site_name" content="Rudy Goel" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Rudy Goel | Creative Strategist" />
+  <meta name="twitter:description" content="I built the ad engine that booked 219 sales calls in 5 weeks for DJ Accelerator. Here’s the proof." />
+  <meta name="twitter:image" content="https://www.rudygoel.com/portfolio/rudy-goel-og.jpg" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Same families as the main site, trimmed to the weights this page uses -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;1,6..72,300&family=Geist:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Paper & Tobacco tokens, copied from src/styles/tokens.css */
+    :root {
+      --paper: #FAF7F1;
+      --paper-raised: #FFFDF9;
+      --ink: #1A211F;
+      --ink-soft: rgba(26, 33, 31, 0.76);
+      --ink-faint: rgba(26, 33, 31, 0.56);
+      --tobacco: #8B6F4E;
+      --tobacco-deep: #7A6044;
+      --border-strong: rgba(26, 33, 31, 0.24);
+      --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body { margin: 0; }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: 0.005em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 20px 24px;
+    }
+
+    .headshot {
+      display: block;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #1B1B1B;
+      box-shadow: 0 0 0 1px var(--border-strong);
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.04;
+      letter-spacing: -0.015em;
+      font-variation-settings: "opsz" 72;
+    }
+
+    h1 .nowrap { white-space: nowrap; }
+
+    h1 em {
+      font-style: italic;
+      color: var(--tobacco-deep);
+    }
+
+    .lede {
+      margin: 20px 0 0;
+      max-width: 34em;
+      font-size: clamp(17px, 1.4vw, 19px);
+      line-height: 1.5;
+      color: var(--ink-soft);
+      text-wrap: balance;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.2;
+      text-decoration: none;
+      transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+    }
+
+    .btn-primary { background: var(--ink); color: var(--paper-raised); }
+    .btn-primary:hover { background: var(--tobacco-deep); border-color: var(--tobacco-deep); }
+
+    .btn-secondary { background: transparent; color: var(--ink); }
+    .btn-secondary:hover { background: var(--ink); color: var(--paper-raised); }
+
+    .btn:focus-visible,
+    .contact a:focus-visible {
+      outline: 2px solid var(--tobacco);
+      outline-offset: 3px;
+    }
+
+    .contact {
+      margin: 0;
+      padding: 16px 20px 28px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--ink-faint);
+    }
+
+    .contact a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--tobacco);
+      text-underline-offset: 3px;
+    }
+
+    .contact a:hover { color: var(--tobacco-deep); }
+
+    @media (max-width: 599px) {
+      main { padding-top: 40px; }
+      .headshot { width: 104px; height: 104px; margin-bottom: 24px; }
+      .actions { flex-direction: column; width: 100%; margin-top: 32px; }
+      .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="headshot" src="/portfolio/rudy-goel.webp" alt="Rudy Goel" width="120" height="120" />
+    <h1>Rudy Goel, <span class="nowrap">Creative <em>Strategist</em></span></h1>
+    <p class="lede">I built the ad engine that booked 219 sales calls in 5 weeks for DJ&nbsp;Accelerator. Here’s the proof.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/portfolio/rudy-goel-anti-resume.pdf" target="_blank" rel="noopener">Read my anti-resume</a>
+      <a class="btn btn-secondary" href="/portfolio/rudy-goel-results.pdf" target="_blank" rel="noopener">See my results</a>
+    </div>
+  </main>
+  <p class="contact">Want to talk? <a href="mailto:support@rudygoel.com">support@rudygoel.com</a></p>
+</body>
+</html>
