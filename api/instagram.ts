@@ -18,7 +18,10 @@
 const VERSION = "v23.0";
 const FIELDS = [
   "username",
+  "biography",
+  "website",
   "followers_count",
+  "follows_count",
   "media_count",
   "profile_picture_url",
   "media.limit(6){media_type,media_product_type,media_url,thumbnail_url,permalink,caption}",
@@ -35,7 +38,10 @@ interface GraphMedia {
 
 interface GraphProfile {
   username: string;
+  biography?: string;
+  website?: string;
   followers_count?: number;
+  follows_count?: number;
   media_count?: number;
   profile_picture_url?: string;
   media?: { data: GraphMedia[] };
@@ -54,7 +60,10 @@ interface BeholdPost {
 }
 interface BeholdFeed {
   username: string;
+  biography?: string;
+  website?: string;
   followersCount?: number;
+  followsCount?: number;
   profilePictureUrl?: string;
   posts?: BeholdPost[];
 }
@@ -79,7 +88,15 @@ async function fromBehold(feedUrl: string): Promise<Response> {
     return json(
       {
         ok: true,
-        profile: { username: f.username, followers: f.followersCount ?? null, posts: null, avatar: f.profilePictureUrl ?? null },
+        profile: {
+          username: f.username,
+          bio: f.biography ?? null,
+          website: f.website ?? null,
+          followers: f.followersCount ?? null,
+          following: f.followsCount ?? null,
+          posts: null,
+          avatar: f.profilePictureUrl ?? null,
+        },
         posts,
       },
       21600
@@ -127,7 +144,10 @@ export async function GET(): Promise<Response> {
         ok: true,
         profile: {
           username: p.username,
+          bio: p.biography ?? null,
+          website: p.website ?? null,
           followers: p.followers_count ?? null,
+          following: p.follows_count ?? null,
           posts: p.media_count ?? null,
           avatar: p.profile_picture_url ?? null,
         },
