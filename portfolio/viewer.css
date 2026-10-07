@@ -129,6 +129,12 @@ a:focus-visible {
   background: #fff;
 }
 
+/* A white PDF tinted to the paper colour: no card, it sits on the page */
+.pdf-page--blend {
+  border-color: transparent;
+  background: transparent;
+}
+
 .pdf-page img {
   display: block;
   width: 100%;

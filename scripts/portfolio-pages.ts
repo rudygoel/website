@@ -17,6 +17,8 @@ export interface PortfolioDoc {
   slug: string;
   pdf: string; // path relative to the project root
   title: string;
+  /** Multiply the page with this colour so a white PDF sits on the site's paper. */
+  blend?: string;
 }
 
 interface Tile { w800: string; w1600: string; height1600: number }
@@ -78,7 +80,7 @@ async function renderAll(docs: PortfolioDoc[], root: string, cacheDir: string) {
 
 async function renderDoc(doc: PortfolioDoc, root: string, cacheDir: string): Promise<Page[]> {
   const data = await fs.readFile(path.resolve(root, doc.pdf));
-  const hash = createHash("sha1").update(data).update(`${RENDER_WIDTH}:${TILE_HEIGHT}:${QUALITY}`).digest("hex").slice(0, 10);
+  const hash = createHash("sha1").update(data).update(`${RENDER_WIDTH}:${TILE_HEIGHT}:${QUALITY}:${doc.blend ?? ""}`).digest("hex").slice(0, 10);
   const manifestPath = path.join(cacheDir, `${doc.slug}-${hash}.json`);
   try {
     return JSON.parse(await fs.readFile(manifestPath, "utf8")) as Page[];
@@ -103,6 +105,13 @@ async function renderDoc(doc: PortfolioDoc, root: string, cacheDir: string): Pro
     ctx.fillRect(0, 0, RENDER_WIDTH, fullH);
     // pdf.js accepts the @napi-rs canvas in Node; its DOM typings don't know that.
     await page.render({ canvas: full as never, canvasContext: ctx as never, viewport }).promise;
+    if (doc.blend) {
+      // White becomes the blend colour; ink and photos barely shift.
+      ctx.globalCompositeOperation = "multiply";
+      ctx.fillStyle = doc.blend;
+      ctx.fillRect(0, 0, RENDER_WIDTH, fullH);
+      ctx.globalCompositeOperation = "source-over";
+    }
 
     const tiles: Tile[] = [];
     for (let y = 0, t = 1; y < fullH; y += TILE_HEIGHT, t++) {
@@ -160,7 +169,7 @@ function pageMarkup(doc: PortfolioDoc, page: Page, index: number, total: number)
     })
     .join("");
   const label = total > 1 ? `${doc.title}, page ${index + 1} of ${total}` : doc.title;
-  return `<figure class="pdf-page" aria-label="${esc(label)}">${tiles}${links}<figcaption class="sr-only">${esc(page.text)}</figcaption></figure>`;
+  return `<figure class="pdf-page${doc.blend ? " pdf-page--blend" : ""}" aria-label="${esc(label)}">${tiles}${links}<figcaption class="sr-only">${esc(page.text)}</figcaption></figure>`;
 }
 
 const pct = (n: number) => Math.round(n * 100000) / 1000;

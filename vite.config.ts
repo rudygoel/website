@@ -55,7 +55,7 @@ export default defineConfig({
     rootAssets(),
     react(),
     portfolioPages([
-      { slug: "anti-resume", pdf: "public/portfolio/rudy-goel-anti-resume.pdf", title: "Rudy Goel, anti-resume" },
+      { slug: "anti-resume", pdf: "public/portfolio/rudy-goel-anti-resume.pdf", title: "Rudy Goel, anti-resume", blend: "#FAF7F1" },
       { slug: "results", pdf: "public/portfolio/rudy-goel-results.pdf", title: "Rudy Goel, creative strategy results" },
     ]),
   ],
