@@ -47,6 +47,8 @@
       --ink-faint: rgba(26, 33, 31, 0.56);
       --tobacco: #8B6F4E;
       --tobacco-deep: #7A6044;
+      --paper-sunk: #F1EBE0;
+      --border: rgba(26, 33, 31, 0.12);
       --border-strong: rgba(26, 33, 31, 0.24);
       --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
       --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -58,10 +60,6 @@
     html, body { margin: 0; }
 
     body {
-      min-height: 100vh;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
       background: var(--paper);
       color: var(--ink);
       font-family: var(--font-body);
@@ -71,8 +69,9 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    main {
-      flex: 1;
+    .hero {
+      min-height: calc(100vh - 96px);
+      min-height: calc(100svh - 96px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -81,7 +80,7 @@
       width: 100%;
       max-width: 720px;
       margin: 0 auto;
-      padding: 48px 20px 24px;
+      padding: 48px 20px 40px;
     }
 
     .headshot {
@@ -149,8 +148,7 @@
     .btn-secondary { background: transparent; color: var(--ink); }
     .btn-secondary:hover { background: var(--ink); color: var(--paper-raised); }
 
-    .btn:focus-visible,
-    .contact a:focus-visible {
+    a:focus-visible {
       outline: 2px solid var(--tobacco);
       outline-offset: 3px;
     }
@@ -172,28 +170,214 @@
 
     .contact a:hover { color: var(--tobacco-deep); }
 
+
+    /* ---- Instagram ---- */
+
+    .ig {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .ig-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 0 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .ig-avatar {
+      flex: none;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #1B1B1B;
+      box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    .ig-who { flex: 1; min-width: 0; line-height: 1.35; }
+
+    .ig-handle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .ig-handle svg { width: 16px; height: 16px; flex: none; }
+
+    .ig-meta {
+      margin: 2px 0 0;
+      font-size: 14px;
+      color: var(--ink-faint);
+    }
+
+    .ig-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ig-live::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--tobacco);
+      animation: ig-pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes ig-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .ig-follow {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color 200ms ease, color 200ms ease;
+    }
+
+    .ig-follow:hover { background: var(--ink); color: var(--paper-raised); }
+
+    .ig-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .ig-grid[hidden] { display: none; }
+
+    .ig-tile {
+      position: relative;
+      display: block;
+      aspect-ratio: 1;
+      background: var(--paper-sunk);
+      overflow: hidden;
+    }
+
+    .ig-tile img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 400ms ease, opacity 200ms ease;
+    }
+
+    .ig-tile:hover img { transform: scale(1.04); opacity: 0.88; }
+
+    .ig-tile svg {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      color: #fff;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+    }
+
     @media (max-width: 599px) {
       main { padding-top: 40px; }
       .headshot { width: 104px; height: 104px; margin-bottom: 24px; }
       .actions { flex-direction: column; width: 100%; margin-top: 32px; }
       .btn { width: 100%; }
+      .ig { padding: 0 12px; }
+      .ig-head { gap: 12px; }
+      .ig-avatar { width: 44px; height: 44px; }
+      .ig-follow { padding: 0 16px; }
+      .ig-grid { gap: 2px; border-radius: 6px; }
+      .ig-tile svg { width: 16px; height: 16px; top: 6px; right: 6px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .btn { transition: none; }
+      .btn, .ig-follow, .ig-tile img { transition: none; }
+      .ig-live::before { animation: none; }
     }
   </style>
 </head>
 <body>
-  <main>
+  <main class="hero">
     <img class="headshot" src="/portfolio/rudy-goel.webp" alt="Rudy Goel" width="120" height="120" />
     <h1>Rudy Goel, <span class="nowrap">Creative <em>Strategist</em></span></h1>
     <p class="lede">I built the ad engine that booked 219 sales calls in 5 weeks for DJ&nbsp;Accelerator. Here’s the proof.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="/portfolio/rudy-goel-anti-resume.pdf" target="_blank" rel="noopener">Read my anti-resume</a>
-      <a class="btn btn-secondary" href="/portfolio/rudy-goel-results.pdf" target="_blank" rel="noopener">See my results</a>
+      <a class="btn btn-primary" href="/portfolio/anti-resume">Read my anti-resume</a>
+      <a class="btn btn-secondary" href="/portfolio/results">See my results</a>
     </div>
   </main>
+
+  <section class="ig" aria-label="Instagram">
+    <div class="ig-head">
+      <img class="ig-avatar" src="/portfolio/rudy-goel.webp" alt="" width="52" height="52" loading="lazy" />
+      <div class="ig-who">
+        <a class="ig-handle" href="https://www.instagram.com/rudygoel_/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>@rudygoel_</a>
+        <p class="ig-meta" data-ig-meta>On Instagram</p>
+      </div>
+      <a class="ig-follow" href="https://www.instagram.com/rudygoel_/" target="_blank" rel="noopener">Follow</a>
+    </div>
+    <div class="ig-grid" data-ig-grid hidden></div>
+  </section>
+
   <p class="contact">Want to talk? <a href="mailto:support@rudygoel.com">support@rudygoel.com</a></p>
+  <script>
+    // Live Instagram grid. /api/instagram is cached at the edge for an hour.
+    // If it isn't configured or fails, the header above stays as a plain link.
+    (function () {
+      var grid = document.querySelector("[data-ig-grid]");
+      var meta = document.querySelector("[data-ig-meta]");
+      var icons = {
+        reel: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>',
+        carousel: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h11a3 3 0 0 1 3 3v11h-2V6a1 1 0 0 0-1-1H7z"/><rect x="3" y="7" width="14" height="14" rx="2"/></svg>'
+      };
+      var fmt = function (n) {
+        if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
+        if (n >= 1e5) return Math.round(n / 1e3) + "K";
+        if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
+        return String(n);
+      };
+      fetch("/api/instagram")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !data.ok || !data.posts || !data.posts.length) return;
+          var p = data.profile || {};
+          var bits = [];
+          if (p.followers != null) bits.push(fmt(p.followers) + " followers");
+          if (p.posts != null) bits.push(fmt(p.posts) + " posts");
+          meta.innerHTML = '<span class="ig-live">Live</span>' + (bits.length ? " \u00b7 " + bits.join(" \u00b7 ") : "");
+          data.posts.slice(0, 6).forEach(function (post) {
+            var a = document.createElement("a");
+            a.className = "ig-tile";
+            a.href = post.url;
+            a.target = "_blank";
+            a.rel = "noopener";
+            var img = document.createElement("img");
+            img.src = post.image;
+            img.alt = post.caption || "Instagram post by @rudygoel_";
+            img.loading = "lazy";
+            img.decoding = "async";
+            img.referrerPolicy = "no-referrer";
+            a.appendChild(img);
+            if (icons[post.kind]) a.insertAdjacentHTML("beforeend", icons[post.kind]);
+            grid.appendChild(a);
+          });
+          grid.hidden = false;
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>

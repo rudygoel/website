@@ -3,6 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import sirv from "sirv";
 import react from "@vitejs/plugin-react";
+import { portfolioPages } from "./scripts/portfolio-pages";
 
 /**
  * Serves the root-level /assets directory at /assets/* in dev,
@@ -50,7 +51,14 @@ async function copyDir(src: string, dest: string): Promise<void> {
 
 export default defineConfig({
   base: process.env.GITHUB_PAGES ? "/website/" : "/",
-  plugins: [rootAssets(), react()],
+  plugins: [
+    rootAssets(),
+    react(),
+    portfolioPages([
+      { slug: "anti-resume", pdf: "public/portfolio/rudy-goel-anti-resume.pdf", title: "Rudy Goel, anti-resume" },
+      { slug: "results", pdf: "public/portfolio/rudy-goel-results.pdf", title: "Rudy Goel, creative strategy results" },
+    ]),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -63,6 +71,8 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, "index.html"),
         portfolio: path.resolve(__dirname, "portfolio/index.html"),
+        "portfolio-anti-resume": path.resolve(__dirname, "portfolio/anti-resume/index.html"),
+        "portfolio-results": path.resolve(__dirname, "portfolio/results/index.html"),
       },
       output: {
         manualChunks: {

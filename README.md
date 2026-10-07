@@ -126,12 +126,21 @@ Cache headers (recommended at the host):
 
 ## /portfolio (unlisted job-application page)
 
-`portfolio/index.html` is a standalone page at rudygoel.com/portfolio. It is not linked from the nav, is `noindex`, and is built as a second Vite entry (see `rollupOptions.input` in `vite.config.ts`). Its files live in `public/portfolio/`.
+Unlisted, `noindex` pages for job applications. Not linked from the nav.
 
-To swap a PDF later, replace the file in `public/portfolio/` with one of the same name and push to `main`. The URL stays the same:
+| URL | Source |
+|---|---|
+| `/portfolio` | `portfolio/index.html` (headshot, two buttons, live Instagram grid) |
+| `/portfolio/anti-resume` | `portfolio/anti-resume/index.html` |
+| `/portfolio/results` | `portfolio/results/index.html` |
+| `/api/instagram` | `api/instagram.ts` (Vercel function) |
 
-- `public/portfolio/rudy-goel-anti-resume.pdf` → `/portfolio/rudy-goel-anti-resume.pdf`
-- `public/portfolio/rudy-goel-results.pdf` → `/portfolio/rudy-goel-results.pdf`
+**Swapping a PDF:** replace the file in `public/portfolio/` with one of the same name and push to `main`. The build re-renders it into the on-page viewer automatically (`scripts/portfolio-pages.ts`, wired in `vite.config.ts`), keeps its links clickable, and the URLs stay the same:
+
+- `public/portfolio/rudy-goel-anti-resume.pdf` → `/portfolio/anti-resume` and `/portfolio/rudy-goel-anti-resume.pdf`
+- `public/portfolio/rudy-goel-results.pdf` → `/portfolio/results` and `/portfolio/rudy-goel-results.pdf`
+
+**Instagram grid:** `api/instagram.ts` reads the latest 6 posts with the `IG_TOKEN` env var on Vercel (plus `IG_USER_ID` for a Facebook Page token). Responses are cached at the edge for an hour. With no token, or if the token stops working, the page shows a plain link to @rudygoel_ instead of the grid, so nothing breaks.
 
 ## Quality bar
 

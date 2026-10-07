@@ -1,0 +1,212 @@
+/* /portfolio document viewer. Paper & Tobacco tokens from src/styles/tokens.css */
+:root {
+  --paper: #FAF7F1;
+  --paper-raised: #FFFDF9;
+  --paper-sunk: #F1EBE0;
+  --ink: #1A211F;
+  --ink-soft: rgba(26, 33, 31, 0.76);
+  --ink-faint: rgba(26, 33, 31, 0.56);
+  --tobacco: #8B6F4E;
+  --tobacco-deep: #7A6044;
+  --border: rgba(26, 33, 31, 0.12);
+  --border-strong: rgba(26, 33, 31, 0.24);
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: pre-wrap;
+  border: 0;
+}
+
+/* ---- Top bar ---- */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  height: 64px;
+  padding: 0 max(20px, env(safe-area-inset-left));
+  background: rgba(250, 247, 241, 0.92);
+  -webkit-backdrop-filter: saturate(1.2) blur(12px);
+  backdrop-filter: saturate(1.2) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.bar a { color: var(--ink); text-decoration: none; }
+
+.bar-back,
+.bar-dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.bar-back { justify-self: start; }
+.bar-dl { justify-self: end; }
+
+.bar-back:hover,
+.bar-dl:hover { color: var(--tobacco-deep); }
+
+.bar svg { flex: none; width: 18px; height: 18px; }
+
+.tabs {
+  display: flex;
+  padding: 4px;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--paper-sunk);
+  border: 1px solid var(--border);
+}
+
+.tabs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.tabs a:hover { color: var(--ink); }
+
+.tabs a[aria-current="page"] {
+  background: var(--ink);
+  color: var(--paper-raised);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--tobacco);
+  outline-offset: 3px;
+}
+
+/* ---- Document ---- */
+
+.doc {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 20px 8px;
+}
+
+.pdf-page {
+  position: relative;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.pdf-page img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pdf-link {
+  position: absolute;
+  border-radius: 4px;
+}
+
+/* Bigger tap target than the drawn link, without moving it */
+.pdf-link::after {
+  content: "";
+  position: absolute;
+  inset: -10px -4px;
+}
+
+.pdf-link:hover { background: rgba(139, 111, 78, 0.14); }
+
+/* ---- After the document ---- */
+
+.doc-next {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper-raised);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.btn:hover { background: var(--tobacco-deep); border-color: var(--tobacco-deep); }
+
+.btn svg { width: 18px; height: 18px; }
+
+.contact {
+  margin: 0;
+  padding: 20px 20px 32px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.contact a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--tobacco);
+  text-underline-offset: 3px;
+}
+
+.contact a:hover { color: var(--tobacco-deep); }
+
+@media (max-width: 599px) {
+  .bar { height: 60px; gap: 8px; padding: 0 12px; }
+  .bar-label { display: none; }
+  .bar-back, .bar-dl { min-width: 44px; justify-content: center; }
+  .tabs a { padding: 0 14px; font-size: 14px; }
+  .doc { padding: 16px 10px 8px; }
+  .pdf-page { margin-bottom: 12px; border-radius: 4px; }
+  .doc-next { padding: 16px 10px 0; }
+  .doc-next .btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs a, .btn { transition: none; }
+}
