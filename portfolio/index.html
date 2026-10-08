@@ -284,19 +284,24 @@
     .zip-link {
       display: inline-flex;
       align-items: center;
-      margin-left: 10px;
-      padding: 7px 14px;
+      gap: 8px;
+      margin-left: 12px;
+      min-height: 44px;
+      padding: 0 18px;
       border: 1px solid var(--ink);
       border-radius: 999px;
-      color: var(--ink);
-      font-size: 13px;
+      background: var(--ink);
+      color: var(--paper-raised);
+      font-size: 14px;
       font-weight: 500;
       text-decoration: none;
       white-space: nowrap;
-      transition: background-color 200ms ease, color 200ms ease;
+      transition: background-color 200ms ease, border-color 200ms ease;
     }
 
-    .zip-link:hover { background: var(--ink); color: var(--paper-raised); }
+    .zip-link svg { width: 18px; height: 18px; flex: none; }
+    .zip-link span { color: rgba(255, 253, 249, 0.7); font-weight: 400; }
+    .zip-link:hover { background: var(--tobacco-deep); border-color: var(--tobacco-deep); }
 
     /* Video cards */
 
@@ -650,7 +655,7 @@
 
       .strip-label { flex-direction: column; gap: 4px; }
       .strip-label p { text-align: left; }
-      .zip-link { margin: 10px 0 0; min-height: 40px; }
+      .zip-link { display: flex; justify-content: center; width: 100%; margin: 12px 0 0; min-height: 48px; }
       .strip-track { gap: 12px; padding: 4px 16px 8px; }
       .reel { width: 168px; }
       .static-open img { height: 240px; }
@@ -758,7 +763,7 @@
 
     <div class="strip-label">
       <h3>Statics</h3>
-      <p>Best performers first. Tap to enlarge. <a class="zip-link" href="/portfolio/rudy-goel-static-ads.zip" download>Download all 39 (ZIP, 11 MB)</a></p>
+      <p>Best performers first. Tap any ad to enlarge, or download the full set. <a class="zip-link" href="/portfolio/rudy-goel-static-ads.zip" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download all 39 statics <span>ZIP, 11 MB</span></a></p>
     </div>
     <div class="strip-wrap strip-wrap--statics">
     <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll statics left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
