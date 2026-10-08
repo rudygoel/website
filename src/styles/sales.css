@@ -1,0 +1,494 @@
+/* ===============================================
+   sales.css — one-offer sales page.
+   Long single column, big type, slippery slope.
+   Uses the Paper & Tobacco tokens from tokens.css.
+   =============================================== */
+
+:root {
+  --sp-measure: 680px;
+  --sp-gutter: clamp(20px, 5vw, 32px);
+  --offerbar-h: 60px;
+}
+
+body.sales {
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding-top: var(--offerbar-h);
+}
+
+/* -----------------------------------------------
+   STICKY OFFER BANNER
+   ----------------------------------------------- */
+
+.offerbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  height: var(--offerbar-h);
+  background: var(--palette-pine-shadow);
+  border-bottom: 1px solid rgba(var(--rgb-paper), 0.14);
+}
+
+.offerbar__inner {
+  height: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--sp-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.offerbar__text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--palette-linen);
+  display: flex;
+  flex-direction: column;
+}
+.offerbar__text strong { font-weight: 500; }
+.offerbar__sub {
+  font-size: 13px;
+  color: rgba(221, 211, 196, 0.66);
+}
+
+.offerbar__cta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: var(--radius-sm);
+  background: var(--palette-tobacco);
+  color: var(--palette-paper-raised);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--d-base) var(--ease), transform var(--d-base) var(--ease);
+}
+.offerbar__cta:hover {
+  background: var(--palette-tobacco-strong);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  :root { --offerbar-h: 56px; }
+  .offerbar__text { font-size: 13px; }
+  .offerbar__sub { display: none; }
+  .offerbar__cta { height: 36px; padding: 0 14px; font-size: 13px; }
+}
+
+/* -----------------------------------------------
+   PAGE SHELL — one narrow column all the way down
+   ----------------------------------------------- */
+
+.sp { display: block; }
+
+.sp-hero,
+.sp-section,
+.sp-final {
+  max-width: var(--sp-measure);
+  margin: 0 auto;
+  padding-inline: var(--sp-gutter);
+}
+
+.sp-section { padding-block: clamp(56px, 9vw, 104px); }
+
+/* Full-bleed backgrounds for the panel and dark sections, while the text
+   inside stays on the same narrow measure. */
+.sp-section--panel,
+.sp-section--dark {
+  max-width: none;
+  padding-inline: 0;
+}
+.sp-section.sp-section--panel > *,
+.sp-section.sp-section--dark > * {
+  max-width: var(--sp-measure);
+  margin-inline: auto;
+  padding-inline: var(--sp-gutter);
+}
+.sp-section--panel {
+  background: var(--palette-paper-sunk);
+  border-block: 1px solid var(--color-border);
+}
+.sp-section--dark {
+  background: var(--palette-pine-shadow);
+  color: var(--palette-linen);
+}
+.sp-section--dark .sp-h2 { color: var(--palette-linen); }
+.sp-section--dark .sp-copy p { color: rgba(221, 211, 196, 0.8); }
+.sp-section--dark .sp-kicker { color: var(--palette-tobacco-strong); }
+
+/* -----------------------------------------------
+   HERO
+   ----------------------------------------------- */
+
+.sp-hero {
+  padding-block: clamp(56px, 11vw, 116px) clamp(48px, 8vw, 88px);
+  text-align: left;
+}
+
+.sp-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 var(--s-5);
+}
+
+.sp-h1 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(38px, 6.4vw, 68px);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  color: var(--color-text);
+  margin: 0 0 var(--s-5);
+  text-wrap: balance;
+}
+.sp-h1 em { font-style: italic; color: var(--color-accent); }
+
+.sp-lede {
+  font-family: var(--font-body);
+  font-size: clamp(18px, 2vw, 21px);
+  line-height: 1.55;
+  color: var(--color-text-soft);
+  margin: 0 0 var(--s-7);
+  max-width: 54ch;
+}
+
+.sp-micro {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-mute);
+  margin: var(--s-4) 0 0;
+}
+.sp-micro--light { color: rgba(221, 211, 196, 0.6); }
+
+/* -----------------------------------------------
+   BIG CTA BUTTON
+   ----------------------------------------------- */
+
+.btn-xl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--palette-paper-raised);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 10px 28px -12px rgba(122, 96, 68, 0.6);
+  transition: background var(--d-base) var(--ease),
+              transform var(--d-base) var(--ease),
+              box-shadow var(--d-base) var(--ease);
+}
+.btn-xl:hover {
+  background: var(--palette-tobacco);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px -12px rgba(122, 96, 68, 0.66);
+  text-decoration: none;
+}
+.btn-xl:active { transform: translateY(0); }
+.btn-xl--light {
+  background: var(--palette-linen);
+  color: var(--palette-pine-shadow);
+  box-shadow: none;
+}
+.btn-xl--light:hover { background: var(--palette-paper-raised); }
+
+@media (max-width: 520px) {
+  .btn-xl { width: 100%; }
+}
+
+/* -----------------------------------------------
+   SECTION TYPE
+   ----------------------------------------------- */
+
+.sp-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 var(--s-4);
+}
+
+.sp-h2 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 4.2vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  color: var(--color-text);
+  margin: 0 0 var(--s-6);
+  text-wrap: balance;
+}
+.sp-h2 em { font-style: italic; color: var(--color-accent); }
+
+/* Body copy: one thought per line, whitespace between lines. */
+.sp-copy p {
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.7vw, 19px);
+  line-height: 1.7;
+  color: var(--color-text-soft);
+  margin: 0 0 var(--s-5);
+  max-width: 56ch;
+}
+.sp-copy p:last-child { margin-bottom: 0; }
+
+/* -----------------------------------------------
+   OFFER STEPS
+   ----------------------------------------------- */
+
+.sp-steps {
+  list-style: none;
+  margin: 0 0 var(--s-7);
+  padding: 0;
+  counter-reset: none;
+}
+.sp-steps li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: var(--s-4);
+  align-items: start;
+  padding: var(--s-5) 0;
+  border-top: 1px solid var(--color-border);
+}
+.sp-steps li:last-child { border-bottom: 1px solid var(--color-border); }
+
+.sp-steps__num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-accent);
+  padding-top: 5px;
+}
+.sp-steps__body {
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.7vw, 19px);
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+/* -----------------------------------------------
+   PROOF RESULTS
+   ----------------------------------------------- */
+
+.sp-result {
+  padding: var(--s-6) 0;
+  border-top: 1px solid var(--color-border);
+}
+.sp-result:last-of-type { border-bottom: 1px solid var(--color-border); }
+
+.sp-result__num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(46px, 7vw, 76px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+}
+.sp-result__label {
+  display: block;
+  margin-top: var(--s-3);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+.sp-result__body {
+  margin: var(--s-4) 0 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-text-soft);
+  max-width: 54ch;
+}
+.sp-result--empty { opacity: 0.4; }
+
+.sp-videos {
+  margin-top: var(--s-8);
+  max-width: none;
+  padding: 0;
+}
+
+/* -----------------------------------------------
+   FIT COLUMNS
+   ----------------------------------------------- */
+
+.sp-fit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 4vw, 48px);
+}
+@media (max-width: 640px) {
+  .sp-fit { grid-template-columns: 1fr; }
+}
+
+.sp-fit__head {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 var(--s-4);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--color-border);
+}
+.sp-fit__col--no .sp-fit__head { color: var(--color-text-mute); }
+
+.sp-fit ul { list-style: none; margin: 0; padding: 0; }
+.sp-fit li {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  padding: var(--s-3) 0;
+}
+.sp-fit__col--no li { color: var(--color-text-mute); }
+
+/* -----------------------------------------------
+   FAQ
+   ----------------------------------------------- */
+
+.sp-faq .faq__item {
+  border-top: 1px solid var(--color-border);
+  padding: 0;
+}
+.sp-faq .faq__item:last-child { border-bottom: 1px solid var(--color-border); }
+
+.sp-faq .faq__q {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-5) 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.3;
+  color: var(--color-text);
+}
+.sp-faq .faq__q::-webkit-details-marker { display: none; }
+.sp-faq .faq__q::after {
+  content: "+";
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--color-accent);
+  transition: transform var(--d-base) var(--ease);
+}
+.sp-faq .faq__item[open] .faq__q::after { transform: rotate(45deg); }
+
+.sp-faq .faq__a {
+  padding: 0 0 var(--s-5);
+}
+.sp-faq .faq__a p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--color-text-soft);
+  max-width: 54ch;
+}
+
+/* -----------------------------------------------
+   FINAL CTA
+   ----------------------------------------------- */
+
+.sp-final {
+  max-width: none;
+  padding-block: clamp(72px, 12vw, 132px);
+  padding-inline: 0;
+  background: var(--palette-pine-shadow);
+  color: var(--palette-linen);
+  text-align: center;
+}
+.sp-final.sp-final > * {
+  max-width: var(--sp-measure);
+  margin-inline: auto;
+  padding-inline: var(--sp-gutter);
+}
+
+.sp-final__h {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(32px, 5.4vw, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--palette-linen);
+  margin: 0 0 var(--s-5);
+  text-wrap: balance;
+}
+.sp-final__h em { font-style: italic; color: var(--palette-tobacco-strong); }
+
+.sp-final__body {
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.8vw, 20px);
+  line-height: 1.6;
+  color: rgba(221, 211, 196, 0.78);
+  margin: 0 0 var(--s-7);
+}
+
+/* -----------------------------------------------
+   FOOTER
+   ----------------------------------------------- */
+
+.sp-footer {
+  padding: var(--s-8) var(--sp-gutter);
+  text-align: center;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+}
+.sp-footer__name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--color-text);
+  margin: 0 0 var(--s-3);
+}
+.sp-footer__meta {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-faint);
+  margin: 0 0 var(--s-4);
+  display: flex;
+  justify-content: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+.sp-footer__meta a { color: var(--color-text-soft); }
+.sp-footer__legal {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-mute);
+  margin: 0 auto;
+  max-width: 52ch;
+}
+
+/* -----------------------------------------------
+   COPY SLOTS — visible only while the page is a template.
+   Delete this block once every [slot] is written.
+   ----------------------------------------------- */
+

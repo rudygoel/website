@@ -73,6 +73,7 @@ export default defineConfig({
         portfolio: path.resolve(__dirname, "portfolio/index.html"),
         "portfolio-anti-resume": path.resolve(__dirname, "portfolio/anti-resume/index.html"),
         "portfolio-results": path.resolve(__dirname, "portfolio/results/index.html"),
+        ads: path.resolve(__dirname, "ads/index.html"),
       },
       output: {
         manualChunks: {
