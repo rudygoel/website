@@ -214,9 +214,41 @@
       text-align: right;
     }
 
-    .strip {
+    .strip-wrap {
       position: relative;
       margin: 0 calc(50% - 50vw);
+      --mid: 190px; /* vertical centre of the cards' media */
+    }
+
+    .strip-wrap--statics { --mid: 154px; }
+
+    .strip-arrow {
+      position: absolute;
+      top: var(--mid);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      margin-top: -24px;
+      padding: 0;
+      border: 1px solid var(--border-strong);
+      border-radius: 50%;
+      background: rgba(255, 253, 249, 0.94);
+      color: var(--ink);
+      box-shadow: 0 4px 14px rgba(22, 25, 26, 0.12);
+      cursor: pointer;
+      transition: background-color 200ms ease, color 200ms ease;
+    }
+
+    .strip-arrow:hover { background: var(--ink); color: var(--paper-raised); }
+    .strip-arrow svg { width: 20px; height: 20px; }
+    .strip-arrow--prev { left: 16px; }
+    .strip-arrow--next { right: 16px; }
+
+    .strip {
+      position: relative;
       overflow-x: auto;
       overscroll-behavior-x: contain;
       scrollbar-width: none;
@@ -237,7 +269,7 @@
       list-style: none;
     }
 
-    .strip + .strip-label { margin-top: 48px; }
+    .strip-wrap + .strip-label { margin-top: 48px; }
 
     /* Video cards */
 
@@ -594,6 +626,10 @@
       .strip-track { gap: 12px; padding: 4px 16px 8px; }
       .reel { width: 168px; }
       .static-open img { height: 240px; }
+      .strip-wrap { --mid: 153px; }
+      .strip-wrap--statics { --mid: 124px; }
+      .strip-arrow { width: 40px; height: 40px; margin-top: -20px; }
+      .strip-arrow svg { width: 18px; height: 18px; }
       .static .card-title, .static .card-meta { max-width: 192px; }
 
       .ig-profile { gap: 20px; align-items: flex-start; padding-bottom: 20px; }
@@ -608,7 +644,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .btn, .ig-btn, .ig-tile img, .reel-play span, .static-open img { transition: none; }
+      .btn, .ig-btn, .ig-tile img, .reel-play span, .static-open img, .strip-arrow { transition: none; }
       .ig-live::before { animation: none; }
     }
   </style>
@@ -634,7 +670,10 @@
       <h3>Video</h3>
       <p>Tap one to watch it with sound.</p>
     </div>
-    <div class="strip" data-strip data-speed="28">
+    <div class="strip-wrap strip-wrap--videos">
+    <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll videos left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="strip-arrow strip-arrow--next" type="button" data-strip-step="1" aria-label="Scroll videos right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+    <div class="strip" data-strip data-speed="31">
       <ul class="strip-track">
           <li class="reel">
             <div class="reel-media">
@@ -686,12 +725,16 @@
           </li>
       </ul>
     </div>
+    </div>
 
     <div class="strip-label">
       <h3>Statics</h3>
       <p>Best performers first. Tap to enlarge.</p>
     </div>
-    <div class="strip" data-strip data-speed="-24">
+    <div class="strip-wrap strip-wrap--statics">
+    <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll statics left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="strip-arrow strip-arrow--next" type="button" data-strip-step="1" aria-label="Scroll statics right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+    <div class="strip" data-strip data-speed="-26.5">
       <ul class="strip-track">
           <li class="static">
             <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-news-lg.webp" data-caption="Breaking news. DJ Accelerator, 55 leads, best static in the account" aria-label="Enlarge: Breaking news, DJ Accelerator"><img src="/portfolio/work/statics/breaking-news-sm.webp" alt="Breaking news static ad for DJ Accelerator" width="1254" height="1254" loading="lazy" decoding="async" /></button>
@@ -785,6 +828,7 @@
           </li>
       </ul>
     </div>
+    </div>
   </section>
 
   <dialog class="lightbox" aria-label="Static ad">
@@ -824,9 +868,10 @@
   <p class="contact">Want to talk? <a href="mailto:support@rudygoel.com">support@rudygoel.com</a></p>
 
   <script>
-    // Scrolling strips. Each one drifts slowly on its own, loops forever,
-    // pauses while you hover, touch, tab into it or play a video, and stays
-    // swipeable by hand. No drift at all for reduced-motion users.
+    // Scrolling strips. Each one drifts slowly on its own and loops forever.
+    // It keeps moving under the mouse, waits while you swipe, tab into it or
+    // play a video, and the edge arrows jump it either way. No drift at all
+    // for reduced-motion users (the arrows still work).
     (function () {
       var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       var playing = 0;
@@ -845,13 +890,11 @@
 
         var half = function () { return track.scrollWidth / 2; };
         var pos = speed < 0 ? half() : 0;
-        var hold = false, holdUntil = 0, visible = false, last = 0;
+        var hold = false, holdUntil = 0, visible = false, last = 0, pending = 0;
         strip.scrollLeft = pos;
 
         var pause = function (ms) { holdUntil = Math.max(holdUntil, performance.now() + ms); };
-        strip.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hold = true; });
-        strip.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") hold = false; });
-        strip.addEventListener("pointerdown", function () { pause(4000); });
+        strip.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse") pause(4000); });
         strip.addEventListener("touchstart", function () { pause(4000); }, { passive: true });
         strip.addEventListener("wheel", function () { pause(3000); }, { passive: true });
         strip.addEventListener("focusin", function () { hold = true; });
@@ -866,12 +909,31 @@
 
         new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(strip);
 
+        // Edge arrows jump about two-thirds of a screen either way
+        strip.parentNode.querySelectorAll("[data-strip-step]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var step = Math.round(strip.clientWidth * 0.66) * Number(btn.dataset.stripStep);
+            if (still) strip.scrollBy({ left: step });
+            else pending += step;
+          });
+        });
+
         if (still) return;
         (function tick(now) {
           var dt = last ? Math.min(now - last, 64) / 1000 : 0;
           last = now;
+          var moved = false;
+          if (pending) {
+            var d = Math.abs(pending) < 1 ? pending : pending * 0.16;
+            pos += d;
+            pending -= d;
+            moved = true;
+          }
           if (visible && !hold && !playing && now > holdUntil) {
             pos += speed * dt;
+            moved = true;
+          }
+          if (moved) {
             var h = half();
             if (pos >= h) pos -= h;
             if (pos < 0) pos += h;
