@@ -61,6 +61,7 @@
     html, body { margin: 0; }
 
     body {
+      overflow-x: clip;
       background: var(--paper);
       color: var(--ink);
       font-family: var(--font-body);
@@ -188,16 +189,59 @@
     #ads { padding-top: 64px; }
     #ads .section-head { padding-top: 0; border-top: 0; text-align: center; }
 
-    /* ---- Video ads ---- */
+    /* ---- Scrolling strips (videos + statics) ---- */
 
-    .reels {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px 20px;
+    .strip-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 14px;
+    }
+
+    .strip-label h3 {
       margin: 0;
-      padding: 0;
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .strip-label p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--ink-faint);
+      text-align: right;
+    }
+
+    .strip {
+      position: relative;
+      margin: 0 calc(50% - 50vw);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      /* fade the edges so cards drift in and out */
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+      mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    }
+
+    .strip::-webkit-scrollbar { display: none; }
+
+    .strip-track {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+      margin: 0;
+      padding: 4px 24px 8px;
       list-style: none;
     }
+
+    .strip + .strip-label { margin-top: 48px; }
+
+    /* Video cards */
+
+    .reel { width: 210px; flex: none; }
 
     .reel-media {
       position: relative;
@@ -231,8 +275,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 64px;
-      height: 64px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: rgba(255, 253, 249, 0.92);
       color: var(--ink);
@@ -241,61 +285,121 @@
     }
 
     .reel-play:hover span { transform: scale(1.08); }
-    .reel-play svg { width: 26px; height: 26px; margin-left: 3px; }
+    .reel-play svg { width: 22px; height: 22px; margin-left: 3px; }
 
-    .reel.is-playing .reel-play { display: none; }
+    .reel.is-playing .reel-play,
+    .reel.is-playing .reel-badge { display: none; }
 
     .reel-badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      padding: 4px 10px;
+      top: 10px;
+      left: 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       background: var(--paper-raised);
       color: var(--ink);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.02em;
       pointer-events: none;
     }
 
-    .reel.is-playing .reel-badge { display: none; }
-
-    .reel h3 {
-      margin: 14px 0 0;
-      font-size: 17px;
+    .card-title {
+      margin: 10px 0 0;
+      font-size: 14px;
       font-weight: 500;
       line-height: 1.35;
     }
 
-    .reel-format {
-      margin: 4px 0 0;
-      font-size: 14px;
+    .card-meta {
+      margin: 3px 0 0;
+      font-size: 13px;
       color: var(--ink-faint);
     }
 
-    .reel-stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 10px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .reel-stats li {
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      font-size: 13px;
-      color: var(--ink-soft);
-    }
-
-    .reel-stats li:first-child {
-      border-color: var(--tobacco);
+    .card-meta b {
       color: var(--tobacco-deep);
       font-weight: 500;
     }
+
+    /* Static cards */
+
+    .static { flex: none; }
+
+    .static-open {
+      display: block;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--paper-sunk);
+      cursor: zoom-in;
+    }
+
+    .static-open img {
+      display: block;
+      height: 300px;
+      width: auto;
+      transition: transform 400ms ease;
+    }
+
+    .static-open:hover img { transform: scale(1.03); }
+
+    .static .card-title,
+    .static .card-meta { max-width: 240px; }
+
+    /* Lightbox */
+
+    .lightbox {
+      width: min(92vw, 720px);
+      max-height: 92vh;
+      padding: 0;
+      border: 0;
+      border-radius: 14px;
+      background: var(--paper-raised);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    .lightbox::backdrop { background: rgba(22, 25, 26, 0.82); }
+
+    .lightbox img {
+      display: block;
+      width: 100%;
+      max-height: calc(92vh - 64px);
+      object-fit: contain;
+      background: var(--paper-sunk);
+    }
+
+    .lightbox-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .lightbox-bar p {
+      flex: 1;
+      margin: 0;
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
+    .lightbox button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border-strong);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .lightbox button:hover { border-color: var(--ink); }
+    .lightbox svg { width: 18px; height: 18px; }
 
     /* ---- Instagram ---- */
 
@@ -475,10 +579,6 @@
 
     .contact a:hover { color: var(--tobacco-deep); }
 
-    @media (max-width: 899px) {
-      .reels { grid-template-columns: repeat(2, 1fr); }
-    }
-
     @media (max-width: 599px) {
       .hero { padding-top: 48px; }
       #ads { padding-top: 48px; }
@@ -489,22 +589,12 @@
       .section { padding: 40px 16px 0; }
       .section-head { padding-top: 32px; margin-bottom: 20px; }
 
-      /* Swipe through the ads like stories */
-      .reels {
-        display: flex;
-        gap: 12px;
-        margin: 0 -16px;
-        padding: 0 16px 8px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-padding: 0 16px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-
-      .reels::-webkit-scrollbar { display: none; }
-      .reel { flex: 0 0 74%; scroll-snap-align: start; }
-      .reel h3 { font-size: 16px; }
+      .strip-label { flex-direction: column; gap: 4px; }
+      .strip-label p { text-align: left; }
+      .strip-track { gap: 12px; padding: 4px 16px 8px; }
+      .reel { width: 168px; }
+      .static-open img { height: 240px; }
+      .static .card-title, .static .card-meta { max-width: 192px; }
 
       .ig-profile { gap: 20px; align-items: flex-start; padding-bottom: 20px; }
       .ig-avatar { width: 86px; height: 86px; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--tobacco); }
@@ -518,7 +608,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .btn, .ig-btn, .ig-tile img, .reel-play span { transition: none; }
+      .btn, .ig-btn, .ig-tile img, .reel-play span, .static-open img { transition: none; }
       .ig-live::before { animation: none; }
     }
   </style>
@@ -537,67 +627,175 @@
   <section class="section" id="ads" aria-labelledby="ads-title">
     <div class="section-head">
       <h2 id="ads-title">The <em>ads</em></h2>
-      <p>Scripted and built for DJ Accelerator. Tap one to watch it with sound.</p>
+      <p>Video and statics I made for DJ Accelerator, plus spec work for other brands.</p>
     </div>
-    <ul class="reels">
-      <li class="reel">
-        <div class="reel-media">
-          <video preload="none" playsinline poster="/portfolio/work/too-old.webp" src="/portfolio/work/too-old.mp4"></video>
-          <button class="reel-play" type="button" aria-label="Play the “too old” talking head reel"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
-          <span class="reel-badge">The winner</span>
-        </div>
-        <h3>“You’re way too old to make this DJing thing happen”</h3>
-        <p class="reel-format">Talking head reel</p>
-        <ul class="reel-stats"><li>468 leads at $5.14</li><li>179K impressions</li><li>7.96% CTR</li></ul>
-      </li>
-      <li class="reel">
-        <div class="reel-media">
-          <video preload="none" playsinline poster="/portfolio/work/slow-vs-fast.webp" src="/portfolio/work/slow-vs-fast.mp4"></video>
-          <button class="reel-play" type="button" aria-label="Play the slow-growing vs fast-growing DJs reel"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
-          <span class="reel-badge">Cheapest qualified lead</span>
-        </div>
-        <h3>Slow-growing vs fast-growing DJs</h3>
-        <p class="reel-format">Talking head with on-screen lists</p>
-        <ul class="reel-stats"><li>18 qualified leads at $11.60</li><li>5.46% CTR</li></ul>
-      </li>
-      <li class="reel">
-        <div class="reel-media">
-          <video preload="none" playsinline poster="/portfolio/work/without-quitting.webp" src="/portfolio/work/without-quitting.mp4"></video>
-          <button class="reel-play" type="button" aria-label="Play the without quitting their jobs B-roll ad"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
-        </div>
-        <h3>How these DJs built careers without quitting their jobs</h3>
-        <p class="reel-format">B-roll montage</p>
-        <ul class="reel-stats"><li>17 leads at $9.86</li><li>6.08% CTR</li></ul>
-      </li>
-      <li class="reel">
-        <div class="reel-media">
-          <video preload="none" playsinline poster="/portfolio/work/firefighter.webp" src="/portfolio/work/firefighter.mp4"></video>
-          <button class="reel-play" type="button" aria-label="Play the firefighter callout ad"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
-        </div>
-        <h3>“Are you a firefighter trying to build a DJ career?”</h3>
-        <p class="reel-format">Occupation callout</p>
-        <ul class="reel-stats"><li>18 leads at $4.46</li><li>4.17% CTR</li></ul>
-      </li>
-      <li class="reel">
-        <div class="reel-media">
-          <video preload="none" playsinline poster="/portfolio/work/ai-ugc-too-old.webp" src="/portfolio/work/ai-ugc-too-old.mp4"></video>
-          <button class="reel-play" type="button" aria-label="Play the AI UGC version of the too old ad"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
-          <span class="reel-badge">AI UGC</span>
-        </div>
-        <h3>The winning angle, from a creator’s mouth</h3>
-        <p class="reel-format">AI UGC. No shoot, no paid creator.</p>
-      </li>
-      <li class="reel">
-        <div class="reel-media">
-          <video preload="none" playsinline poster="/portfolio/work/bins-decks.webp" src="/portfolio/work/bins-decks.mp4"></video>
-          <button class="reel-play" type="button" aria-label="Play the DJ who bins his decks ad"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
-          <span class="reel-badge">AI UGC</span>
-        </div>
-        <h3>The DJ who bins his decks</h3>
-        <p class="reel-format">8-second pattern-break hook. No words.</p>
-      </li>
-    </ul>
+
+    <div class="strip-label">
+      <h3>Video</h3>
+      <p>Tap one to watch it with sound.</p>
+    </div>
+    <div class="strip" data-strip data-speed="28">
+      <ul class="strip-track">
+          <li class="reel">
+            <div class="reel-media">
+              <video preload="none" playsinline poster="/portfolio/work/too-old.webp" src="/portfolio/work/too-old.mp4"></video>
+              <button class="reel-play" type="button" aria-label="Play: You’re way too old to make this DJing thing happen"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button><span class="reel-badge">The winner</span>
+            </div>
+            <p class="card-title">“You’re way too old to make this DJing thing happen”</p>
+            <p class="card-meta">Talking head reel · <b>468 leads, 7.96% CTR</b></p>
+          </li>
+          <li class="reel">
+            <div class="reel-media">
+              <video preload="none" playsinline poster="/portfolio/work/slow-vs-fast.webp" src="/portfolio/work/slow-vs-fast.mp4"></video>
+              <button class="reel-play" type="button" aria-label="Play: Slow-growing vs fast-growing DJs"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button><span class="reel-badge">Cheapest qualified lead</span>
+            </div>
+            <p class="card-title">Slow-growing vs fast-growing DJs</p>
+            <p class="card-meta">Talking head with on-screen lists · <b>5.46% CTR</b></p>
+          </li>
+          <li class="reel">
+            <div class="reel-media">
+              <video preload="none" playsinline poster="/portfolio/work/without-quitting.webp" src="/portfolio/work/without-quitting.mp4"></video>
+              <button class="reel-play" type="button" aria-label="Play: How these DJs built careers without quitting their jobs"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
+            </div>
+            <p class="card-title">How these DJs built careers without quitting their jobs</p>
+            <p class="card-meta">B-roll montage · <b>6.08% CTR</b></p>
+          </li>
+          <li class="reel">
+            <div class="reel-media">
+              <video preload="none" playsinline poster="/portfolio/work/firefighter.webp" src="/portfolio/work/firefighter.mp4"></video>
+              <button class="reel-play" type="button" aria-label="Play: Are you a firefighter trying to build a DJ career?"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button>
+            </div>
+            <p class="card-title">“Are you a firefighter trying to build a DJ career?”</p>
+            <p class="card-meta">Occupation callout · <b>4.17% CTR</b></p>
+          </li>
+          <li class="reel">
+            <div class="reel-media">
+              <video preload="none" playsinline poster="/portfolio/work/ai-ugc-too-old.webp" src="/portfolio/work/ai-ugc-too-old.mp4"></video>
+              <button class="reel-play" type="button" aria-label="Play: The winning angle, from a creator’s mouth"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button><span class="reel-badge">AI UGC</span>
+            </div>
+            <p class="card-title">The winning angle, from a creator’s mouth</p>
+            <p class="card-meta">No shoot, no paid creator</p>
+          </li>
+          <li class="reel">
+            <div class="reel-media">
+              <video preload="none" playsinline poster="/portfolio/work/bins-decks.webp" src="/portfolio/work/bins-decks.mp4"></video>
+              <button class="reel-play" type="button" aria-label="Play: The DJ who bins his decks"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span></button><span class="reel-badge">AI UGC</span>
+            </div>
+            <p class="card-title">The DJ who bins his decks</p>
+            <p class="card-meta">8-second pattern-break hook</p>
+          </li>
+      </ul>
+    </div>
+
+    <div class="strip-label">
+      <h3>Statics</h3>
+      <p>Best performers first. Tap to enlarge.</p>
+    </div>
+    <div class="strip" data-strip data-speed="-24">
+      <ul class="strip-track">
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-news-lg.webp" data-caption="Breaking news. DJ Accelerator, 55 leads, best static in the account" aria-label="Enlarge: Breaking news, DJ Accelerator"><img src="/portfolio/work/statics/breaking-news-sm.webp" alt="Breaking news static ad for DJ Accelerator" width="1254" height="1254" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Breaking news</p>
+            <p class="card-meta">DJ Accelerator · <b>55 leads, best static in the account</b></p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/before-after-lg.webp" data-caption="Before / after. DJ Accelerator, 17% CTR" aria-label="Enlarge: Before / after, DJ Accelerator"><img src="/portfolio/work/statics/before-after-sm.webp" alt="Before / after static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Before / after</p>
+            <p class="card-meta">DJ Accelerator · <b>17% CTR</b></p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/mate-text-chain-lg.webp" data-caption="Mate’s text chain. DJ Accelerator, 8.7% CTR" aria-label="Enlarge: Mate’s text chain, DJ Accelerator"><img src="/portfolio/work/statics/mate-text-chain-sm.webp" alt="Mate’s text chain static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Mate’s text chain</p>
+            <p class="card-meta">DJ Accelerator · <b>8.7% CTR</b></p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/ugly-doodle-lg.webp" data-caption="Ugly doodle. DJ Accelerator, 8.5% CTR" aria-label="Enlarge: Ugly doodle, DJ Accelerator"><img src="/portfolio/work/statics/ugly-doodle-sm.webp" alt="Ugly doodle static ad for DJ Accelerator" width="928" height="1152" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Ugly doodle</p>
+            <p class="card-meta">DJ Accelerator · <b>8.5% CTR</b></p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/editorial-lg.webp" data-caption="Editorial headline. DJ Accelerator, 7.3% CTR" aria-label="Enlarge: Editorial headline, DJ Accelerator"><img src="/portfolio/work/statics/editorial-sm.webp" alt="Editorial headline static ad for DJ Accelerator" width="1856" height="2304" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Editorial headline</p>
+            <p class="card-meta">DJ Accelerator · <b>7.3% CTR</b></p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/midwit-lg.webp" data-caption="Midwit meme. DJ Accelerator" aria-label="Enlarge: Midwit meme, DJ Accelerator"><img src="/portfolio/work/statics/midwit-sm.webp" alt="Midwit meme static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Midwit meme</p>
+            <p class="card-meta">DJ Accelerator</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/headaches-meme-lg.webp" data-caption="Types of headaches meme. DJ Accelerator, 5.5% CTR" aria-label="Enlarge: Types of headaches meme, DJ Accelerator"><img src="/portfolio/work/statics/headaches-meme-sm.webp" alt="Types of headaches meme static ad for DJ Accelerator" width="1856" height="2304" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Types of headaches meme</p>
+            <p class="card-meta">DJ Accelerator · <b>5.5% CTR</b></p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/reddit-guessing-lg.webp" data-caption="Reddit thread. DJ Accelerator" aria-label="Enlarge: Reddit thread, DJ Accelerator"><img src="/portfolio/work/statics/reddit-guessing-sm.webp" alt="Reddit thread static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Reddit thread</p>
+            <p class="card-meta">DJ Accelerator</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-age-myth-lg.webp" data-caption="Breaking news, round two. DJ Accelerator" aria-label="Enlarge: Breaking news, round two, DJ Accelerator"><img src="/portfolio/work/statics/breaking-age-myth-sm.webp" alt="Breaking news, round two static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Breaking news, round two</p>
+            <p class="card-meta">DJ Accelerator</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-ankles-doodle-lg.webp" data-caption="MS Paint doodle. Rovella, spec" aria-label="Enlarge: MS Paint doodle, Rovella, spec"><img src="/portfolio/work/statics/rovella-ankles-doodle-sm.webp" alt="MS Paint doodle static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">MS Paint doodle</p>
+            <p class="card-meta">Rovella, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-breaking-news-lg.webp" data-caption="Breaking news. Rovella, spec" aria-label="Enlarge: Breaking news, Rovella, spec"><img src="/portfolio/work/statics/rovella-breaking-news-sm.webp" alt="Breaking news static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Breaking news</p>
+            <p class="card-meta">Rovella, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-warning-label-lg.webp" data-caption="Reverse side-effects label. Rovella, spec" aria-label="Enlarge: Reverse side-effects label, Rovella, spec"><img src="/portfolio/work/statics/rovella-warning-label-sm.webp" alt="Reverse side-effects label static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Reverse side-effects label</p>
+            <p class="card-meta">Rovella, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-receipt-lg.webp" data-caption="Receipt. Elite IV, spec" aria-label="Enlarge: Receipt, Elite IV, spec"><img src="/portfolio/work/statics/elite-receipt-sm.webp" alt="Receipt static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Receipt</p>
+            <p class="card-meta">Elite IV, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-search-lg.webp" data-caption="Search bar. Elite IV, spec" aria-label="Enlarge: Search bar, Elite IV, spec"><img src="/portfolio/work/statics/elite-search-sm.webp" alt="Search bar static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Search bar</p>
+            <p class="card-meta">Elite IV, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-pillow-lg.webp" data-caption="Native photo. Elite IV, spec" aria-label="Enlarge: Native photo, Elite IV, spec"><img src="/portfolio/work/statics/elite-pillow-sm.webp" alt="Native photo static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Native photo</p>
+            <p class="card-meta">Elite IV, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-dating-doodle-lg.webp" data-caption="Two-panel doodle. Homee, spec" aria-label="Enlarge: Two-panel doodle, Homee, spec"><img src="/portfolio/work/statics/homee-dating-doodle-sm.webp" alt="Two-panel doodle static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Two-panel doodle</p>
+            <p class="card-meta">Homee, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-signboard-lg.webp" data-caption="Absurd photo metaphor. Homee, spec" aria-label="Enlarge: Absurd photo metaphor, Homee, spec"><img src="/portfolio/work/statics/homee-signboard-sm.webp" alt="Absurd photo metaphor static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Absurd photo metaphor</p>
+            <p class="card-meta">Homee, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rhythm-engine-with-without-lg.webp" data-caption="With / without. Rhythm Engine" aria-label="Enlarge: With / without, Rhythm Engine"><img src="/portfolio/work/statics/rhythm-engine-with-without-sm.webp" alt="With / without static ad for Rhythm Engine" width="2048" height="2048" loading="lazy" decoding="async" /></button>
+            <p class="card-title">With / without</p>
+            <p class="card-meta">Rhythm Engine</p>
+          </li>
+      </ul>
+    </div>
   </section>
+
+  <dialog class="lightbox" aria-label="Static ad">
+    <img alt="" />
+    <div class="lightbox-bar">
+      <button type="button" data-lb="prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button type="button" data-lb="next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+      <p data-lb-caption></p>
+      <button type="button" data-lb="close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </dialog>
 
   <section class="section" id="instagram" aria-labelledby="ig-title">
     <div class="section-head">
@@ -626,19 +824,110 @@
   <p class="contact">Want to talk? <a href="mailto:support@rudygoel.com">support@rudygoel.com</a></p>
 
   <script>
-    // Video ads: tap to play with sound, one at a time.
+    // Scrolling strips. Each one drifts slowly on its own, loops forever,
+    // pauses while you hover, touch, tab into it or play a video, and stays
+    // swipeable by hand. No drift at all for reduced-motion users.
     (function () {
-      var reels = [].slice.call(document.querySelectorAll(".reel"));
-      reels.forEach(function (reel) {
+      var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var playing = 0;
+
+      [].slice.call(document.querySelectorAll("[data-strip]")).forEach(function (strip) {
+        var track = strip.querySelector(".strip-track");
+        var speed = parseFloat(strip.dataset.speed) || 24; // px per second, negative drifts the other way
+        var originals = [].slice.call(track.children);
+        // One copy of the cards so the loop has no visible seam
+        originals.forEach(function (li) {
+          var clone = li.cloneNode(true);
+          clone.setAttribute("aria-hidden", "true");
+          clone.querySelectorAll("button, a, video").forEach(function (el) { el.setAttribute("tabindex", "-1"); });
+          track.appendChild(clone);
+        });
+
+        var half = function () { return track.scrollWidth / 2; };
+        var pos = speed < 0 ? half() : 0;
+        var hold = false, holdUntil = 0, visible = false, last = 0;
+        strip.scrollLeft = pos;
+
+        var pause = function (ms) { holdUntil = Math.max(holdUntil, performance.now() + ms); };
+        strip.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hold = true; });
+        strip.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") hold = false; });
+        strip.addEventListener("pointerdown", function () { pause(4000); });
+        strip.addEventListener("touchstart", function () { pause(4000); }, { passive: true });
+        strip.addEventListener("wheel", function () { pause(3000); }, { passive: true });
+        strip.addEventListener("focusin", function () { hold = true; });
+        strip.addEventListener("focusout", function () { hold = false; });
+        strip.addEventListener("scroll", function () {
+          // Someone dragged or swiped: follow them, and keep the loop seamless
+          if (Math.abs(strip.scrollLeft - Math.round(pos)) > 2) pos = strip.scrollLeft;
+          var h = half();
+          if (strip.scrollLeft >= h) { pos -= h; strip.scrollLeft = Math.round(pos); }
+          else if (strip.scrollLeft <= 0 && speed < 0) { pos += h; strip.scrollLeft = Math.round(pos); }
+        }, { passive: true });
+
+        new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(strip);
+
+        if (still) return;
+        (function tick(now) {
+          var dt = last ? Math.min(now - last, 64) / 1000 : 0;
+          last = now;
+          if (visible && !hold && !playing && now > holdUntil) {
+            pos += speed * dt;
+            var h = half();
+            if (pos >= h) pos -= h;
+            if (pos < 0) pos += h;
+            strip.scrollLeft = Math.round(pos);
+          }
+          requestAnimationFrame(tick);
+        })(0);
+      });
+
+      // Videos: tap to play with sound, one at a time; the strips wait while one plays.
+      var videos = [].slice.call(document.querySelectorAll(".reel video"));
+      document.querySelectorAll(".reel").forEach(function (reel) {
         var video = reel.querySelector("video");
         reel.querySelector(".reel-play").addEventListener("click", function () {
-          reels.forEach(function (other) {
-            if (other !== reel) other.querySelector("video").pause();
-          });
+          videos.forEach(function (other) { if (other !== video) other.pause(); });
           video.controls = true;
           reel.classList.add("is-playing");
           video.play();
         });
+        video.addEventListener("play", function () { playing++; });
+        video.addEventListener("pause", function () { playing = Math.max(0, playing - 1); });
+      });
+
+      // Statics: tap to open full size, arrows or swipe-free buttons to flip through.
+      var dialog = document.querySelector(".lightbox");
+      var big = dialog.querySelector("img");
+      var caption = dialog.querySelector("[data-lb-caption]");
+      var cards = [].slice.call(document.querySelectorAll('.static:not([aria-hidden]) .static-open'));
+      var index = 0;
+      var show = function (i) {
+        index = (i + cards.length) % cards.length;
+        big.src = cards[index].dataset.full;
+        big.alt = cards[index].getAttribute("aria-label").replace("Enlarge: ", "");
+        caption.textContent = cards[index].dataset.caption;
+      };
+      document.querySelectorAll(".static-open").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var real = cards.filter(function (c) { return c.dataset.full === btn.dataset.full; })[0];
+          show(cards.indexOf(real));
+          playing++;
+          dialog.showModal();
+        });
+      });
+      dialog.addEventListener("close", function () { playing = Math.max(0, playing - 1); });
+      dialog.addEventListener("click", function (e) {
+        var action = e.target.closest("[data-lb]");
+        if (e.target === dialog) return dialog.close();
+        if (!action) return;
+        var a = action.dataset.lb;
+        if (a === "close") dialog.close();
+        if (a === "prev") show(index - 1);
+        if (a === "next") show(index + 1);
+      });
+      dialog.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") show(index - 1);
+        if (e.key === "ArrowRight") show(index + 1);
       });
     })();
 
