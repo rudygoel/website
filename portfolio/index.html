@@ -281,6 +281,23 @@
 
     .strip-wrap + .strip-label { margin-top: 48px; }
 
+    .zip-link {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 10px;
+      padding: 7px 14px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 200ms ease, color 200ms ease;
+    }
+
+    .zip-link:hover { background: var(--ink); color: var(--paper-raised); }
+
     /* Video cards */
 
     .reel { width: 210px; flex: none; }
@@ -633,6 +650,7 @@
 
       .strip-label { flex-direction: column; gap: 4px; }
       .strip-label p { text-align: left; }
+      .zip-link { margin: 10px 0 0; min-height: 40px; }
       .strip-track { gap: 12px; padding: 4px 16px 8px; }
       .reel { width: 168px; }
       .static-open img { height: 240px; }
@@ -740,7 +758,7 @@
 
     <div class="strip-label">
       <h3>Statics</h3>
-      <p>Best performers first. Tap to enlarge.</p>
+      <p>Best performers first. Tap to enlarge. <a class="zip-link" href="/portfolio/rudy-goel-static-ads.zip" download>Download all 39 (ZIP, 11 MB)</a></p>
     </div>
     <div class="strip-wrap strip-wrap--statics">
     <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll statics left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -758,23 +776,8 @@
             <p class="card-meta">DJ Accelerator · <b>17% CTR</b></p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/mate-text-chain-lg.webp" data-caption="Mate’s text chain. DJ Accelerator, 8.7% CTR" aria-label="Enlarge: Mate’s text chain, DJ Accelerator"><img src="/portfolio/work/statics/mate-text-chain-sm.webp" alt="Mate’s text chain static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Mate’s text chain</p>
-            <p class="card-meta">DJ Accelerator · <b>8.7% CTR</b></p>
-          </li>
-          <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/ugly-doodle-lg.webp" data-caption="Ugly doodle. DJ Accelerator, 8.5% CTR" aria-label="Enlarge: Ugly doodle, DJ Accelerator"><img src="/portfolio/work/statics/ugly-doodle-sm.webp" alt="Ugly doodle static ad for DJ Accelerator" width="928" height="1152" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Ugly doodle</p>
-            <p class="card-meta">DJ Accelerator · <b>8.5% CTR</b></p>
-          </li>
-          <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/editorial-lg.webp" data-caption="Editorial headline. DJ Accelerator, 7.3% CTR" aria-label="Enlarge: Editorial headline, DJ Accelerator"><img src="/portfolio/work/statics/editorial-sm.webp" alt="Editorial headline static ad for DJ Accelerator" width="1856" height="2304" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Editorial headline</p>
-            <p class="card-meta">DJ Accelerator · <b>7.3% CTR</b></p>
-          </li>
-          <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/midwit-lg.webp" data-caption="Midwit meme. DJ Accelerator" aria-label="Enlarge: Midwit meme, DJ Accelerator"><img src="/portfolio/work/statics/midwit-sm.webp" alt="Midwit meme static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Midwit meme</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/midwit-lg.webp" data-caption="Midwit meme: not too late. DJ Accelerator" aria-label="Enlarge: Midwit meme: not too late, DJ Accelerator"><img src="/portfolio/work/statics/midwit-sm.webp" alt="Midwit meme: not too late static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Midwit meme: not too late</p>
             <p class="card-meta">DJ Accelerator</p>
           </li>
           <li class="static">
@@ -783,17 +786,32 @@
             <p class="card-meta">DJ Accelerator · <b>5.5% CTR</b></p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/reddit-guessing-lg.webp" data-caption="Reddit thread. DJ Accelerator" aria-label="Enlarge: Reddit thread, DJ Accelerator"><img src="/portfolio/work/statics/reddit-guessing-sm.webp" alt="Reddit thread static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Reddit thread</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/ugly-doodle-lg.webp" data-caption="Ugly doodle. DJ Accelerator" aria-label="Enlarge: Ugly doodle, DJ Accelerator"><img src="/portfolio/work/statics/ugly-doodle-sm.webp" alt="Ugly doodle static ad for DJ Accelerator" width="928" height="1152" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Ugly doodle</p>
             <p class="card-meta">DJ Accelerator</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-age-myth-lg.webp" data-caption="Breaking news, round two. DJ Accelerator" aria-label="Enlarge: Breaking news, round two, DJ Accelerator"><img src="/portfolio/work/statics/breaking-age-myth-sm.webp" alt="Breaking news, round two static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Breaking news, round two</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-365-followers-lg.webp" data-caption="Breaking news: 365 followers. DJ Accelerator" aria-label="Enlarge: Breaking news: 365 followers, DJ Accelerator"><img src="/portfolio/work/statics/breaking-365-followers-sm.webp" alt="Breaking news: 365 followers static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Breaking news: 365 followers</p>
             <p class="card-meta">DJ Accelerator</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-ankles-doodle-lg.webp" data-caption="MS Paint doodle. Rovella, spec" aria-label="Enlarge: MS Paint doodle, Rovella, spec"><img src="/portfolio/work/statics/rovella-ankles-doodle-sm.webp" alt="MS Paint doodle static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-2027-lineups-lg.webp" data-caption="Breaking news: 2027 lineups. DJ Accelerator" aria-label="Enlarge: Breaking news: 2027 lineups, DJ Accelerator"><img src="/portfolio/work/statics/breaking-2027-lineups-sm.webp" alt="Breaking news: 2027 lineups static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Breaking news: 2027 lineups</p>
+            <p class="card-meta">DJ Accelerator</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/problem-solution-lg.webp" data-caption="Problem and solution. DJ Accelerator" aria-label="Enlarge: Problem and solution, DJ Accelerator"><img src="/portfolio/work/statics/problem-solution-sm.webp" alt="Problem and solution static ad for DJ Accelerator" width="1080" height="1080" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Problem and solution</p>
+            <p class="card-meta">DJ Accelerator</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/skool-before-after-lg.webp" data-caption="Before / after, Skool. DJ Accelerator" aria-label="Enlarge: Before / after, Skool, DJ Accelerator"><img src="/portfolio/work/statics/skool-before-after-sm.webp" alt="Before / after, Skool static ad for DJ Accelerator" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Before / after, Skool</p>
+            <p class="card-meta">DJ Accelerator</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-ms-paint-doodle-lg.webp" data-caption="MS Paint doodle. Rovella, spec" aria-label="Enlarge: MS Paint doodle, Rovella, spec"><img src="/portfolio/work/statics/rovella-ms-paint-doodle-sm.webp" alt="MS Paint doodle static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
             <p class="card-title">MS Paint doodle</p>
             <p class="card-meta">Rovella, spec</p>
           </li>
@@ -803,9 +821,39 @@
             <p class="card-meta">Rovella, spec</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-warning-label-lg.webp" data-caption="Reverse side-effects label. Rovella, spec" aria-label="Enlarge: Reverse side-effects label, Rovella, spec"><img src="/portfolio/work/statics/rovella-warning-label-sm.webp" alt="Reverse side-effects label static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Reverse side-effects label</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-boarding-pass-lg.webp" data-caption="Boarding pass. Rovella, spec" aria-label="Enlarge: Boarding pass, Rovella, spec"><img src="/portfolio/work/statics/rovella-boarding-pass-sm.webp" alt="Boarding pass static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Boarding pass</p>
             <p class="card-meta">Rovella, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-warning-cinema-lg.webp" data-caption="Warning label: cinema. Rovella, spec" aria-label="Enlarge: Warning label: cinema, Rovella, spec"><img src="/portfolio/work/statics/rovella-warning-cinema-sm.webp" alt="Warning label: cinema static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Warning label: cinema</p>
+            <p class="card-meta">Rovella, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/rovella-flat-lay-lg.webp" data-caption="Annotated flat lay. Rovella, spec" aria-label="Enlarge: Annotated flat lay, Rovella, spec"><img src="/portfolio/work/statics/rovella-flat-lay-sm.webp" alt="Annotated flat lay static ad for Rovella" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Annotated flat lay</p>
+            <p class="card-meta">Rovella, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-dating-vs-flatmate-lg.webp" data-caption="Dating vs flatmate hunting. Homee, spec" aria-label="Enlarge: Dating vs flatmate hunting, Homee, spec"><img src="/portfolio/work/statics/homee-dating-vs-flatmate-sm.webp" alt="Dating vs flatmate hunting static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Dating vs flatmate hunting</p>
+            <p class="card-meta">Homee, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-signboard-lg.webp" data-caption="Signboard. Homee, spec" aria-label="Enlarge: Signboard, Homee, spec"><img src="/portfolio/work/statics/homee-signboard-sm.webp" alt="Signboard static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Signboard</p>
+            <p class="card-meta">Homee, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-fourth-toothbrush-lg.webp" data-caption="Fourth toothbrush. Homee, spec" aria-label="Enlarge: Fourth toothbrush, Homee, spec"><img src="/portfolio/work/statics/homee-fourth-toothbrush-sm.webp" alt="Fourth toothbrush static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Fourth toothbrush</p>
+            <p class="card-meta">Homee, spec</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-milk-carton-lg.webp" data-caption="Milk carton. Homee, spec" aria-label="Enlarge: Milk carton, Homee, spec"><img src="/portfolio/work/statics/homee-milk-carton-sm.webp" alt="Milk carton static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Milk carton</p>
+            <p class="card-meta">Homee, spec</p>
           </li>
           <li class="static">
             <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-receipt-lg.webp" data-caption="Receipt. Elite IV, spec" aria-label="Enlarge: Receipt, Elite IV, spec"><img src="/portfolio/work/statics/elite-receipt-sm.webp" alt="Receipt static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
@@ -813,28 +861,28 @@
             <p class="card-meta">Elite IV, spec</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-search-lg.webp" data-caption="Search bar. Elite IV, spec" aria-label="Enlarge: Search bar, Elite IV, spec"><img src="/portfolio/work/statics/elite-search-sm.webp" alt="Search bar static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Search bar</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-pillow-lg.webp" data-caption="Pillow. Elite IV, spec" aria-label="Enlarge: Pillow, Elite IV, spec"><img src="/portfolio/work/statics/elite-pillow-sm.webp" alt="Pillow static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Pillow</p>
             <p class="card-meta">Elite IV, spec</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-pillow-lg.webp" data-caption="Native photo. Elite IV, spec" aria-label="Enlarge: Native photo, Elite IV, spec"><img src="/portfolio/work/statics/elite-pillow-sm.webp" alt="Native photo static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Native photo</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-price-tags-lg.webp" data-caption="Price tags. Elite IV, spec" aria-label="Enlarge: Price tags, Elite IV, spec"><img src="/portfolio/work/statics/elite-price-tags-sm.webp" alt="Price tags static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Price tags</p>
             <p class="card-meta">Elite IV, spec</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-dating-doodle-lg.webp" data-caption="Two-panel doodle. Homee, spec" aria-label="Enlarge: Two-panel doodle, Homee, spec"><img src="/portfolio/work/statics/homee-dating-doodle-sm.webp" alt="Two-panel doodle static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Two-panel doodle</p>
-            <p class="card-meta">Homee, spec</p>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/elite-social-post-lg.webp" data-caption="Social post. Elite IV, spec" aria-label="Enlarge: Social post, Elite IV, spec"><img src="/portfolio/work/statics/elite-social-post-sm.webp" alt="Social post static ad for Elite IV" width="1080" height="1350" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Social post</p>
+            <p class="card-meta">Elite IV, spec</p>
           </li>
           <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/homee-signboard-lg.webp" data-caption="Absurd photo metaphor. Homee, spec" aria-label="Enlarge: Absurd photo metaphor, Homee, spec"><img src="/portfolio/work/statics/homee-signboard-sm.webp" alt="Absurd photo metaphor static ad for Homee" width="1080" height="1350" loading="lazy" decoding="async" /></button>
-            <p class="card-title">Absurd photo metaphor</p>
-            <p class="card-meta">Homee, spec</p>
-          </li>
-          <li class="static">
-            <button class="static-open" type="button" data-full="/portfolio/work/statics/rhythm-engine-with-without-lg.webp" data-caption="With / without. Rhythm Engine" aria-label="Enlarge: With / without, Rhythm Engine"><img src="/portfolio/work/statics/rhythm-engine-with-without-sm.webp" alt="With / without static ad for Rhythm Engine" width="2048" height="2048" loading="lazy" decoding="async" /></button>
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/re-with-without-lg.webp" data-caption="With / without. Rhythm Engine" aria-label="Enlarge: With / without, Rhythm Engine"><img src="/portfolio/work/statics/re-with-without-sm.webp" alt="With / without static ad for Rhythm Engine" width="2048" height="2048" loading="lazy" decoding="async" /></button>
             <p class="card-title">With / without</p>
+            <p class="card-meta">Rhythm Engine</p>
+          </li>
+          <li class="static">
+            <button class="static-open" type="button" data-full="/portfolio/work/statics/re-comms-email-lg.webp" data-caption="Comms email. Rhythm Engine" aria-label="Enlarge: Comms email, Rhythm Engine"><img src="/portfolio/work/statics/re-comms-email-sm.webp" alt="Comms email static ad for Rhythm Engine" width="2048" height="2048" loading="lazy" decoding="async" /></button>
+            <p class="card-title">Comms email</p>
             <p class="card-meta">Rhythm Engine</p>
           </li>
       </ul>
