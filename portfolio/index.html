@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;1,6..72,300&family=Geist:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,600;1,6..72,300&family=Geist:wght@400;500&display=swap"
     rel="stylesheet"
   />
 
@@ -105,16 +105,26 @@
     h1 {
       margin: 0;
       font-family: var(--font-display);
-      font-weight: 300;
-      font-size: clamp(36px, 6vw, 64px);
-      line-height: 1.04;
-      letter-spacing: -0.015em;
+      font-weight: 600;
+      font-size: clamp(44px, 7vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
       font-variation-settings: "opsz" 72;
     }
 
-    h1 .nowrap { white-space: nowrap; }
+    .role {
+      margin: 10px 0 0;
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(26px, 3.6vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      font-variation-settings: "opsz" 72;
+    }
 
-    h1 em, h2 em {
+    .role .nowrap { white-space: nowrap; }
+
+    .role em, h2 em {
       font-style: italic;
       color: var(--tobacco-deep);
     }
@@ -652,7 +662,8 @@
 <body>
   <main class="hero">
     <img class="headshot" src="/portfolio/rudy-goel.webp" alt="Rudy Goel" width="120" height="120" />
-    <h1>Rudy Goel, <span class="nowrap">Creative <em>Strategist</em></span></h1>
+    <h1>Rudy Goel</h1>
+    <p class="role"><span class="nowrap">Creative <em>Strategist</em></span> <span class="nowrap">&amp; Media Buyer</span></p>
     <p class="lede">I built the ad engine that booked 219 sales calls in 5 weeks for DJ&nbsp;Accelerator. Here’s the proof.</p>
     <div class="actions">
       <a class="btn btn-primary" href="/portfolio/anti-resume">Read my anti-resume</a>
