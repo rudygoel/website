@@ -3,8 +3,8 @@
  * Body: { token, email, ref }. Saves the lead (see _lib/leads.ts), then
  * returns { ok: true, fixes } with the sealed markdown from /api/roast.
  */
-import { unseal } from "./_lib/seal";
-import { saveLead } from "./_lib/leads";
+import { unseal } from "./_lib/seal.js";
+import { saveLead } from "./_lib/leads.js";
 
 const EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+\.[a-z]{2,}$/i;
 

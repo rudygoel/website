@@ -16,12 +16,12 @@
  * ROAST_SECRET (optional, see _lib/seal.ts).
  */
 import Anthropic from "@anthropic-ai/sdk";
-import { INSTRUCTIONS } from "./_lib/instructions";
-import { RUBRIC } from "./_lib/rubric";
-import { checkLimits, clientIp } from "./_lib/limits";
-import { seal } from "./_lib/seal";
-import { cleanUrl, readLanding } from "./_lib/landing";
-import { MOCK_ROAST } from "./_lib/mock";
+import { INSTRUCTIONS } from "./_lib/instructions.js";
+import { RUBRIC } from "./_lib/rubric.js";
+import { checkLimits, clientIp } from "./_lib/limits.js";
+import { seal } from "./_lib/seal.js";
+import { cleanUrl, readLanding } from "./_lib/landing.js";
+import { MOCK_ROAST } from "./_lib/mock.js";
 
 const MODEL = process.env.ROAST_MODEL || "claude-opus-5-5";
 const EFFORT = (process.env.ROAST_EFFORT || "medium") as "low" | "medium" | "high";
