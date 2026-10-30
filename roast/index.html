@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#16191A" />
+
+  <title>AD ROAST | Rudy Goel</title>
+  <meta name="description" content="Upload your Meta ad. Get a score out of 100 and the 3 fixes I'd make first." />
+  <meta name="author" content="Rudy Goel" />
+  <link rel="canonical" href="https://rudygoel.com/roast" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AD ROAST by Rudy Goel" />
+  <meta property="og:description" content="Upload your Meta ad. Get a score out of 100 and the 3 fixes I'd make first." />
+  <meta property="og:url" content="https://rudygoel.com/roast" />
+  <meta property="og:image" content="https://rudygoel.com/og.png" />
+  <meta property="og:site_name" content="Rudy Goel" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AD ROAST by Rudy Goel" />
+  <meta name="twitter:description" content="Upload your Meta ad. Get a score out of 100 and the 3 fixes I'd make first." />
+  <meta name="twitter:image" content="https://rudygoel.com/og.png" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Google tag (gtag.js), same property as the main site -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1HE0PESGM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V1HE0PESGM');
+  </script>
+</head>
+<body>
+  <header class="top">
+    <a class="mark" href="/">Rudy Goel</a>
+    <span class="label">AD ROAST</span>
+  </header>
+
+  <main>
+    <section class="intro" id="intro">
+      <p class="label ember">Free · about 30 seconds</p>
+      <h1>Is your ad <em>burning</em> money?</h1>
+      <p class="lede">Upload your Meta ad. Get a score out of 100 and the 3 fixes I'd make first.</p>
+      <p class="small">It checks your ad against the same list I run on paid accounts every week. Heads up, it's brutal haha</p>
+    </section>
+
+    <form class="card" id="form" novalidate>
+      <div class="tabs" role="tablist" aria-label="What are you roasting?">
+        <button type="button" role="tab" class="tab" data-kind="image" aria-selected="true">Image</button>
+        <button type="button" role="tab" class="tab" data-kind="video" aria-selected="false">Video</button>
+        <button type="button" role="tab" class="tab" data-kind="copy" aria-selected="false">Copy only</button>
+      </div>
+
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload your ad">
+        <input type="file" id="file" accept="image/*" multiple hidden />
+        <div class="drop-empty">
+          <span class="drop-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+          </span>
+          <strong id="drop-title">Drop your ad here, or tap to pick it</strong>
+          <span id="drop-hint">A screenshot works. Up to 5 images for a carousel.</span>
+        </div>
+        <div class="thumbs" id="thumbs" hidden></div>
+      </div>
+
+      <label class="field" id="spoken-field" hidden>
+        <span>What do you say in the first 5 seconds? <i>Optional</i></span>
+        <input type="text" id="spoken" maxlength="600" placeholder="The first line out loud, word for word" />
+        <small>I only see stills from the video, so I can't hear it. The video itself stays on your device.</small>
+      </label>
+
+      <label class="field">
+        <span>Primary text <i id="primary-opt">Optional</i></span>
+        <textarea id="primaryText" rows="4" maxlength="3000" placeholder="The words above the image or video"></textarea>
+      </label>
+
+      <div class="row">
+        <label class="field">
+          <span>Headline <i>Optional</i></span>
+          <input type="text" id="headline" maxlength="200" placeholder="The bold line under it" />
+        </label>
+        <label class="field">
+          <span>Button</span>
+          <select id="cta">
+            <option value="">Not sure</option>
+            <option>Learn More</option>
+            <option>Shop Now</option>
+            <option>Sign Up</option>
+            <option>Book Now</option>
+            <option>Apply Now</option>
+            <option>Get Quote</option>
+            <option>Send Message</option>
+            <option>Download</option>
+            <option>Contact Us</option>
+          </select>
+        </label>
+      </div>
+
+      <details class="more">
+        <summary>Add details for a sharper roast</summary>
+        <div class="row">
+          <label class="field">
+            <span>Who sees it?</span>
+            <select id="traffic">
+              <option value="">Not sure</option>
+              <option value="cold">Cold: people who don't know me</option>
+              <option value="warm">Warm: past visitors or followers</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Landing page</span>
+            <input type="url" id="landingUrl" maxlength="500" placeholder="yoursite.com/offer" inputmode="url" />
+          </label>
+        </div>
+        <label class="field">
+          <span>What you sell and who it's for</span>
+          <input type="text" id="about" maxlength="400" placeholder="e.g. 12-week strength program for tradies, $497" />
+        </label>
+        <label class="field">
+          <span>Your numbers</span>
+          <input type="text" id="numbers" maxlength="400" placeholder="e.g. $1,200 spent, CTR 0.9%, CPL $41" />
+        </label>
+      </details>
+
+      <p class="error" id="form-error" role="alert" hidden></p>
+      <button type="submit" class="btn" id="go">Roast my ad</button>
+    </form>
+
+    <section class="result" id="result" hidden aria-live="polite">
+      <div class="loading" id="loading">
+        <div class="ember-dot" aria-hidden="true"></div>
+        <p id="loading-line">Looking at your ad</p>
+      </div>
+
+      <div class="score" id="score" hidden>
+        <svg viewBox="0 0 120 120" class="dial" aria-hidden="true">
+          <circle cx="60" cy="60" r="52" class="dial-track" />
+          <circle cx="60" cy="60" r="52" class="dial-fill" id="dial-fill" />
+        </svg>
+        <div class="score-num"><span id="score-num">0</span><small>/100</small></div>
+        <div class="score-text">
+          <p class="label" id="score-kind">AD ROAST</p>
+          <p class="verdict" id="verdict"></p>
+        </div>
+      </div>
+
+      <div class="md" id="md"></div>
+
+      <div class="gate" id="gate" hidden>
+        <div class="gate-blur" aria-hidden="true">
+          <p class="gate-h">🛠 The 3 fixes</p>
+          <p>1. ████████ ███ █████ ██████ ██ █████ ████ ███</p>
+          <p>2. ██████ ████ █████████ ███ ███ ████████ ██</p>
+          <p>3. ████ ██████ ███ ██████████ █████ ███████</p>
+        </div>
+        <div class="gate-card">
+          <p class="label ember">Your 3 fixes are ready</p>
+          <h2>See what I'd fix first.</h2>
+          <p>Pop your email in and they open right here. Fix 1 is the one costing you the most. Each one comes with a rewrite you can paste in today.</p>
+          <form class="gate-form" id="gate-form" novalidate>
+            <input type="email" id="email" autocomplete="email" placeholder="you@business.com" required />
+            <button type="submit" class="btn" id="unlock">Show my fixes</button>
+          </form>
+          <p class="error" id="gate-error" role="alert" hidden></p>
+          <p class="small">I won't sell or share it.</p>
+        </div>
+      </div>
+
+      <div class="fixes md" id="fixes" hidden></div>
+
+      <div class="cta" id="cta-card" hidden>
+        <p class="label ember">Want a human on it?</p>
+        <h2>Spending $5k+ a month on ads?</h2>
+        <p>DM ROASTED to @rudygoel_ on Instagram and a real human will look at the whole account.</p>
+        <div class="cta-row">
+          <a class="btn" href="https://ig.me/m/rudygoel_" target="_blank" rel="noopener" id="dm">DM ROASTED</a>
+          <button type="button" class="btn ghost" id="again">Roast another ad</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="/">rudygoel.com</a>
+    <span>This checks the ad. So it can't promise results.</span>
+  </footer>
+
+  <script type="module" src="/src/roast/main.ts"></script>
+</body>
+</html>

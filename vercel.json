@@ -1,7 +1,21 @@
 {
+  "functions": {
+    "api/roast.ts": {
+      "maxDuration": 120
+    }
+  },
   "rewrites": [
-    { "source": "/dashboard", "destination": "https://rudy-dashboard.vercel.app/dashboard" },
-    { "source": "/dashboard/:path*", "destination": "https://rudy-dashboard.vercel.app/dashboard/:path*" },
-    { "source": "/typefully", "destination": "https://rudy-dashboard.vercel.app/dashboard/typefully" }
+    {
+      "source": "/dashboard",
+      "destination": "https://rudy-dashboard.vercel.app/dashboard"
+    },
+    {
+      "source": "/dashboard/:path*",
+      "destination": "https://rudy-dashboard.vercel.app/dashboard/:path*"
+    },
+    {
+      "source": "/typefully",
+      "destination": "https://rudy-dashboard.vercel.app/dashboard/typefully"
+    }
   ]
 }
