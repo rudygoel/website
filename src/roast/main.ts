@@ -1,6 +1,7 @@
 /**
- * AD ROAST page: upload or paste an ad, stream the roast from /api/roast,
- * then trade an email for the 3 fixes via /api/roast-unlock.
+ * AD ROAST page, one step per screen: upload the ad, answer two questions,
+ * stream the roast from /api/roast, then trade an email for the 3 fixes via
+ * /api/roast-unlock.
  *
  * Images are resized here before upload. Videos never leave the device:
  * frames are pulled with a <video> + <canvas> (weighted to the first 5
@@ -10,7 +11,7 @@ import { marked } from "marked";
 import DOMPurify from "dompurify";
 import "./roast.css";
 
-type Kind = "image" | "video" | "copy";
+type Kind = "image" | "video";
 interface Frame { data: string; at?: number }
 
 declare global {
@@ -18,12 +19,13 @@ declare global {
 }
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
-const form = $<HTMLFormElement>("form");
+const uploadScreen = $("screen-upload");
+const form = $<HTMLFormElement>("screen-details");
 const drop = $("drop");
 const fileInput = $<HTMLInputElement>("file");
 const thumbs = $("thumbs");
+const uploadError = $("upload-error");
 const formError = $("form-error");
-const go = $<HTMLButtonElement>("go");
 const result = $("result");
 const loading = $("loading");
 const loadingLine = $("loading-line");
@@ -46,16 +48,11 @@ let token = "";
 const MAX_IMAGE_BYTES = 25 * 1024 * 1024;
 const MAX_UPLOAD_CHARS = 3_900_000;
 
-const HINTS: Record<Kind, { title: string; hint: string; accept: string }> = {
-  image: { title: "Drop your ad here, or tap to pick it", hint: "A screenshot works. Up to 5 images for a carousel.", accept: "image/*" },
-  video: { title: "Drop your video ad here, or tap to pick it", hint: "MP4 or MOV. I pull a few stills from it and only send those.", accept: "video/*" },
-  copy: { title: "", hint: "", accept: "" },
-};
+const DROP_TITLE = "Tap to pick your ad, or drop it here";
 
 const LINES: Record<Kind, string[]> = {
   image: ["Looking at your ad", "Checking what lands in the first second", "Reading your headline cold", "Looking for who it's for", "Hunting for proof", "Counting the adjectives", "Writing it up"],
   video: ["Looking at frame 1", "Checking if anything moves", "Reading the on-screen text", "Looking for who it's for", "Hunting for proof", "Checking the ending", "Writing it up"],
-  copy: ["Reading line 1", "Looking for who it's for", "Checking the offer", "Hunting for proof", "Counting the adjectives", "Writing it up"],
 };
 
 function track(event: string, params: Record<string, unknown> = {}) {
@@ -73,23 +70,16 @@ function refTag(): string {
   try { return document.referrer ? new URL(document.referrer).hostname : "direct"; } catch { return "direct"; }
 }
 
-/* ---------- tabs ---------- */
+/* ---------- screens ---------- */
 
-function setKind(next: Kind) {
-  kind = next;
-  document.querySelectorAll<HTMLButtonElement>(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.kind === next)));
-  drop.hidden = next === "copy";
-  $("spoken-field").hidden = next !== "video";
-  $("primary-opt").textContent = next === "copy" ? "" : "Optional";
-  $("drop-title").textContent = HINTS[next].title;
-  $("drop-hint").textContent = HINTS[next].hint;
-  fileInput.accept = HINTS[next].accept;
-  fileInput.multiple = next === "image";
-  clearFiles();
-  showError("");
+type Screen = "upload" | "details" | "result";
+
+function show(screen: Screen) {
+  uploadScreen.hidden = screen !== "upload";
+  form.hidden = screen !== "details";
+  result.hidden = screen !== "result";
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
-document.querySelectorAll<HTMLButtonElement>(".tab").forEach((t) => t.addEventListener("click", () => setKind(t.dataset.kind as Kind)));
 
 /* ---------- files ---------- */
 
@@ -97,14 +87,12 @@ function clearFiles() {
   frames = [];
   duration = undefined;
   thumbs.innerHTML = "";
-  thumbs.hidden = true;
-  (drop.querySelector(".drop-empty") as HTMLElement).hidden = false;
   fileInput.value = "";
 }
 
 function showThumbs(note: string) {
   thumbs.innerHTML = "";
-  frames.slice(0, 8).forEach((f) => {
+  frames.slice(0, kind === "video" ? 4 : 5).forEach((f) => {
     const img = new Image();
     img.src = f.data;
     img.alt = "";
@@ -112,10 +100,8 @@ function showThumbs(note: string) {
   });
   const meta = document.createElement("span");
   meta.className = "meta";
-  meta.textContent = `${note} · tap to change`;
+  meta.textContent = note;
   thumbs.appendChild(meta);
-  thumbs.hidden = false;
-  (drop.querySelector(".drop-empty") as HTMLElement).hidden = true;
 }
 
 function drawScaled(src: CanvasImageSource, w: number, h: number, maxSide: number, quality: number): string {
@@ -187,36 +173,42 @@ async function videoToFrames(file: File): Promise<{ frames: Frame[]; duration: n
 async function takeFiles(list: FileList | File[]) {
   const files = Array.from(list);
   if (!files.length || preparing) return;
-  showError("");
+  showUploadError("");
   preparing = true;
-  go.disabled = true;
+  drop.classList.add("busy");
   try {
-    if (kind === "video") {
-      const file = files.find((f) => f.type.startsWith("video/")) || files[0];
-      if (!file.type.startsWith("video/")) throw new Error("That's not a video file. Switch to Image for screenshots.");
+    const video = files.find((f) => f.type.startsWith("video/"));
+    if (video) {
+      kind = "video";
       $("drop-title").textContent = "Pulling stills from your video...";
-      const out = await videoToFrames(file).catch(() => {
-        throw new Error("I couldn't read that video here. Try an MP4, or upload 3 screenshots on the Image tab.");
+      const out = await videoToFrames(video).catch(() => {
+        throw new Error("I couldn't read that video here. Try an MP4, or upload 3 screenshots of it instead.");
       });
       frames = out.frames;
       duration = out.duration;
       showThumbs(`${frames.length} stills from a ${Math.round(duration)}s video`);
     } else {
+      kind = "image";
       const images = files.filter((f) => f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name)).slice(0, 5);
-      if (!images.length) throw new Error(files[0].type.startsWith("video/") ? "That's a video. Switch to the Video tab." : "That's not an image I can read.");
+      if (!images.length) throw new Error("That's not an image or video I can read. A screenshot of the ad works.");
+      $("drop-title").textContent = "Loading your ad...";
       frames = await Promise.all(images.map((f) => imageToFrame(f)));
       if (frames.reduce((n, f) => n + f.data.length, 0) > MAX_UPLOAD_CHARS) {
         frames = await Promise.all(images.map((f) => imageToFrame(f, 1100, 0.72)));
       }
-      showThumbs(frames.length > 1 ? `${frames.length} images` : "1 image");
+      showThumbs(frames.length > 1 ? `${frames.length} images` : "");
     }
+    $("spoken-field").hidden = kind !== "video";
+    showError("");
+    show("details");
+    track("roast_uploaded", { kind });
   } catch (e) {
     clearFiles();
-    showError((e as Error).message);
+    showUploadError((e as Error).message);
   } finally {
-    $("drop-title").textContent = HINTS[kind].title;
+    $("drop-title").textContent = DROP_TITLE;
+    drop.classList.remove("busy");
     preparing = false;
-    go.disabled = false;
   }
 }
 
@@ -231,7 +223,7 @@ drop.addEventListener("drop", (e) => {
   if (e.dataTransfer?.files) takeFiles(e.dataTransfer.files);
 });
 document.addEventListener("paste", (e) => {
-  if (kind === "copy") return;
+  if (uploadScreen.hidden) return;
   const files = Array.from(e.clipboardData?.files || []);
   if (files.length) takeFiles(files);
 });
@@ -242,6 +234,16 @@ function showError(msg: string) {
   formError.textContent = msg;
   formError.hidden = !msg;
 }
+
+function showUploadError(msg: string) {
+  uploadError.textContent = msg;
+  uploadError.hidden = !msg;
+}
+
+$("change").addEventListener("click", () => {
+  clearFiles();
+  show("upload");
+});
 
 function md(text: string): string {
   const html = DOMPurify.sanitize(marked.parse(text, { async: false, gfm: true, breaks: true }) as string);
@@ -272,7 +274,7 @@ function mix(a: string, b: string, t: number): string {
 }
 
 function scoreColour(n: number): string {
-  return n < 50 ? mix("#E2552B", "#E39B45", n / 50) : mix("#E39B45", "#7BA692", (n - 50) / 50);
+  return n < 50 ? mix("#E2552B", "#E8A33A", n / 50) : mix("#E8A33A", "#1F9A62", (n - 50) / 50);
 }
 
 function showScore(headLine: string) {
@@ -281,12 +283,12 @@ function showScore(headLine: string) {
   const fill = $("dial-fill") as unknown as SVGCircleElement;
   if (!m) {
     $("score-num").textContent = "?";
-    $("score-kind").textContent = "AD ROAST";
+    $("score-kind").textContent = "Your score";
     $("verdict").textContent = headLine.replace(/^#\s*/, "").replace(/^🔥\s*AD ROAST:?\s*/i, "") || "Can't score this";
     return;
   }
   const n = Math.min(100, Number(m[2]));
-  $("score-kind").textContent = m[1] ? "AD ROAST · copy only" : "AD ROAST";
+  $("score-kind").textContent = m[1] ? "Provisional score" : "Your score";
   $("verdict").textContent = m[1] ? "Provisional score. Add the image or video for the full roast." : m[3].trim();
   fill.style.stroke = scoreColour(n);
   requestAnimationFrame(() => { fill.style.strokeDashoffset = String(326.7 * (1 - n / 100)); });
@@ -318,30 +320,28 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (preparing) return;
   const val = (id: string) => ($(id) as HTMLInputElement).value.trim();
-  if (kind === "copy" && !val("primaryText") && !val("headline")) return showError("Paste your ad copy first.");
-  if (kind !== "copy" && !frames.length) return showError(kind === "video" ? "Add your video first." : "Add your ad first.");
+  if (!frames.length) {
+    show("upload");
+    return showUploadError("Add your ad first.");
+  }
   showError("");
+  const traffic = (form.querySelector<HTMLInputElement>('input[name="traffic"]:checked')?.value) || "";
 
   const payload = {
     kind,
-    images: kind === "copy" ? [] : frames,
+    images: frames,
     duration,
     primaryText: val("primaryText"),
     headline: val("headline"),
-    cta: val("cta"),
-    traffic: val("traffic"),
+    traffic,
     about: val("about"),
     spoken: kind === "video" ? val("spoken") : "",
     landingUrl: val("landingUrl"),
-    numbers: val("numbers"),
   };
 
   resetResult();
-  form.hidden = true;
-  $("intro").hidden = true;
-  result.hidden = false;
+  show("result");
   loading.hidden = false;
-  window.scrollTo({ top: 0, behavior: "smooth" });
   track("roast_start", { kind });
 
   const lines = LINES[kind];
@@ -399,9 +399,7 @@ form.addEventListener("submit", async (e) => {
     paint();
 
     if (failed && !text) {
-      result.hidden = true;
-      form.hidden = false;
-      $("intro").hidden = false;
+      show("details");
       showError(failed);
       track("roast_error", { kind, status: res.status });
       return;
@@ -470,11 +468,7 @@ gateForm.addEventListener("submit", (e) => { e.preventDefault(); unlock(); });
 $("dm").addEventListener("click", () => track("roast_dm_click", { kind }));
 $("again").addEventListener("click", () => {
   resetResult();
-  result.hidden = true;
-  form.hidden = false;
-  $("intro").hidden = false;
   clearFiles();
   form.reset();
-  setKind(kind);
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  show("upload");
 });
