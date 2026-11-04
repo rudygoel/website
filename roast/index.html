@@ -45,7 +45,7 @@
     <!-- Screen 1: hero + upload -->
     <section class="screen" id="screen-upload">
       <div class="hero">
-        <p class="eyebrow">For business owners running ads on Facebook and Instagram</p>
+        <p class="eyebrow">Spending money on Facebook or Instagram ads and can't work out why nobody's buying?</p>
         <h1>Let's fucking roast <span class="hot">your ad.</span></h1>
         <p class="sub">I'll give you a score out of 100 and the 3 main fixes I'd make if I wanted to 10x your results.</p>
         <p class="note">Free. Takes about a minute. Heads up, it's brutal haha</p>
@@ -64,6 +64,15 @@
           <strong id="drop-title">Tap to pick your ad, or drop it here</strong>
           <span>A screenshot, a video file, or up to 5 carousel images</span>
         </div>
+
+        <form class="ad-link" id="link-form" novalidate>
+          <label for="ad-link" class="q">Got a link to your ad instead?</label>
+          <div class="ad-link-row">
+            <input type="url" id="ad-link" maxlength="600" inputmode="url" placeholder="facebook.com/ads/library/?id=..." />
+            <button type="submit" class="btn ghost">Open it</button>
+          </div>
+          <small id="link-note">I'll open it so you can screenshot it, then add that in the box above.</small>
+        </form>
 
         <ul class="tips">
           <li><b>Best:</b> screenshot the ad as it shows in your feed. Then I can read your text and headline too.</li>

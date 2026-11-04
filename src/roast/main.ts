@@ -240,6 +240,35 @@ function showUploadError(msg: string) {
   uploadError.hidden = !msg;
 }
 
+/* ---------- ad link ---------- */
+
+// Facebook won't serve the Ad Library to a server, so a link can't be read here.
+// It opens in a new tab and the visitor screenshots the ad into the box.
+function adLink(raw: string): URL | null {
+  try {
+    const u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+    if (!/(^|\.)(facebook\.com|instagram\.com|fb\.com|fb\.me|fb\.watch)$/i.test(u.hostname)) return null;
+    u.protocol = "https:";
+    return u;
+  } catch {
+    return null;
+  }
+}
+
+$("link-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const note = $("link-note");
+  const url = adLink(($("ad-link") as HTMLInputElement).value.trim());
+  note.classList.toggle("error", !url);
+  if (!url) {
+    note.textContent = "That doesn't look like a Facebook or Instagram link.";
+    return;
+  }
+  window.open(url.href, "_blank", "noopener");
+  note.textContent = "It's open in a new tab. Screenshot your ad, then add it in the box above.";
+  track("roast_link_open");
+});
+
 $("change").addEventListener("click", () => {
   clearFiles();
   show("upload");
