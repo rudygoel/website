@@ -208,3 +208,25 @@ blockquote p { font-size: 23px; font-weight: 700; line-height: 1.25; letter-spac
   html { scroll-behavior: auto; }
   .btn, [data-video] button, .faq__q::after { transition: none; }
 }
+
+/* second-tier buttons: black and white, so the ember button stays the main ask */
+.btn--dark { background: var(--ink); color: #fff; }
+.btn--dark:hover { background: #2B2B2B; }
+.btn--white { background: #fff; color: var(--ink); flex: none; }
+.btn--white:hover { background: var(--paper); }
+.btn--dark::after, .btn--white::after { content: "\2192"; margin-left: 12px; font-size: 1.15em; transition: transform 160ms ease; }
+.btn--dark:hover::after, .btn--white:hover::after { transform: translateX(5px); }
+.btn--block { display: flex; width: 100%; margin-top: 16px; min-height: 76px; font-size: 24px; }
+.alt {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px 28px; flex-wrap: wrap;
+  margin-top: 20px; padding: 28px; border-radius: 16px; background: var(--ink); color: #fff;
+}
+.alt p { font-size: clamp(24px, 2.8vw, 32px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
+.faq__item p a { font-weight: 800; color: var(--ember-ink); text-underline-offset: 3px; }
+.faq__item p a:hover { color: var(--ember-dark); }
+
+@media (max-width: 520px) {
+  .alt { padding: 20px; }
+  .btn--white { padding: 0 12px; font-size: 18px; white-space: nowrap; }
+  .btn--white::after { margin-left: 8px; }
+}
