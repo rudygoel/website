@@ -9,6 +9,8 @@
   --ember: #E2552B;      /* big type and decoration only */
   --ember-ink: #C9411A;  /* buttons and small text */
   --ember-dark: #A93512;
+  --good: #1F7A50;
+  --bad: #D92D20;
   --font: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light;
 }
@@ -158,8 +160,8 @@ blockquote p { font-size: 23px; font-weight: 700; line-height: 1.25; letter-spac
 .fit h3 { font-size: 27px; font-weight: 900; letter-spacing: -0.025em; margin-bottom: 14px; }
 .fit li { position: relative; padding: 10px 0 10px 34px; font-size: 20px; font-weight: 500; line-height: 1.32; }
 .fit li::before { position: absolute; left: 0; top: 9px; font-weight: 900; font-size: 22px; }
-.fit__col--yes li::before { content: "✓"; color: var(--ember-ink); }
-.fit__col--no li::before { content: "✕"; color: var(--ink); }
+.fit__col--yes li::before { content: "✓"; color: var(--good); }
+.fit__col--no li::before { content: "✕"; color: var(--bad); }
 
 /* faq */
 .faq__item { border-top: 2px solid var(--ink); }
