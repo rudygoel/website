@@ -220,17 +220,18 @@
 
     .strip-label {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 0 0 14px;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 18px;
+      text-align: center;
     }
 
     .strip-label h3 {
       margin: 0;
       font-family: var(--font-display);
       font-weight: 300;
-      font-size: 28px;
+      font-size: 36px;
       line-height: 1.1;
     }
 
@@ -238,7 +239,6 @@
       margin: 0;
       font-size: 14px;
       color: var(--ink-faint);
-      text-align: right;
     }
 
     .strip-wrap {
@@ -301,22 +301,22 @@
     .zip-link {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-left: 12px;
-      min-height: 44px;
-      padding: 0 18px;
+      gap: 6px;
+      margin-top: 6px;
+      min-height: 36px;
+      padding: 0 14px;
       border: 1px solid var(--ink);
       border-radius: 999px;
       background: var(--ink);
       color: var(--paper-raised);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       text-decoration: none;
       white-space: nowrap;
       transition: background-color 200ms ease, border-color 200ms ease;
     }
 
-    .zip-link svg { width: 18px; height: 18px; flex: none; }
+    .zip-link svg { width: 16px; height: 16px; flex: none; }
     .zip-link span { color: rgba(255, 253, 249, 0.7); font-weight: 400; }
     .zip-link:hover { background: var(--tobacco-deep); border-color: var(--tobacco-deep); }
 
@@ -670,9 +670,8 @@
       .section { padding: 40px 16px 0; }
       .section-head { padding-top: 32px; margin-bottom: 20px; }
 
-      .strip-label { flex-direction: column; gap: 4px; }
-      .strip-label p { text-align: left; }
-      .zip-link { display: flex; justify-content: center; width: 100%; margin: 12px 0 0; min-height: 48px; }
+      .strip-label h3 { font-size: 32px; }
+      .zip-link { min-height: 40px; }
       .strip-track { gap: 12px; padding: 4px 16px 8px; }
       .reel { width: 168px; }
       .static-open img { height: 240px; }
@@ -719,12 +718,13 @@
 
     <div class="strip-label">
       <h3>Statics</h3>
-      <p>Proven winners first. Tap any ad to enlarge, or download the full set. <a class="zip-link" href="/portfolio/rudy-goel-static-ads.zip" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download all 26 statics <span>ZIP, 6.7 MB</span></a></p>
+      <p>Proven winners first. Tap any ad to enlarge, or download the full set.</p>
+      <a class="zip-link" href="/portfolio/rudy-goel-static-ads.zip" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download all 26 statics <span>ZIP, 6.7 MB</span></a>
     </div>
     <div class="strip-wrap strip-wrap--statics">
     <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll statics left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="strip-arrow strip-arrow--next" type="button" data-strip-step="1" aria-label="Scroll statics right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
-    <div class="strip" data-strip data-speed="-26.5">
+    <div class="strip" data-strip data-speed="-29.15">
       <ul class="strip-track">
           <li class="static">
             <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-news-lg.webp" data-caption="Breaking news. DJ Accelerator, 55 leads, best static in the account" aria-label="Enlarge: Breaking news, DJ Accelerator"><img src="/portfolio/work/statics/breaking-news-sm.webp" alt="Breaking news static ad for DJ Accelerator" width="1200" height="1200" loading="lazy" decoding="async" /></button>
@@ -867,7 +867,7 @@
     <div class="strip-wrap strip-wrap--videos">
     <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll videos left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="strip-arrow strip-arrow--next" type="button" data-strip-step="1" aria-label="Scroll videos right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
-    <div class="strip" data-strip data-speed="31">
+    <div class="strip" data-strip data-speed="34.1">
       <ul class="strip-track">
           <li class="reel">
             <div class="reel-media">
