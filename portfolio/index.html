@@ -724,7 +724,7 @@
     <div class="strip-wrap strip-wrap--statics">
     <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll statics left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="strip-arrow strip-arrow--next" type="button" data-strip-step="1" aria-label="Scroll statics right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
-    <div class="strip" data-strip data-speed="-29.15">
+    <div class="strip" data-strip data-speed="-87.5">
       <ul class="strip-track">
           <li class="static">
             <button class="static-open" type="button" data-full="/portfolio/work/statics/breaking-news-lg.webp" data-caption="Breaking news. DJ Accelerator, 55 leads, best static in the account" aria-label="Enlarge: Breaking news, DJ Accelerator"><img src="/portfolio/work/statics/breaking-news-sm.webp" alt="Breaking news static ad for DJ Accelerator" width="1200" height="1200" loading="lazy" decoding="async" /></button>
@@ -867,7 +867,7 @@
     <div class="strip-wrap strip-wrap--videos">
     <button class="strip-arrow strip-arrow--prev" type="button" data-strip-step="-1" aria-label="Scroll videos left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="strip-arrow strip-arrow--next" type="button" data-strip-step="1" aria-label="Scroll videos right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
-    <div class="strip" data-strip data-speed="34.1">
+    <div class="strip" data-strip data-speed="102">
       <ul class="strip-track">
           <li class="reel">
             <div class="reel-media">
@@ -1007,10 +1007,11 @@
   <p class="contact">Want to talk? <a href="mailto:support@rudygoel.com">support@rudygoel.com</a></p>
 
   <script>
-    // Scrolling strips. Each one drifts slowly on its own and loops forever.
-    // It keeps moving under the mouse, waits while you swipe, tab into it or
-    // play a video, and the edge arrows jump it either way. No drift at all
-    // for reduced-motion users (the arrows still work).
+    // Scrolling strips. Each one runs on its own and loops forever.
+    // It stops only while the mouse is over it (or, with no mouse, while you
+    // swipe it, tab into it with the keyboard or play a video). The edge
+    // arrows jump it either way. No drift at all for reduced-motion users
+    // (the arrows still work).
     (function () {
       var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       var playing = 0;
@@ -1029,14 +1030,19 @@
 
         var half = function () { return track.scrollWidth / 2; };
         var pos = speed < 0 ? half() : 0;
-        var hold = false, holdUntil = 0, visible = false, last = 0, pending = 0;
+        var hold = false, hover = false, holdUntil = 0, visible = false, last = 0, pending = 0;
         strip.scrollLeft = pos;
 
         var pause = function (ms) { holdUntil = Math.max(holdUntil, performance.now() + ms); };
-        strip.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse") pause(4000); });
-        strip.addEventListener("touchstart", function () { pause(4000); }, { passive: true });
-        strip.addEventListener("wheel", function () { pause(3000); }, { passive: true });
-        strip.addEventListener("focusin", function () { hold = true; });
+        // Mouse over the strip or its arrows: stop. Mouse off: carry on straight away.
+        var wrap = strip.parentNode;
+        wrap.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hover = true; });
+        wrap.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") hover = false; });
+        // No hover on a phone, so a swipe gets a short wait instead
+        strip.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse") pause(2500); });
+        strip.addEventListener("touchstart", function () { pause(2500); }, { passive: true });
+        // Keyboard users only: a mouse click must not leave the strip frozen
+        strip.addEventListener("focusin", function (e) { hold = e.target.matches(":focus-visible"); });
         strip.addEventListener("focusout", function () { hold = false; });
         strip.addEventListener("scroll", function () {
           // Someone dragged or swiped: follow them, and keep the loop seamless
@@ -1068,7 +1074,7 @@
             pending -= d;
             moved = true;
           }
-          if (visible && !hold && !playing && now > holdUntil) {
+          if (visible && !hold && !hover && !playing && now > holdUntil) {
             pos += speed * dt;
             moved = true;
           }
